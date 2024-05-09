@@ -5,10 +5,11 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
-import { RegistroComponent } from './registro/registro.component';
+import { RegistroComponent } from './Iniciar-sesion/registro.component';
 import { RegistroEmpleadoComponent } from './registro-empleado/registro-empleado.component';
 import { VerPerfilComponent } from './ver-perfil/ver-perfil.component';
 import { CambiarContraComponent } from './cambiar-contra/cambiar-contra.component';
+
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { CambiarContraComponent } from './cambiar-contra/cambiar-contra.componen
     RegistroComponent,
     VerPerfilComponent,
     CambiarContraComponent,
-    RegistroEmpleadoComponent
+    RegistroEmpleadoComponent,
+
   ],
   imports: [
     BrowserModule,
