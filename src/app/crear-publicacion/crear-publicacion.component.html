@@ -1,0 +1,61 @@
+<div class="form-container mb-3 w-25">
+  <h1>Crear Publicación</h1>
+  <p>Por favor, ingrese los datos del producto</p>
+<form [formGroup]="prodForm" (ngSubmit)="onSubmit()">
+  <div class="form-outline mb-3 " data-mdb-input-init>
+    <label class="form-label" for="title">
+      Nombre
+    </label>
+    <input type="text" id="title" class="form-control form-control-lg" formControlName="title">
+    <div class="mb-3">
+    <small class="text-danger" *ngIf="hasErrors('title', 'required')" >El titulo es obligatorio</small>
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label" for="desc">
+      Descripción
+    </label>
+    <textarea rows=3 type="text" id="desc" class="form-control" formControlName="desc"></textarea>
+    <div class="mb-3">
+    <small class="text-danger" *ngIf="hasErrors('desc', 'required')" >La descripción es obligatoria</small>
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label" for="cat">
+      Categoria
+    </label>
+    <input class="form-control" list="catOptions" id="cat" formControlName="cat" placeholder="e.g serruchos">
+<datalist id="catOptions">
+  <option value="Serruchos">
+  <option value="Powertools">
+  <option value="cat3">
+  <option value="otra cat">
+  <option value="test">
+</datalist>
+    <div class="mb-3">
+    <small class="text-danger" *ngIf="hasErrors('cat', 'required')" >Una categoria es obligatoria</small>
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label" for="img">
+      Fotos
+    </label>
+    <div class="mb-3">
+    <input type="file" accept="image/jpg, image/jpeg, image/png" class="form-control" id="img" formControlName="img" multiple/>
+    <small class="text-danger" *ngIf="hasErrors('img', 'required')" >Una foto es obligatoria</small>
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label" for="desiredProds">
+      Productos deseados
+    </label>
+    <input type="text" id="desiredProds" class="form-control" formControlName="desiredProds">
+  </div>
+
+  <button type="submit" class="btn btn-primary" [disabled]="prodForm.invalid">Crear</button>
+</form>
+</div>
