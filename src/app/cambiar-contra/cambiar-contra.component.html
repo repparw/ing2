@@ -2,16 +2,16 @@
     <div class="campo-contrasena">
       <label for="nuevaContrasena" class="form-label">Nueva contraseña:</label>
       <input type="password" class="form-control" id="nuevaContrasena" formControlName="nuevaContrasena">
-      <div class="text-danger" *ngIf="hasErrors('nuevaContrasena', 'required') && submitted">La nueva contraseña es requerida.</div>
-      <div class="text-danger" *ngIf="hasErrors('nuevaContrasena', 'minlength') && submitted">La nueva contraseña debe tener al menos 6 caracteres.</div>
+      <div class="text-danger" *ngIf="hasErrors('nuevaContrasena', 'required') ">La nueva contraseña es requerida.</div>
+      <div class="text-danger" *ngIf="hasErrors('nuevaContrasena', 'minlength') ">La nueva contraseña debe tener al menos 6 caracteres.</div>
     </div>
     <div class="campo-contrasena">
-      <label for="repetirContrasena" class="form-label">Repetir contraseña:</label>
+      <label for="repetirContrasena" class="form-label">Repetir nueva contraseña:</label>
       <input type="password" class="form-control" id="repetirContrasena" formControlName="repetirContrasena">
-      <div class="text-danger" *ngIf="hasErrors('repetirContrasena', 'required') && submitted">La repetición de contraseña es requerida.</div>
-      <div class="text-danger" *ngIf="hasErrors('repetirContrasena', 'minlength') && submitted">La repetición de contraseña debe tener al menos 6 caracteres.</div>
+      <div class="text-danger" *ngIf="hasErrors('repetirContrasena', 'required') ">La repetición de contraseña es requerida.</div>
+      <div class="text-danger" *ngIf="hasErrors('repetirContrasena', 'minlength') ">La repetición de contraseña debe tener al menos 6 caracteres.</div>
       <div class="text-danger" *ngIf="cambiarContraForm.get('nuevaContrasena')?.value !== cambiarContraForm.get('repetirContrasena')?.value && submitted">Las contraseñas no coinciden.</div>
     </div>
-    <button type="submit" [disabled]="cambiarContraForm.invalid">Cambiar contraseña</button>
+    <button type="submit" class="btn-primary" [disabled]="cambiarContraForm.invalid">Cambiar contraseña</button>
   </form>
   
