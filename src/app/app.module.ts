@@ -10,7 +10,7 @@ import { RegistroEmpleadoComponent } from './registro-empleado/registro-empleado
 import { VerPerfilComponent } from './ver-perfil/ver-perfil.component';
 import { CambiarContraComponent } from './cambiar-contra/cambiar-contra.component';
 import { CrearPublicacionComponent } from './crear-publicacion/crear-publicacion.component';
-
+import { HttpClientModule} from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -25,7 +25,8 @@ import { CrearPublicacionComponent } from './crear-publicacion/crear-publicacion
   imports: [
     BrowserModule,
     AppRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    HttpClientModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
