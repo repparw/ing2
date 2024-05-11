@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Route, Router } from '@angular/router';
+import { LoginService } from '../services/login.service';
+import { LoginRequest } from '../services/loginRequest';
 
 @Component({
   selector: 'app-registro',
@@ -8,34 +10,50 @@ import { Route, Router } from '@angular/router';
   styleUrls: ['./registro.component.css']
 })
 export class RegistroComponent implements OnInit {
-  
+  loginError:string = "";
   loginForm= this.formBuilder.group({
-    mail: ['', [Validators.required, Validators.email]],
-    contraseña: ['', Validators.required],
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', Validators.required],
   })
   
-  constructor(private formBuilder:FormBuilder, private router:Router){}
+  constructor(private formBuilder:FormBuilder, private router:Router, private loginService:LoginService){}
 
   ngOnInit(): void{
 
   }
 
-  get mail(){
-    return this.loginForm.controls.mail;
+  get email(){
+    return this.loginForm.controls.email;
   }
   
-  get contraseña(){
-    return this.loginForm.controls.contraseña;
+  get password(){
+    return this.loginForm.controls.password;
   }
-   
+
+
   login(){
     if(this.loginForm.valid){
-      console.log('Nice');
-      this.router.navigateByUrl('/home');
-      this.loginForm.reset;
+      this.loginService.login(this.loginForm.value as LoginRequest).subscribe({
+        next: (userData) => {
+          console.log(userData);
+        },
+        error: (errorData) => {
+          console.error(errorData);
+          this.loginError=errorData;
+        },
+        complete: () => {
+          console.info("Login completo");
+          this.router.navigateByUrl('/home');
+          this.loginForm.reset;
+        }
+      })
     }
     else{
       this.loginForm.markAllAsTouched();
     }
+  }
+
+  hasErrors(controlName: string, errortype: string){
+    return this.loginForm.get(controlName)?.hasError(errortype) && this.loginForm.get(controlName)?.touched
   }
 }
