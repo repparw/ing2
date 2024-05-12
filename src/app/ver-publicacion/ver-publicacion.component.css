@@ -1,11 +1,34 @@
 
+    html{
+        height: 100%;
+        width: 100%;
+    
+        /* Set the height to match that of the viewport. */
+        height: 100vh;
+    
+        /* Set the width to match that of the viewport. */
+        width: 100vw;
+    
+        /* Remove any browser-default margins. */
+        margin: 0;
+        background-color: #DFD0B8;
+    }
+
+    h2{
+        font-family: sans-serif;
+        color:#153448;
+    }
+    h4{
+        font-family: sans-serif;
+        color:#153448;
+    }
+
 
     /* Ajuste de tamaño de imagenes*/
     .c-img {
-        max-width: 600px;
-        height: 600px;
+        max-width: 450px;
+        height: 450px;
         object-fit: cover;
-        margin: auto;
 
     }
     /* Cambio de color boton < y > */
@@ -14,3 +37,14 @@
         filter: invert(100%);
         
     }
+
+    .carousel{
+        margin-left: 10%;
+        max-height: 450px;
+        max-width: 450px;
+
+    }
+
+
+
+    
