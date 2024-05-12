@@ -1,16 +1,21 @@
-import { Component } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Pub } from '../services/pub'
+import { PublicationService } from '../services/publicacion.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-editar-publicacion',
   templateUrl: './editar-publicacion.component.html',
   styleUrls: ['./editar-publicacion.component.css']
 })
-export class EditarPublicacionComponent {
+
+export class EditarPublicacionComponent implements OnInit {
+  @Input() pub: Pub;
   prodForm = this.formBuilder.group({
       title: ['', Validators.required],
       desc: ['', Validators.required],
-      category: ['', Validators.required],
+      category: [''],
       is_paused: [false],
       photos: new FormControl(),
       desired: [''],
@@ -19,7 +24,36 @@ export class EditarPublicacionComponent {
       user: [1],
   });
 
+  editPub(pub: Pub): Observable<Pub> {
+    // castear datos a prodForm
+    if (this.pub) {
+      this.prodForm.patchValue(this.pub);
+  }
+
   constructor(private formBuilder: FormBuilder){
+  }
+
+  ngOnInit() {
+    }
+  }
+
+  onFileSelected(event: any) {
+  const selectedFiles = event.target.files;
+
+  if (selectedFiles.length > 0) {
+    // Multiple files selected, handle them appropriately
+    this.prodForm.patchValue({ photos: selectedFiles }); // Set photos to an array of files
+    this.prodForm.get('photos')?.updateValueAndValidity();
+
+    // Optional: Loop through selectedFiles and perform additional processing
+    for (const file of selectedFiles) {
+      // ... process each file (e.g., display filename, perform validation)
+    }
+  } else {
+    // No file selected, handle the case (optional)
+    console.warn('No files selected for upload');
+    this.prodForm.patchValue({ photos: null }); // Optionally set photos to null
+  }
   }
 
   hasErrors(controlName: string, errorType: string) {

@@ -49,7 +49,7 @@ export class CrearPublicacionComponent {
     console.warn('No files selected for upload');
     this.prodForm.patchValue({ photos: null }); // Optionally set photos to null
   }
-}
+  }
 
   onSubmit() {
   if (this.prodForm.invalid) {
