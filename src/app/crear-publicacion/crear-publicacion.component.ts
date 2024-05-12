@@ -14,6 +14,7 @@ export class CrearPublicacionComponent {
       Validators.required),
     cat: new FormControl('',
       Validators.required),
+    isPaused: new FormControl('', Validators.required),
 // TODO limitar cantidad de imagenes
     img: new FormControl('',
       Validators.required),
