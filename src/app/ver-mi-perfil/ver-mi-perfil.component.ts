@@ -1,4 +1,5 @@
-import { Component} from '@angular/core';
+import { Component, inject} from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-ver-mi-perfil',
@@ -15,6 +16,11 @@ export class VerMiPerfilComponent {
   mail: string = 'messi@yahoo.com';
   sucursal: string = 'La Plata';
 
+  private _router = inject(Router)
+
+  navegate(ruta: string): void{
+    this._router.navigate([ruta])
+  }
 
 }
 
