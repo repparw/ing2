@@ -6,6 +6,7 @@ import { RegistroEmpleadoComponent } from './registro-empleado/registro-empleado
 import { VerPerfilComponent } from './ver-perfil/ver-perfil.component';
 import { CambiarContraComponent } from './cambiar-contra/cambiar-contra.component';
 import { CrearPublicacionComponent } from './crear-publicacion/crear-publicacion.component';
+import { VerPublicacionComponent } from './ver-publicacion/ver-publicacion.component';
 
 const routes: Routes = [
   {path: 'home', component: HomeComponent},
@@ -14,6 +15,7 @@ const routes: Routes = [
   {path: 'ver perfil', component: VerPerfilComponent},
   {path: 'crear publi', component: CrearPublicacionComponent},
   {path: 'cambiar contra', component: CambiarContraComponent},
+  {path: 'ver publicacion', component: VerPublicacionComponent},
   {path: '**', redirectTo: '/home', pathMatch:'full'}
 ];
 

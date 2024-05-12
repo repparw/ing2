@@ -1,0 +1,16 @@
+
+
+    /* Ajuste de tamaño de imagenes*/
+    .c-img {
+        max-width: 600px;
+        height: 600px;
+        object-fit: cover;
+        margin: auto;
+
+    }
+    /* Cambio de color boton < y > */
+    .slide-control{
+        
+        filter: invert(100%);
+        
+    }

@@ -10,6 +10,7 @@ import { RegistroEmpleadoComponent } from './registro-empleado/registro-empleado
 import { VerPerfilComponent } from './ver-perfil/ver-perfil.component';
 import { CambiarContraComponent } from './cambiar-contra/cambiar-contra.component';
 import { CrearPublicacionComponent } from './crear-publicacion/crear-publicacion.component';
+import { VerPublicacionComponent } from './ver-publicacion/ver-publicacion.component';
 
 
 @NgModule({
@@ -21,6 +22,7 @@ import { CrearPublicacionComponent } from './crear-publicacion/crear-publicacion
     CambiarContraComponent,
     RegistroEmpleadoComponent,
     CrearPublicacionComponent,
+    VerPublicacionComponent,
   ],
   imports: [
     BrowserModule,
