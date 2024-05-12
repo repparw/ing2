@@ -5,6 +5,7 @@ import { RegistroComponent } from './Iniciar-sesion/registro.component';
 import { RegistroEmpleadoComponent } from './registro-empleado/registro-empleado.component';
 import { VerPerfilComponent } from './ver-perfil/ver-perfil.component';
 import { VerMiPerfilComponent } from './ver-mi-perfil/ver-mi-perfil.component';
+import { ModificarPerfilComponent } from './modificar-perfil/modificar-perfil.component';
 import { CambiarContraComponent } from './cambiar-contra/cambiar-contra.component';
 import { CrearPublicacionComponent } from './crear-publicacion/crear-publicacion.component';
 import { VerPublicacionComponent } from './ver-publicacion/ver-publicacion.component';
@@ -15,6 +16,7 @@ const routes: Routes = [
   {path: 'registrar empleado', component: RegistroEmpleadoComponent},
   {path: 'ver perfil', component: VerPerfilComponent},
   {path: 'ver mi perfil', component: VerMiPerfilComponent},
+  {path: 'modificar perfil', component: ModificarPerfilComponent},
   {path: 'crear publi', component: CrearPublicacionComponent},
   {path: 'cambiar contra', component: CambiarContraComponent},
   {path: 'ver publicacion', component: VerPublicacionComponent},
