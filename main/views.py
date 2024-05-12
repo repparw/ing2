@@ -5,7 +5,7 @@ from .serializers import PubSerializer, UserSerializer, EmployeeSerializer
 
 # Create your views here.
 
-class EmployeeViewSet():
+class EmployeeViewSet(viewsets.ModelViewSet):
   queryset = Employee.objects.all()
   serializer_class = EmployeeSerializer
 

@@ -11,7 +11,7 @@ import { Observable } from 'rxjs';
 })
 
 export class EditarPublicacionComponent implements OnInit {
-  @Input() pub: Pub;
+  // @Input() pub: Pub;
   prodForm = this.formBuilder.group({
       title: ['', Validators.required],
       desc: ['', Validators.required],
@@ -24,18 +24,18 @@ export class EditarPublicacionComponent implements OnInit {
       user: [1],
   });
 
-  editPub(pub: Pub): Observable<Pub> {
-    // castear datos a prodForm
-    if (this.pub) {
-      this.prodForm.patchValue(this.pub);
-  }
+//editPub(pub: Pub): Observable<Pub> {
+//  // castear datos a prodForm
+//  if (this.pub) {
+//    this.prodForm.patchValue(this.pub);
+//}
 
   constructor(private formBuilder: FormBuilder){
   }
 
   ngOnInit() {
     }
-  }
+
 
   onFileSelected(event: any) {
   const selectedFiles = event.target.files;
