@@ -1,0 +1,22 @@
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+  }
+ body {
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    height: 100vh;
+    margin: 0; /* Remove default margin */
+    background-color: #DFD0B8;
+  }
+
+  .logo-onlytech {
+    width: 200px; /* Adjust as needed */
+    height: auto; /* Maintain aspect ratio */
+    position: absolute; /* Position the image absolutely */
+    bottom: 0px; /* Adjust the distance from the bottom */
+    right: 0px; /* Adjust the distance from the right */
+  }

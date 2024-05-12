@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "ingenieria2-2024"
+version = "0.1.0"
+description = ""
+authors = ["repparw <ubritos@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+asgiref = "^3.8.1"
+django = "^5.0.6"
+django-cors-headers = "^4.3.1"
+djangorestframework = "^3.15.1"
+pillow = "^10.3.0"
+sqlparse = "^0.5.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

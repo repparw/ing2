@@ -13,8 +13,8 @@ export class CambiarContraComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder) { 
     this.cambiarContraForm = this.formBuilder.group({
-      nuevaContrasena: ['', [Validators.required, Validators.minLength(6)]],
-      repetirContrasena: ['', [Validators.required, Validators.minLength(6)]]
+      nuevaContrasena: ['', [Validators.required, Validators.minLength(6), Validators.pattern(".*[!@#$%^&*()_+}{:;'?/><,.\|~`]")]],
+      repetirContrasena: ['', [Validators.required, Validators.minLength(6),  Validators.pattern(".*[!@#$%^&*()_+}{:;'?/><,.\|~`]")]]
     });
   }
 
@@ -24,7 +24,7 @@ export class CambiarContraComponent implements OnInit {
 
   hasErrors(controlName: string, errorType: string) {
     const control = this.cambiarContraForm.get(controlName);
-    return control && control.hasError(errorType) && (control.dirty || control.touched);
+    return control && control.hasError(errorType);
   }
 
   enviar() {
@@ -33,6 +33,7 @@ export class CambiarContraComponent implements OnInit {
       return; // Detener el envío del formulario si hay errores de validación
     }
     console.log(this.cambiarContraForm.value);
+    
     // Aquí puedes realizar la lógica para enviar el formulario al backend
   }
 }
