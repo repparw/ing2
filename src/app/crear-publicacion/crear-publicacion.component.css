@@ -19,10 +19,6 @@ label {
     border-left: 5px solid #a94442;
 }
 
-div.checkbox.ng-valid:not(form).ng-touched {
-  border-left: 0px;
-}
-
 textarea {
   resize: none;
 }
