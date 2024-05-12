@@ -1,9 +1,13 @@
 from rest_framework import viewsets
 from django.shortcuts import render
-from .models import Pub
-from .serializers import PubSerializer
+from .models import Pub, User
+from .serializers import PubSerializer, UserSerializer
 
 # Create your views here.
+
+class UserViewSet(viewsets.ModelViewSet):
+  queryset = User.objects.all()
+  serializer_class = UserSerializer
 
 class PubViewSet(viewsets.ModelViewSet):
   queryset = Pub.objects.all()
