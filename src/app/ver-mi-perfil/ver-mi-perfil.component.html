@@ -6,7 +6,7 @@
         <h3 class="card-title">Nombre: {{nombre}}</h3>
         <img src="{{fotoDePerfil}}" class="card-img-top" alt="fotoDePerfil">
         <div class="card-body">
-            <h5>Valoración: {{valoracion}}</h5> <!-- Valoración por defecto '-'. Poner cantidad de votos? --> 
+            <h5>Valoración: {{valoracion}}</h5> <!-- Valoración por defecto '-'. Poner cantidad de votos? -->
             <h5>DNI: {{dni}}</h5>
             <h5>Fecha de Nacimiento: {{fechaDeNacimiento | date:'dd/MM/yyyy'}}</h5>
             <h5>Mail: {{mail}}</h5>
@@ -15,19 +15,19 @@
     </div>
 
     <div>
-        <button type="button" class="btn btn-outline-primary" (click)="navegate('modificar perfil')">Modificar Perfil</button>
+        <button type="button" class="btn btn-outline-primary" (click)="navigate('modificar perfil')">Modificar Perfil</button>
     </div>
-    
+
     <div class="card">
         <h2 class="card-title">Publicaciones</h2>
         <div class="card-body">
-            <!-- Lista de publicaciones --> 
+            <!-- Lista de publicaciones -->
         </div>
     </div>
 
-    
+
     <div>
-        <button type="button" class="btn btn-outline-primary" (click)="navegate('crear publi')">Agregar Publicacion</button>
+        <button type="button" class="btn btn-outline-primary" (click)="navigate('crear publi')">Agregar Publicacion</button>
 
     </div>
 </div>

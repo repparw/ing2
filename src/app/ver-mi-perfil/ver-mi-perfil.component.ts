@@ -18,7 +18,7 @@ export class VerMiPerfilComponent {
 
   private _router = inject(Router)
 
-  navegate(ruta: string): void{
+  navigate(ruta: string): void{
     this._router.navigate([ruta])
   }
 

@@ -1,13 +1,47 @@
 from rest_framework import viewsets
 from django.shortcuts import render
-from .models import Pub, User
-from .serializers import PubSerializer, UserSerializer
+from .models import Pub, User, Employee
+from .serializers import PubSerializer, UserSerializer, EmployeeSerializer
 
 # Create your views here.
+
+class EmployeeViewSet():
+  queryset = Employee.objects.all()
+  serializer_class = EmployeeSerializer
+
+def create_employee(dni, email, password, suc):
+  if not dni or not email or not password or not suc:
+    raise ValueError("Missing required fields. Please provide dni, email, password, and suc.")
+  # Create the employee object
+  empl = Employee(
+      dni=dni,
+      email=email,
+      password=password,
+      suc=suc)
+  # Save the employee to the database
+  empl.save()
+
+  return empl
 
 class UserViewSet(viewsets.ModelViewSet):
   queryset = User.objects.all()
   serializer_class = UserSerializer
+
+def create_user(dni, email, password, date, mailing, suc):
+  if not dni or not email or not password:
+    raise ValueError("Missing required fields. Please provide dni, email, and password.")
+  # Create the user object
+  user = User(
+      dni=dni,
+      email=email,
+      password=password,
+      date=date,
+      mailing=mailing,
+      suc=suc)
+  # Save the user to the database
+  user.save()
+
+  return user
 
 class PubViewSet(viewsets.ModelViewSet):
   queryset = Pub.objects.all()
