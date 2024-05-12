@@ -14,7 +14,8 @@ import { VerPublicacionComponent } from './ver-publicacion/ver-publicacion.compo
 import { HttpClientModule} from '@angular/common/http';
 import { VerMiPerfilComponent } from './ver-mi-perfil/ver-mi-perfil.component';
 import { ModificarPerfilComponent } from './modificar-perfil/modificar-perfil.component';
-
+import { EditarPublicacionComponent } from './editar-publicacion/editar-publicacion.component';
+import { EliminarPublicacionComponent } from './eliminar-publicacion/eliminar-publicacion.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,8 @@ import { ModificarPerfilComponent } from './modificar-perfil/modificar-perfil.co
     VerPublicacionComponent,
     VerMiPerfilComponent,
     ModificarPerfilComponent,
+    EditarPublicacionComponent,
+    EliminarPublicacionComponent,
   ],
   imports: [
     BrowserModule,
