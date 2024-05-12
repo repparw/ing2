@@ -10,6 +10,8 @@ import { RegistroEmpleadoComponent } from './registro-empleado/registro-empleado
 import { VerPerfilComponent } from './ver-perfil/ver-perfil.component';
 import { CambiarContraComponent } from './cambiar-contra/cambiar-contra.component';
 import { CrearPublicacionComponent } from './crear-publicacion/crear-publicacion.component';
+import { VerMiPerfilComponent } from './ver-mi-perfil/ver-mi-perfil.component';
+import { ModificarPerfilComponent } from './modificar-perfil/modificar-perfil.component';
 
 
 @NgModule({
@@ -21,6 +23,8 @@ import { CrearPublicacionComponent } from './crear-publicacion/crear-publicacion
     CambiarContraComponent,
     RegistroEmpleadoComponent,
     CrearPublicacionComponent,
+    VerMiPerfilComponent,
+    ModificarPerfilComponent,
   ],
   imports: [
     BrowserModule,
