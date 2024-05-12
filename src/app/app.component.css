@@ -6,3 +6,18 @@
 a{
     color: aliceblue;
 }
+
+body, html {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* Para ocultar la barra de desplazamiento */
+}
+
+.logo-onlytech {
+  width: 200px; /* Adjust as needed */
+  height: auto; /* Maintain aspect ratio */
+  position: absolute; /* Position the image absolutely */
+  bottom: 0px; /* Adjust the distance from the bottom */
+  right: 0px; /* Adjust the distance from the right */
+}
