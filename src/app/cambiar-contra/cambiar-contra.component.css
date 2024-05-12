@@ -53,10 +53,3 @@ form {
   box-shadow: rgba(50, 50, 93, .1) 0 0 0 1px inset, rgba(50, 50, 93, .2) 0 6px 15px 0, rgba(0, 0, 0, .1) 0 2px 2px 0, rgba(50, 151, 211, .3) 0 0 0 4px;
 }
 
-.logo-onlytech {
-  width: 200px; /* Adjust as needed */
-  height: auto; /* Maintain aspect ratio */
-  position: absolute; /* Position the image absolutely */
-  bottom: 0px; /* Adjust the distance from the bottom */
-  right: 0px; /* Adjust the distance from the right */
-}
