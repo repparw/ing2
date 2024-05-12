@@ -24,7 +24,7 @@ class Pub(models.Model):
   desc = models.CharField(max_length=1000)
   user = models.ForeignKey('User', on_delete=models.CASCADE)
   photos = models.ImageField(upload_to='photos/pub')
-  isPaused = models.BooleanField()
+  is_paused = models.BooleanField()
   price = models.FloatField()
   category = models.CharField(max_length=100)
   desired = models.CharField(max_length=100)
