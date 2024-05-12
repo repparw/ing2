@@ -10,6 +10,8 @@ import { RegistroEmpleadoComponent } from './registro-empleado/registro-empleado
 import { VerPerfilComponent } from './ver-perfil/ver-perfil.component';
 import { CambiarContraComponent } from './cambiar-contra/cambiar-contra.component';
 import { CrearPublicacionComponent } from './crear-publicacion/crear-publicacion.component';
+import { VerPublicacionComponent } from './ver-publicacion/ver-publicacion.component';
+import { HttpClientModule} from '@angular/common/http';
 import { VerMiPerfilComponent } from './ver-mi-perfil/ver-mi-perfil.component';
 import { ModificarPerfilComponent } from './modificar-perfil/modificar-perfil.component';
 
@@ -23,13 +25,15 @@ import { ModificarPerfilComponent } from './modificar-perfil/modificar-perfil.co
     CambiarContraComponent,
     RegistroEmpleadoComponent,
     CrearPublicacionComponent,
+    VerPublicacionComponent,
     VerMiPerfilComponent,
     ModificarPerfilComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    HttpClientModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
