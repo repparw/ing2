@@ -1,12 +1,12 @@
 <div class="form-container mb-3 w-25">
-  <h1>Crear publicación</h1>
+  <h1>Editar publicación</h1>
   <p>Por favor, ingrese los datos del producto</p>
-<form [formGroup]="prodForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data">
+<form [formGroup]="prodForm" (ngSubmit)="onSubmit()">
   <div class="form-outline mb-3 " data-mdb-input-init>
     <label class="form-label" for="title">
       Nombre
     </label>
-    <input type="text" id="title" class="form-control form-control-lg" [formControlName]="'title'" formControlName>
+    <input type="text" id="title" class="form-control form-control-lg" formControlName="title" readonly>
     <div class="mb-3">
     <small class="text-danger" *ngIf="hasErrors('title', 'required')" >El titulo es obligatorio</small>
     </div>
@@ -16,17 +16,17 @@
     <label class="form-label" for="desc">
       Descripción
     </label>
-    <textarea rows=3 type="text" id="desc" class="form-control" [formControlName]="'desc'"></textarea>
+    <textarea rows=3 type="text" id="desc" class="form-control" formControlName="desc"></textarea>
     <div class="mb-3">
     <small class="text-danger" *ngIf="hasErrors('desc', 'required')" >La descripción es obligatoria</small>
     </div>
   </div>
 
   <div class="mb-3">
-    <label class="form-label" for="category">
+    <label class="form-label" for="cat">
       Categoria
     </label>
-    <input class="form-control" list="catOptions" id="category" [formControlName]="'category'" placeholder="e.g serruchos">
+    <input class="form-control" list="catOptions" id="cat" formControlName="cat" placeholder="e.g serruchos" readonly>
 <datalist id="catOptions">
   <option value="Serruchos">
   <option value="Powertools">
@@ -35,33 +35,33 @@
   <option value="test">
 </datalist>
     <div class="mb-3">
-    <small class="text-danger" *ngIf="hasErrors('category', 'required')" >Una categoria es obligatoria</small>
+    <small class="text-danger" *ngIf="hasErrors('cat', 'required')" >Una categoria es obligatoria</small>
     </div>
   </div>
 
   <!--- add a checkbox -->
   <div class="mb-3">
-    <label class="form-label" for="is_paused">
+    <label class="form-label" for="isPaused">
       ¿Esta pausada?
     </label>
-    <input type="checkbox" id="is_paused" class="form-check-input" [formControlName]="'is_paused'">
+    <input type="checkbox" id="isPaused" class="form-check-input" formControlName="isPaused">
   </div>
 
   <div class="mb-3">
-    <label class="form-label" for="photos">
+    <label class="form-label" for="img">
       Fotos
     </label>
     <div class="mb-3">
-    <input type="file" accept="image/jpg, image/jpeg, image/png" class="form-control-file" id="photos" formControlName="photos" (change)="onFileSelected($event)" lang="es" multiple/>
-    <small class="text-danger" *ngIf="hasErrors('photos', 'required')" >Una foto es obligatoria</small>
+    <input type="file" accept="image/jpg, image/jpeg, image/png" class="form-control" id="img" formControlName="img" multiple/>
+    <small class="text-danger" *ngIf="hasErrors('img', 'required')" >Una foto es obligatoria</small>
     </div>
   </div>
 
   <div class="mb-3">
-    <label class="form-label" for="desired">
+    <label class="form-label" for="desiredProds">
       Productos deseados
     </label>
-    <input type="text" id="desired" class="form-control" [formControlName]="'desired'">
+    <input type="text" id="desiredProds" class="form-control" formControlName="desiredProds">
   </div>
 
   <button type="submit" class="btn btn-primary" [disabled]="prodForm.invalid">Crear</button>
