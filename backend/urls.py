@@ -16,7 +16,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from rest_framework import routers
+from main.views import PubViewSet
+
+router = routers.DefaultRouter()
+router.register('publications', PubViewSet, basename='publications' )
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-]
+] + router.urls
