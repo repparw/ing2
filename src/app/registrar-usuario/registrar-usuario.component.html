@@ -1,3 +1,4 @@
+<html>
 <div class="form-container w-25">
     <h1>Registro de Usuario</h1>
     <p>Por favor, ingrese los datos del usuario</p>
@@ -11,7 +12,7 @@
       <small class="text-danger" *ngIf="hasErrors('name', 'required')" >El nombre es requerido</small>
       </div>
     </div>
-    
+
     <div>
         <label for="apellido">
           Apellido
@@ -31,7 +32,7 @@
       <small class="text-danger" *ngIf="hasErrors('dni', 'required')" >El DNI es requerido</small>
       </div>
     </div>
-  
+
     <div>
       <label for="email">
         Email
@@ -42,7 +43,7 @@
       <small class="text-danger" *ngIf="hasErrors('email', 'pattern')">El email debe ser valido (.*&#64;.*)</small>
       </div>
     </div>
-    
+
     <div>
         <label for="fechaNacimiento">
           Fecha de nacimiento
@@ -63,10 +64,10 @@
       <small class="text-danger" *ngIf="hasErrors('password', 'minlength')">La contraseña debe tener 6 o más caracteres</small>
       </div>
     </div>
-  
+
     <!-- Add more fields as needed -->
-  
+
     <button type="submit" class="btn btn-primary" [disabled]="userForm.invalid">Registrar</button>
   </form>
   </div>
-  
+</html>
