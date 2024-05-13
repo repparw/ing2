@@ -16,6 +16,7 @@ import { VerMiPerfilComponent } from './ver-mi-perfil/ver-mi-perfil.component';
 import { ModificarPerfilComponent } from './modificar-perfil/modificar-perfil.component';
 import { EditarPublicacionComponent } from './editar-publicacion/editar-publicacion.component';
 import { EliminarPublicacionComponent } from './eliminar-publicacion/eliminar-publicacion.component';
+import { RegistrarUsuarioComponent } from './registrar-usuario/registrar-usuario.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { EliminarPublicacionComponent } from './eliminar-publicacion/eliminar-pu
     ModificarPerfilComponent,
     EditarPublicacionComponent,
     EliminarPublicacionComponent,
+    RegistrarUsuarioComponent,
   ],
   imports: [
     BrowserModule,

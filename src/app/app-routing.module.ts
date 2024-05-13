@@ -10,11 +10,13 @@ import { CambiarContraComponent } from './cambiar-contra/cambiar-contra.componen
 import { CrearPublicacionComponent } from './crear-publicacion/crear-publicacion.component';
 import { EditarPublicacionComponent } from './editar-publicacion/editar-publicacion.component';
 import { VerPublicacionComponent } from './ver-publicacion/ver-publicacion.component';
+import { RegistrarUsuarioComponent } from './registrar-usuario/registrar-usuario.component';
 
 const routes: Routes = [
   {path: 'home', component: HomeComponent},
-  {path: 'registrar', component: RegistroComponent},
+  {path: 'inicio sesion', component: RegistroComponent},
   {path: 'registrar empleado', component: RegistroEmpleadoComponent},
+  {path: 'registrar usuario', component: RegistrarUsuarioComponent},
   {path: 'ver perfil', component: VerPerfilComponent},
   {path: 'ver mi perfil', component: VerMiPerfilComponent},
   {path: 'modificar perfil', component: ModificarPerfilComponent},
