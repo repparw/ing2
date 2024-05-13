@@ -1,10 +1,9 @@
 export interface User {
-  id: number;
-  email: string;
-  dni: string;
-  password?: string;
-  fechaNacimiento?: Date;
-  nombre: string;
-  apellido: string;
-
+  name: string,
+  dni: number,
+  email: string,
+  password?: string,
+  date: Date,
+  mailing:boolean,
+  suc: number;
 }
