@@ -9,12 +9,11 @@ class SucursalViewSet(viewsets.ModelViewSet):
   queryset = Sucursal.objects.all()
   serializer_class = SucursalSerializer
 
-def create_sucursal(name, address, phone, email, city):
-  if not name or not address or not phone or not email or not city:
+def create_sucursal(address, phone, email, city):
+  if not address or not phone or not email or not city:
     raise ValueError("Missing required fields. Please provide name, address, phone, email, and city.")
   # Create the sucursal object
   suc = Sucursal(
-      name=name,
       address=address,
       phone=phone,
       email=email,
@@ -27,11 +26,12 @@ class EmployeeViewSet(viewsets.ModelViewSet):
   queryset = Employee.objects.all()
   serializer_class = EmployeeSerializer
 
-def create_employee(dni, email, password, suc):
-  if not dni or not email or not password or not suc:
+def create_employee(name, dni, email, password, suc):
+  if not name or not dni or not email or not password or not suc:
     raise ValueError("Missing required fields. Please provide dni, email, password, and suc.")
   # Create the employee object
   empl = Employee(
+      name=name,
       dni=dni,
       email=email,
       password=password,
