@@ -1,9 +1,27 @@
 from rest_framework import viewsets
 from django.shortcuts import render
-from .models import Pub, User, Employee
-from .serializers import PubSerializer, UserSerializer, EmployeeSerializer
+from .models import Pub, User, Employee, Sucursal
+from .serializers import PubSerializer, UserSerializer, EmployeeSerializer, SucursalSerializer
 
 # Create your views here.
+
+class SucursalViewSet(viewsets.ModelViewSet):
+  queryset = Sucursal.objects.all()
+  serializer_class = SucursalSerializer
+
+def create_sucursal(name, address, phone, email, city):
+  if not name or not address or not phone or not email or not city:
+    raise ValueError("Missing required fields. Please provide name, address, phone, email, and city.")
+  # Create the sucursal object
+  suc = Sucursal(
+      name=name,
+      address=address,
+      phone=phone,
+      email=email,
+      city=city)
+  # Save the sucursal to the database
+  suc.save()
+  return suc
 
 class EmployeeViewSet(viewsets.ModelViewSet):
   queryset = Employee.objects.all()

@@ -1,6 +1,7 @@
 from django.db import models
 
 class User(models.Model):
+  name = models.CharField(max_length=100, default='0')
   dni = models.CharField(unique=True, max_length=8)
   email = models.CharField(unique=True, max_length=100)
   password = models.CharField(max_length=100)
@@ -14,6 +15,7 @@ class Admin(models.Model):
   password = models.CharField(max_length=100)
 
 class Employee(models.Model):
+  name = models.CharField(max_length=100, default='0')
   dni = models.CharField(unique=True, max_length=8)
   email = models.CharField(unique=True, max_length=100)
   password = models.CharField(max_length=100)
