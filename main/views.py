@@ -65,6 +65,40 @@ class PubViewSet(viewsets.ModelViewSet):
   queryset = Pub.objects.all()
   serializer_class = PubSerializer
 
+def update_publication(pub_id, title, desc, user, photos, is_paused, price, category, desired):
+  """
+  This function updates an existing publication object and saves it to the database.
+  Args:
+      pub_id (int): The ID of the publication to update.
+      title (str): The new title of the publication.
+      desc (str): The new description of the publication.
+      user (User object): The new user who created the publication.
+      photos (File object): The new image file for the publication (optional).
+      is_paused (bool): Whether the publication is paused (not visible).
+      price (float): The new price of the publication (optional).
+      category (str): The new category of the publication.
+      desired (str): The new desired outcome of the publication (optional).
+  Returns:
+      Pub object: The updated publication object.
+  Raises:
+      ValueError: If the publication with the given ID does not exist.
+  """
+  # Get the publication object with the given ID
+  try:
+    pub = Pub.objects.get(id=pub_id)
+  except Pub.DoesNotExist:
+    raise ValueError(f"Publication with ID {pub_id} does not exist.")
+  # Update the publication object
+  pub.title = title
+  pub.desc = desc
+  pub.photos = photos
+  pub.is_paused = is_paused
+  pub.category = category
+  # Save the updated publication to the database
+  pub.save(update_fields=['title', 'desc', 'photos', 'is_paused', 'desired'])
+
+  return pub
+
 def create_publication(title, desc, user, photos, is_paused, price, category, desired):
   """
   This function creates a new publication object and saves it to the database.

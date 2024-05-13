@@ -8,14 +8,10 @@ import { Pub } from './pub';
 })
 
 export class PublicationService {
-  private apiUrl = 'http://localhost:8000/publications/';
+  private baseUrl = 'http://localhost:8000/';
+  private apiUrl = this.baseUrl + 'publications/';
 
   constructor(private http: HttpClient) { }
-
-  createPublication(publication: Pub): Observable<Pub> {
-    const headers = new HttpHeaders().set('Content-Type', 'application/json');
-    return this.http.post<Pub>(this.apiUrl, publication, { headers });
-  }
 
   private handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {
@@ -26,8 +22,24 @@ export class PublicationService {
     return throwError(() => new Error('Por favor, inténtelo de nuevo más tarde.'));
   }
 
-  get publication(): Observable<Pub[]> {
+  public getPublication(id: number): Observable<Pub> {
+    return this.http.get<Pub>(this.apiUrl + id + '/');
+      }
+
+  public getAllCategories(): Observable<any> {
+    return this.http.get<any>(this.baseUrl + 'categories/');
+      }
+
+  public getPublications(): Observable<Pub[]> {
     return this.http.get<Pub[]>(this.apiUrl);
+      }
+
+  public updatePublication(id: number, pub: Pub): Observable<Pub> {
+    return this.http.put<Pub>(this.apiUrl + id + '/', pub);
+      }
+
+  public deletePublication(id: number): Observable<Pub> {
+    return this.http.delete<Pub>(this.apiUrl + id + '/');
       }
 }
 

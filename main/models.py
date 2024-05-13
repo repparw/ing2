@@ -7,7 +7,7 @@ class User(models.Model):
   password = models.CharField(max_length=100)
   date = models.DateField()
   mailing = models.BooleanField()
-  valoracion = models.DecimalField()
+  rating = models.DecimalField(max_digits=2, decimal_places=2, default=0)
   suc = models.ForeignKey('Sucursal', on_delete=models.SET_NULL, null=True)
 
 class Admin(models.Model):
@@ -37,3 +37,5 @@ class Sucursal(models.Model):
   photos = models.ImageField(upload_to='photos/suc')
   phone = models.CharField(max_length=20)
 
+class Images(models.Model):
+  image = models.ImageField(upload_to='photos/pub')
