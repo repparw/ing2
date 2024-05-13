@@ -47,6 +47,16 @@
     </div>
   </div>
 
+  <div>
+    <label for="suc">
+      Sucursal
+    </label>
+    <input type="number" id="suc" class="form-control" formControlName="suc">
+    <div>
+    <small class="text-danger" *ngIf="hasErrors('suc', 'required')" >El numero de sucursal es requerido</small>
+    </div>
+  </div>
+
   <!-- Add more fields as needed -->
 
   <button type="submit" class="btn btn-primary" [disabled]="employeeForm.invalid">Registrar</button>
