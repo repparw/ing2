@@ -10,7 +10,7 @@ import { User } from './user';
 export class LoginService {
 
   currentUserLoginOn: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  currentUserData: BehaviorSubject<User> = new BehaviorSubject<User>({ name: '', dni: 0, email:'', password: '', date: new Date(), mailing: false, suc: 0});
+  currentUserData: BehaviorSubject<User> = new BehaviorSubject<User>({ name: '', dni: 0, email:'', password: '', date: new Date(), mailing: false, valoracion: 0, suc: 0});
 
   private userUrl = 'http://localhost:8000/users/'; 
   headerDict: HeadersInit | undefined;

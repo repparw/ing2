@@ -7,6 +7,7 @@ class User(models.Model):
   password = models.CharField(max_length=100)
   date = models.DateField()
   mailing = models.BooleanField()
+  valoracion = models.DecimalField()
   suc = models.ForeignKey('Sucursal', on_delete=models.SET_NULL, null=True)
 
 class Admin(models.Model):

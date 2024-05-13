@@ -8,7 +8,7 @@ import { Component } from '@angular/core';
 export class VerPerfilComponent {
   fotoDePerfil: string = './././assets/logos/Principal.png';  //Poner foto de perfil por defecto en algún lado
   nombre: string = 'Patricio';
-  apellido: string = 'Apellido';
+  apellido: string = 'Serres';
   valoracion: number = 7.2;
   publicaciones?: object[];
 

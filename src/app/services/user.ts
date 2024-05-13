@@ -5,5 +5,6 @@ export interface User {
   password?: string,
   date: Date,
   mailing:boolean,
+  valoracion: number,
   suc: number;
 }

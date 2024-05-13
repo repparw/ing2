@@ -1,3 +1,4 @@
+<html>
 <div class="form-container w-25">
     <h1>Modificar Perfil</h1>
   <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
@@ -36,10 +37,11 @@
       <label for="fechaDeNacimiento">
         Fecha De Nacimiento
       </label>
-      <input type="date" id="fechaDeNacimiento" class="form-control" value="{{fecha | date:'yyyy-MM-dd'}}">
+      <input type="date" id="fechaDeNacimiento" class="form-control" formControlName="fechaDeNacimiento">
       <div>
       <small class="text-danger" *ngIf="hasErrors('fechaDeNacimiento', 'required')" >La fecha de nacimiento es requerida</small>
-      </div>
+      <small class="text-danger" *ngIf="hasErrors('fechaDeNacimiento', 'esMenorDeEdad')" >No puede ser menor de edad</small>
+    </div>
     </div>
 
     <div>
@@ -53,12 +55,14 @@
     </div>
     
     <div>
-      <button type="button" class="btn btn-outline-primary" (click)="navigate('cambiar contra')">Cambiar Contraseña</button>
+      <button type="button" class="btn btn-secondary" (click)="navigate('cambiar contra')">Cambiar Contraseña</button>
+      <button type="submit" class="btn btn-primary" [disabled]="userForm.invalid">Modificar</button>
     </div>
 
     <!-- Add more fields as needed -->
   
-    <button type="submit" class="btn btn-primary" [disabled]="userForm.invalid">Modificar</button>
+    
   </form>
   </div>
+</html>
   
