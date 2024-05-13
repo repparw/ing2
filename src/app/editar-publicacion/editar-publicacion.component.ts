@@ -2,7 +2,9 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Pub } from '../services/pub'
 import { PublicationService } from '../services/publicacion.service';
+import { Location } from '@angular/common';
 import { Observable } from 'rxjs';
+import { FileSelectDirective, FileUploader } from 'ng2-file-upload';
 
 @Component({
   selector: 'app-editar-publicacion',
@@ -11,49 +13,54 @@ import { Observable } from 'rxjs';
 })
 
 export class EditarPublicacionComponent implements OnInit {
-  // @Input() pub: Pub;
-  prodForm = this.formBuilder.group({
-      title: ['', Validators.required],
-      desc: ['', Validators.required],
-      category: [''],
-      is_paused: [false],
-      photos: new FormControl(),
-      desired: [''],
-      // fields not in form
-      price: [0],
-      user: [1],
-  });
+  id = 1;
+  public uploader: FileUploader = new FileUploader({ url: 'http://localhost:8000/publications/'+this.id+'/', itemAlias: 'photos' })
 
-//editPub(pub: Pub): Observable<Pub> {
-//  // castear datos a prodForm
-//  if (this.pub) {
-//    this.prodForm.patchValue(this.pub);
-//}
+  prodForm = new FormGroup({
+    title: new FormControl('', Validators.required),
+    desc: new FormControl('', Validators.required),
+    category: new FormControl(''),
+    is_paused: new FormControl(false),
+    photos: new FormControl<File | null>(null),
+    desired: new FormControl(''),
+    rating: new FormControl(0),
+    price: new FormControl(0),
+    user: new FormControl(0),
+      });
 
-  constructor(private formBuilder: FormBuilder){
-  }
+  constructor(
+    private formBuilder: FormBuilder,
+    private publicationService: PublicationService,
+    private location: Location,
+  ){ }
 
   ngOnInit() {
-    }
-
-
-  onFileSelected(event: any) {
-  const selectedFiles = event.target.files;
-
-  if (selectedFiles.length > 0) {
-    // Multiple files selected, handle them appropriately
-    this.prodForm.patchValue({ photos: selectedFiles }); // Set photos to an array of files
-    this.prodForm.get('photos')?.updateValueAndValidity();
-
-    // Optional: Loop through selectedFiles and perform additional processing
-    for (const file of selectedFiles) {
-      // ... process each file (e.g., display filename, perform validation)
-    }
-  } else {
-    // No file selected, handle the case (optional)
-    console.warn('No files selected for upload');
-    this.prodForm.patchValue({ photos: null }); // Optionally set photos to null
+    this.getPublication(this.id);
+    this.uploader.onBeforeUploadItem = this.onBeforeUploadItem;
   }
+
+  onBeforeUploadItem(item: any) {
+    item.method = 'PUT';
+  }
+
+  getPublication(id: number): void {
+   this.publicationService.getPublication(id).subscribe((pub: Pub) => {
+    this.prodForm = this.getForm(pub);
+          })
+  }
+
+  getForm(data: Pub) {
+    return new FormGroup({
+      title: new FormControl(data.title, Validators.required),
+      desc: new FormControl(data.desc, Validators.required),
+      category: new FormControl(data.category),
+      is_paused: new FormControl(data.is_paused),
+      photos: new FormControl<File | null>(data.photos),
+      desired: new FormControl(data.desired),
+      rating: new FormControl(data.rating),
+      price: new FormControl(data.price),
+      user: new FormControl(data.user),
+          });
   }
 
   hasErrors(controlName: string, errorType: string) {
@@ -61,13 +68,50 @@ export class EditarPublicacionComponent implements OnInit {
     return control && control.hasError(errorType) && (control.dirty || control.touched);
   }
 
+  goBack() {
+    this.location.back();
+      }
+
+  handleFileUpload(pubId: number, data: any[]) {
+    // Check if there are any files selected in the uploader
+  if (this.uploader.queue.length === 0) {
+    // No files selected, send update request directly
+    return;
+  }
+
+  // If files are selected, iterate through them and upload
+  this.uploader.queue.forEach((fileItem) => {
+    // Access file information from fileItem
+    const selectedFile = fileItem.file;
+
+    // Modify onBuildItemForm to append product update data (excluding file)
+    this.uploader.onBuildItemForm = (item: any, form: any) => {
+      form.append('file', selectedFile); // Append the selected file
+    };
+
+    // Upload the file with updated product data
+    this.uploader.uploadItem(fileItem);
+  });
+  }
+
+
   onSubmit() {
   if (this.prodForm.invalid) {
     this.prodForm.markAllAsTouched();
     return; // Detener el envío del formulario si hay errores de validación
   }
-//addPub(this.prodForm.value);
-  console.log(this.prodForm.value);
+  this.uploader.onBuildItemForm = (fileItem: any, form: any) => {
+    form.append('title', this.prodForm.get('title')?.value);
+    form.append('desc', this.prodForm.get('desc')?.value);
+    form.append('category', this.prodForm.get('category')?.value);
+    form.append('is_paused', this.prodForm.get('is_paused')?.value);
+    form.append('desired', this.prodForm.get('desired')?.value);
+    form.append('price', this.prodForm.get('price')?.value);
+    form.append('user', this.prodForm.get('user')?.value);
+  }
+  console.log('Agregando formulario a la base de datos');
+  this.uploader.uploadAll();
+  console.log('Formulario agregado a la base de datos', this.prodForm.value);
   }
 }
 
