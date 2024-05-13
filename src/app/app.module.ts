@@ -17,6 +17,7 @@ import { ModificarPerfilComponent } from './modificar-perfil/modificar-perfil.co
 import { EditarPublicacionComponent } from './editar-publicacion/editar-publicacion.component';
 import { EliminarPublicacionComponent } from './eliminar-publicacion/eliminar-publicacion.component';
 import { RegistrarUsuarioComponent } from './registrar-usuario/registrar-usuario.component';
+import { FileUploadModule } from 'ng2-file-upload';
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import { RegistrarUsuarioComponent } from './registrar-usuario/registrar-usuario
     AppRoutingModule,
     ReactiveFormsModule,
     HttpClientModule,
+    FileUploadModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
