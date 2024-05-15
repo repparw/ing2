@@ -1,6 +1,6 @@
 /* Base Styling */
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;
   padding: 0;
   background-color: #948979;
@@ -37,9 +37,14 @@ li:hover {
 /* Link Styling */
 a {
   display: flex;
-  align-items: center; /* Para centrar verticalmente los elementos */
+  align-items: center;
   text-decoration: none;
   color: #333;
+  transition: color 0.2s;
+}
+
+a:hover {
+  color: #007bff;
 }
 
 /* Image Styling */
@@ -49,8 +54,14 @@ a {
   border-radius: 5px;
   object-fit: cover;
   margin-right: 10px;
+  transition: transform 0.3s ease-in-out;
 }
 
+.image-thumbnail:hover {
+  transform: scale(1.1);
+}
+
+/* Info Styling */
 .info {
   display: flex;
   flex-direction: column;
@@ -61,13 +72,13 @@ a {
   font-weight: bold;
   margin-bottom: 5px;
   color: #333;
+  letter-spacing: 0.5px;
+  line-height: 1.4;
 }
 
 .price {
   color: #333;
   font-weight: bold;
-}
-
-a:hover {
-  color: #007bff;
+  font-size: 16px;
+  letter-spacing: 0.3px;
 }
