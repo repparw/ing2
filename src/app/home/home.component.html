@@ -3,19 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Listar publicaciones</title>
+    <title>Lista de Publicaciones</title>
 </head>
 <body>
-    <h2 class="titulo">Listar publicaciones</h2>
-    
-    <ul>
-        <li *ngFor="let item of data" class="fila">
-            <a href="http://localhost:4200/publicacion/{{item.id}}"> <img src="{{ item.image }}" class="image-thumbnail" width="100" height="100" > </a>
-            <div class="info">
-                <span class="title">{{ item.title }}</span>
-                <span class="price"> ${{ item.price }}</span>
-            </div>
-        </li>
-    </ul>
+    <div class="container">
+        <ul>
+            <li *ngFor="let item of data" class="fila justified-content-center">
+                <a href="http://localhost:4200/publicacion/{{item.id}}">
+                    <img src="{{ item.image }}" class="image-thumbnail" width="100" height="100">
+                    <div class="info">
+                        <span class="title">{{ item.title }}</span>
+                        <span class="price"> ${{ item.price }}</span>
+                    </div>
+                </a>
+            </li>
+        </ul>
+    </div>
 </body>
 </html>
