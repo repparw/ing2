@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { Observable, throwError, catchError } from 'rxjs';
+import { flatMap } from 'rxjs/operators';
 import { Pub } from './pub';
 
 @Injectable({
@@ -22,8 +23,16 @@ export class PublicationService {
     return throwError(() => new Error('Por favor, inténtelo de nuevo más tarde.'));
   }
 
+  public createPublication(pub: Pub): Observable<Pub> {
+    return this.http.post<Pub>(this.apiUrl, pub)
+      }
+
   public getPublication(id: number): Observable<Pub> {
     return this.http.get<Pub>(this.apiUrl + id + '/');
+      }
+
+  public getPhotos(id: number): string {
+    return (`${this.apiUrl}${id}/photos/`);
       }
 
   public getAllCategories(): Observable<any> {
@@ -41,5 +50,6 @@ export class PublicationService {
   public deletePublication(id: number): Observable<Pub> {
     return this.http.delete<Pub>(this.apiUrl + id + '/');
       }
+
 }
 

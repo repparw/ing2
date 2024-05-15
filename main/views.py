@@ -1,8 +1,8 @@
 from rest_framework import viewsets
 from django.shortcuts import render
+from django.http import HttpResponse, Http404
 from .models import Pub, User, Employee, Sucursal
 from .serializers import PubSerializer, UserSerializer, EmployeeSerializer, SucursalSerializer
-
 # Create your views here.
 
 class SucursalViewSet(viewsets.ModelViewSet):
@@ -64,6 +64,25 @@ def create_user(dni, email, password, date, mailing, suc):
 class PubViewSet(viewsets.ModelViewSet):
   queryset = Pub.objects.all()
   serializer_class = PubSerializer
+
+def get_all_ids():
+  return Pub.objects.values_list('id', flat=True)
+
+def serve_publication_image(request, pk):
+    try:
+        pub= Pub.objects.get(pk=pk)
+    except Pub.DoesNotExist:
+        raise Http404('Publicacion no encontrada')
+
+    # Validate user permissions if applicable (e.g., only authenticated users can access)
+    if not pub.photos:
+        # Handle case where no image is uploaded
+        return HttpResponse('No hay foto disponible', status=404)
+
+    # Set appropriate content type (e.g., image/jpeg, image/png)
+    content_type = 'image/jpeg, image/png, image/jpg'
+
+    return HttpResponse(pub.photos.read(), content_type=content_type)
 
 def update_publication(pub_id, title, desc, user, photos, is_paused, price, category, desired):
   """
