@@ -8,7 +8,7 @@ import { Pub } from './pub';
 })
 
 export class PublicationService {
-  private baseUrl = 'http://localhost:8000/';
+  private baseUrl = 'http://127.0.0.1:8000/';
   private apiUrl = this.baseUrl + 'publications/';
 
   constructor(private http: HttpClient) { }
