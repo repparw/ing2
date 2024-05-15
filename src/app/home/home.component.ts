@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { LoginService } from '../services/login.service';
 import { FakeApiService } from '../services/online-data/fake-api.service';
+import { PublicationService } from '../services/publicacion.service';
 
 @Component({
   selector: 'app-home',
@@ -12,7 +13,7 @@ export class HomeComponent implements OnInit{
     data: any[]=[];
     
 
-    constructor (private apiService:FakeApiService){
+    constructor (private publi:PublicationService){
 
     }
 
@@ -31,7 +32,7 @@ export class HomeComponent implements OnInit{
         )*/
     }
     llenarData(){
-      this.apiService.getData().subscribe( data => {
+      this.publi.getPublications().subscribe( data => {
         this.data=data;
         console.log(this.data);
       })
