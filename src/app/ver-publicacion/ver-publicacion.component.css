@@ -1,50 +1,60 @@
+html{
+    background: #153448;
+    height: 100%;
+    width: 100%;
 
-    html{
-        height: 100%;
-        width: 100%;
+    /* Set the height to match that of the viewport. */
+    height: 100vh;
 
-        /* Set the height to match that of the viewport. */
-        height: 100vh;
+    /* Set the width to match that of the viewport. */
+    width: 100vw;
 
-        /* Set the width to match that of the viewport. */
-        width: 100vw;
+    /* Remove any browser-default margins. */
+    margin: 0;
+}
 
-        /* Remove any browser-default margins. */
-        margin: 0;
-    }
+.container {
+    display: flex; /* Use flexbox for layout */
+    align-items: center; /* Center items vertically */
+}
 
-    h2{
-        margin-left: 10%;
-        font-family: sans-serif;
-        color:#153448;
-    }
-    h4{
-        font-family: sans-serif;
-        color:#153448;
-    }
+.carousel-container {
+    flex: 1; /* Take up remaining space */
+    margin-right: 20px; /* Add space between carousel and text */
+}
 
+.carousel-text {
+    margin-left: 20px; /* Add space between carousel and text */
+}
 
-    /* Ajuste de tamaño de imagenes*/
-    .c-img {
-        max-width: 450px;
-        height: 450px;
-        object-fit: cover;
-
-    }
-    /* Cambio de color boton < y > */
-    .slide-control{
-
-        filter: invert(100%);
-
-    }
-
-    .carousel{
-        margin-left: 10%;
-        max-height: 450px;
-        max-width: 450px;
-
-    }
+h2{
+    margin-left: 10%;
+    font-family: sans-serif;
+    color:#153448;
+}
+h4{
+    font-family: sans-serif;
+    color:#153448;
+}
 
 
+/* Ajuste de tamaño de imagenes*/
+.c-img {
+    max-width: 450px;
+    height: 450px;
+    object-fit: cover;
 
+}
+/* Cambio de color boton < y > */
+.slide-control{
 
+    filter: invert(100%);
+
+}
+
+.carousel{
+    margin-left: 10%;
+    max-height: 450px;
+    max-width: 450px;
+
+}
