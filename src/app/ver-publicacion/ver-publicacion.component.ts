@@ -11,6 +11,7 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class VerPublicacionComponent implements OnInit{
   data!: Pub;
+  linkFoto!: String;
   constructor (private route: ActivatedRoute, private  publi: PublicationService ){
     
 
@@ -21,6 +22,8 @@ export class VerPublicacionComponent implements OnInit{
     this.publi.getPublication(productID).subscribe(data => {
       if (data) { // Check if data is not null
         this.data = data;
+        this.linkFoto=String(data.photos.slice(22));
+        console.log(this.linkFoto)
         console.log(this.data);
       } else {
         console.log('No data received'); // Handle no data case (optional)
