@@ -32,7 +32,7 @@ import { FileUploadModule } from 'ng2-file-upload';
     VerMiPerfilComponent,
     ModificarPerfilComponent,
     EditarPublicacionComponent,
-    EliminarPublicacionComponent,
+//    EliminarPublicacionComponent,
     RegistrarUsuarioComponent,
   ],
   imports: [

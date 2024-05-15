@@ -94,7 +94,6 @@ export class EditarPublicacionComponent implements OnInit {
   });
   }
 
-
   onSubmit() {
   if (this.prodForm.invalid) {
     this.prodForm.markAllAsTouched();
@@ -114,4 +113,3 @@ export class EditarPublicacionComponent implements OnInit {
   console.log('Formulario agregado a la base de datos', this.prodForm.value);
   }
 }
-

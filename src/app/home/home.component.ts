@@ -11,15 +11,10 @@ import { PublicationService } from '../services/publicacion.service';
 export class HomeComponent implements OnInit{
     userLoginOn:boolean = false;
     data: any[]=[];
-    
 
-    constructor (private publi:PublicationService){
+    constructor (public publi:PublicationService){
 
     }
-
-    
-
-    
 
     ngOnInit(): void {
         this.llenarData();
@@ -31,6 +26,7 @@ export class HomeComponent implements OnInit{
           }
         )*/
     }
+
     llenarData(){
       this.publi.getPublications().subscribe( data => {
         this.data=data;

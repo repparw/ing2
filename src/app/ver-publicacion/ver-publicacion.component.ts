@@ -11,9 +11,8 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class VerPublicacionComponent implements OnInit{
   data!: Pub;
-  linkFoto!: String;
+  linkFoto!: any;
   constructor (private route: ActivatedRoute, private  publi: PublicationService ){
-    
 
   }
   ngOnInit(): void {
@@ -22,8 +21,8 @@ export class VerPublicacionComponent implements OnInit{
     this.publi.getPublication(productID).subscribe(data => {
       if (data) { // Check if data is not null
         this.data = data;
-        this.linkFoto=String(data.photos.slice(22));
-        console.log(this.linkFoto)
+        this.linkFoto = this.publi.getPhotos(productID);
+        console.log(this.linkFoto);
         console.log(this.data);
       } else {
         console.log('No data received'); // Handle no data case (optional)
@@ -31,8 +30,8 @@ export class VerPublicacionComponent implements OnInit{
     });
     console.log(this.data);
   }
-  
-  
+
+
 }
 
 

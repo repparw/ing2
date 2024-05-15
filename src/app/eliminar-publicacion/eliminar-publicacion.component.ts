@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { PublicationService } from '../services/publicacion.service';
+import { Pub } from '../services/pub';
 
 @Component({
   selector: 'app-eliminar-publicacion',
@@ -7,4 +9,11 @@ import { Component } from '@angular/core';
 })
 export class EliminarPublicacionComponent {
 
+  constructor(private publicationService: PublicationService) { }
+
+  deletePublication(id: number) {
+    this.publicationService.deletePublication(id).subscribe((pub: Pub) => {
+      console.log('Publicación eliminada');
+    });
+  }
 }
