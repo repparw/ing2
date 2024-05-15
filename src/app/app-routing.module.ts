@@ -22,7 +22,7 @@ const routes: Routes = [
   {path: 'modificar perfil', component: ModificarPerfilComponent},
   {path: 'crear publi', component: CrearPublicacionComponent},
   {path: 'cambiar contra', component: CambiarContraComponent},
-  {path: 'ver publicacion', component: VerPublicacionComponent},
+  {path: 'publicacion/:id', component: VerPublicacionComponent},
   {path: 'editar publi', component: EditarPublicacionComponent},
   {path: '**', redirectTo: '/home', pathMatch:'full'}
 ];
