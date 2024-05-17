@@ -45,7 +45,7 @@ class UserViewSet(viewsets.ModelViewSet):
   queryset = User.objects.all()
   serializer_class = UserSerializer
 
-def create_user(name,dni, email, password, date, mailing, suc):
+def create_user(name,dni, email, password, date, mailing, ratin, suc):
   if not name or not dni or not email or not password or not date or not suc:
     raise ValueError("Missing required fields. Please provide dni, email, and password.")
   # Create the user object
@@ -56,6 +56,7 @@ def create_user(name,dni, email, password, date, mailing, suc):
       password=password,
       date=date,
       mailing=mailing,
+      ratin=ratin,
       suc=suc)
   # Save the user to the database
   user.save()
