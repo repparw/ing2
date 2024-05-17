@@ -3,6 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { PublicationService } from '../services/publicacion.service';
 import { Pub } from '../services/pub'
 import { FileSelectDirective, FileUploader } from 'ng2-file-upload';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-crear-publicacion',
@@ -25,7 +26,7 @@ export class CrearPublicacionComponent {
       user: [1],
   });
 
-  constructor(private formBuilder: FormBuilder, private publicationService:PublicationService){ }
+  constructor(private formBuilder: FormBuilder, private publicationService:PublicationService, private router:Router){ }
 
   ngOnInit() {
   }
@@ -36,6 +37,7 @@ export class CrearPublicacionComponent {
   }
 
   onSubmit() {
+    
   if (this.prodForm.invalid) {
     this.prodForm.markAllAsTouched();
     return; // Detener el envío del formulario si hay errores de validación
@@ -52,5 +54,7 @@ export class CrearPublicacionComponent {
   console.log('Agregando formulario a la base de datos');
   this.uploader.uploadAll();
   console.log('Formulario agregado a la base de datos', this.prodForm.value);
+  this.router.navigate(['/publicacion/19']);
   }
+
 }
