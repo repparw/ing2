@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Route, Router } from '@angular/router';
-import { LoginService } from '../services/login.service';
 import { LoginRequest } from '../services/loginRequest';
+import { UserService } from '../services/user.service';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-registro',
@@ -14,9 +15,11 @@ export class RegistroComponent implements OnInit {
   loginForm= this.formBuilder.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', Validators.required],
-  })
+  });
   
-  constructor(private formBuilder:FormBuilder, private router:Router, private loginService:LoginService){}
+  userService = inject(UserService);
+
+  constructor(private formBuilder:FormBuilder, private router:Router){}
 
   ngOnInit(): void{
 
@@ -30,8 +33,14 @@ export class RegistroComponent implements OnInit {
     return this.loginForm.controls.password;
   }
 
+  async login (){
+    const response = await this.userService.login(this.loginForm.value);
+    console.log(response);
+    
+  }
 
-  login(){
+
+  /*login(){
     if(this.loginForm.valid){
       this.loginService.login(this.loginForm.value as LoginRequest).subscribe({
         next: (userData) => {
@@ -55,5 +64,5 @@ export class RegistroComponent implements OnInit {
 
   hasErrors(controlName: string, errortype: string){
     return this.loginForm.get(controlName)?.hasError(errortype) && this.loginForm.get(controlName)?.touched
-  }
+  }*/
 }

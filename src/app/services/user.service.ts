@@ -1,15 +1,15 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { LoginRequest } from './loginRequest';
 import { HttpClient, HttpErrorResponse,HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject, Observable, catchError, tap, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, firstValueFrom, tap, throwError } from 'rxjs';
 import { User } from './user';
 
 @Injectable({
   providedIn: 'root'
 })
-export class LoginService {
+export class UserService {
 
-  currentUserLoginOn: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  /*currentUserLoginOn: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   currentUserData: BehaviorSubject<User> = new BehaviorSubject<User>({ name: '', dni: 0, email:'', password: '', date: new Date(), mailing: false, valoracion: 0, suc: 0});
 
   private userUrl = 'http://localhost:8000/users/'; 
@@ -50,6 +50,45 @@ export class LoginService {
 
   get userLoginOn():Observable<boolean>{
     return this.currentUserLoginOn.asObservable();
+  }*/
+
+
+  private userUrl = 'http://localhost:8000/users/';
+  headerDict: HeadersInit | undefined;
+  private httpClient = inject(HttpClient);
+
+  constructor(private http: HttpClient){
+    
+  }
+
+  /*register (formValue: any){
+    return firstValueFrom(
+      this.httpClient.post<any>(`${this.userUrl}`, formValue)
+    );
+  }*/
+
+  createUser(user: User): Observable<User> {
+    const headers = new HttpHeaders().set('Content-Type', 'application/json');
+    return this.http.post<User>(this.userUrl, user, { headers });
+  }
+
+  login (formValue: any){
+    return firstValueFrom(
+      this.httpClient.post<any>(`${this.userUrl}/login`, formValue)
+    );
+  }
+
+  get employee(): Observable<User[]> {
+    return this.http.get<User[]>(this.userUrl);
+  }
+
+  private handleError(error: HttpErrorResponse) {
+    if (error.error instanceof ErrorEvent) {
+      console.error('Se ha producido un error:', error.error.message);
+    } else {
+      console.error(`Backend retornó el error ${error.status}, ` + `Cuerpo del error: ${error.error}`);
+    }
+    return throwError(() => new Error('Por favor, inténtelo de nuevo más tarde.'));
   }
 
 }
