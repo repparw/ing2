@@ -14,16 +14,6 @@
     </div>
 
     <div>
-        <label for="apellido">
-          Apellido
-        </label>
-        <input type="text" id="apellido" class="form-control" formControlName="name">
-        <div>
-        <small class="text-danger" *ngIf="hasErrors('apellido', 'required')" >El apellido es requerido</small>
-        </div>
-      </div>
-
-    <div>
       <label for="dni">
         DNI
       </label>
@@ -63,6 +53,23 @@
       <small class="text-danger" *ngIf="hasErrors('password', 'required')">La contraseña es requerida</small>
       <small class="text-danger" *ngIf="hasErrors('password', 'minlength')">La contraseña debe tener 6 o más caracteres</small>
       </div>
+    </div>
+
+    <div>
+      <label for="suc">
+        Sucursal
+      </label>
+      <input type="number" id="suc" class="form-control" formControlName="suc">
+      <div>
+      <small class="text-danger" *ngIf="hasErrors('suc', 'required')" >El numero de sucursal es requerido</small>
+      </div>
+    </div>
+
+    <div>
+      <label class="form-label" for="is_paused">
+        mailing
+      </label>
+      <input type="checkbox" id="mailing" class="form-check-input" [formControlName]="'mailing'">
     </div>
 
     <!-- Add more fields as needed -->

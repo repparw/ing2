@@ -2,9 +2,8 @@ export interface User {
   name: string,
   dni: number,
   email: string,
-  password?: string,
+  password: string,
   date: Date,
-  mailing:boolean,
-  valoracion: number,
+  mailing?:boolean,
   suc: number;
 }
