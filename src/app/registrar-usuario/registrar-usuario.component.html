@@ -4,77 +4,69 @@
     <p>Por favor, ingrese los datos del usuario</p>
   <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
     <div>
-      <label for="name">
-        Nombre
-      </label>
+      <label for="name">Nombre</label>
       <input type="text" id="name" class="form-control" formControlName="name">
       <div>
-      <small class="text-danger" *ngIf="hasErrors('name', 'required')" >El nombre es requerido</small>
+        <small class="text-danger" *ngIf="hasErrors('name', 'required')">El nombre es requerido</small>
       </div>
     </div>
 
     <div>
-      <label for="dni">
-        DNI
-      </label>
+      <label for="dni">DNI</label>
       <input type="number" id="dni" class="form-control" formControlName="dni">
       <div>
-      <small class="text-danger" *ngIf="hasErrors('dni', 'required')" >El DNI es requerido</small>
+        <small class="text-danger" *ngIf="hasErrors('dni', 'required')">El DNI es requerido</small>
       </div>
     </div>
 
     <div>
-      <label for="email">
-        Email
-      </label>
-      <input type="email" id="email" class="form-control" formControlName="email" placeholder="nombre@ejemplo.com" >
+      <label for="email">Email</label>
+      <input type="email" id="email" class="form-control" formControlName="email" placeholder="nombre@ejemplo.com">
       <div>
-      <small class="text-danger" *ngIf="hasErrors('email', 'required')">El email es requerido</small>
-      <small class="text-danger" *ngIf="hasErrors('email', 'pattern')">El email debe ser valido (.*&#64;.*)</small>
+        <small class="text-danger" *ngIf="hasErrors('email', 'required')">El email es requerido</small>
+        <small class="text-danger" *ngIf="hasErrors('email', 'pattern')">El email debe ser válido (.*&#64;.*)</small>
       </div>
     </div>
 
     <div>
-        <label for="fechaNacimiento">
-          Fecha de nacimiento
-        </label>
-        <input type="date" formControlName="fechaNacimiento" id="fechaNacimiento">
-        <div>
-        <small class="text-danger" *ngIf="hasErrors('fechaNacimiento', 'required')" >La fecha de nacimiento es requerido</small>
-        </div>
+      <label for="fechaNacimiento">Fecha de nacimiento</label>
+      <input type="date" formControlName="fechaNacimiento" id="fechaNacimiento" class="form-control">
+      <div>
+        <small class="text-danger" *ngIf="hasErrors('fechaNacimiento', 'required')">La fecha de nacimiento es requerida</small>
       </div>
+    </div>
 
     <div>
-      <label for="password">
-        Contraseña
-      </label>
+      <label for="password">Contraseña</label>
       <input type="password" id="password" class="form-control" formControlName="password">
       <div>
-      <small class="text-danger" *ngIf="hasErrors('password', 'required')">La contraseña es requerida</small>
-      <small class="text-danger" *ngIf="hasErrors('password', 'minlength')">La contraseña debe tener 6 o más caracteres</small>
+        <small class="text-danger" *ngIf="hasErrors('password', 'required')">La contraseña es requerida</small>
+        <small class="text-danger" *ngIf="hasErrors('password', 'minlength')">La contraseña debe tener 6 o más caracteres</small>
       </div>
     </div>
 
     <div>
-      <label for="suc">
-        Sucursal
-      </label>
+      <label for="suc">Sucursal</label>
       <input type="number" id="suc" class="form-control" formControlName="suc">
       <div>
-      <small class="text-danger" *ngIf="hasErrors('suc', 'required')" >El numero de sucursal es requerido</small>
+        <small class="text-danger" *ngIf="hasErrors('suc', 'required')">El número de sucursal es requerido</small>
       </div>
     </div>
 
     <div>
-      <label class="form-label" for="is_paused">
-        mailing
-      </label>
-      <input type="checkbox" id="mailing" class="form-check-input" [formControlName]="'mailing'">
+      <label for="rating">Valoración</label>
+      <input type="number" id="rating" class="form-control" formControlName="rating" step="0.01">
+      <div>
+        <small class="text-danger" *ngIf="hasErrors('rating', 'required')">La valoración es requerida</small>
+      </div>
     </div>
 
-    <!-- Add more fields as needed -->
+    <div>
+      <label class="form-label" for="mailing">Mailing</label>
+      <input type="checkbox" id="mailing" class="form-check-input" formControlName="mailing">
+    </div>
 
     <button type="submit" class="btn btn-primary" [disabled]="userForm.invalid">Registrar</button>
   </form>
-  </div>
+</div>
 </html>

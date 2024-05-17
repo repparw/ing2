@@ -14,36 +14,42 @@ import { zip } from 'rxjs';
 export class RegistrarUsuarioComponent implements OnInit {
   
   registroError: string = "";
-  userForm = new FormGroup({
-    name: new FormControl('',
-      Validators.required),
-    dni: new FormControl('',
-      Validators.required),
-    email: new FormControl('',[
-      Validators.required,
-      Validators.pattern('.*@.*')]),
-    fechaNacimiento: new FormControl('',
-     Validators.required),  
-    password: new FormControl('', [
-      Validators.required,
-      Validators.minLength(6)]),
-    suc: new FormControl(1,
-      Validators.required),
-    mailing: new FormControl(false)
-  });
+  userForm!: FormGroup;
 
 
   constructor(private formBuilder: FormBuilder, private router: Router, private userService: UserService){
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.userForm = this.formBuilder.group({
+      name: ['', Validators.required],
+      dni: ['', Validators.required],
+      email: ['', [Validators.required, Validators.pattern('.*@.*')]],
+      fechaNacimiento: ['', Validators.required],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      suc: [1, Validators.required],
+      rating: [0.00],
+      mailing: [false]
+    });
+  }
 
   onSubmit() {
-    if (this.userForm.valid) {
+    if (this.userForm.invalid) {
+      console.log("formulario invalido");
+      console.log(this.userForm.errors);
       return
     }
-    const currentDate = new Date();
-
+    const formValues = this.userForm.value;
+    const userPayload = {
+      name: formValues.name,
+      dni: formValues.dni,
+      email: formValues.email,
+      password: formValues.password,
+      date: this.formatDate(formValues.fechaNacimiento),
+      mailing: formValues.mailing,
+      rating: formValues.rating,
+      suc: formValues.suc
+    };
     this.userService.createUser(this.userForm.value as User).subscribe(
       (response) => {
         console.log('Empleado creado exitosamente', response);
@@ -51,8 +57,18 @@ export class RegistrarUsuarioComponent implements OnInit {
     },
       (error) => {
         console.error('Error al crear empleado', error);
+        this.registroError = "Error al registrar el usuario. Intente otra vez";
       }   
     )
+  }
+
+  formatDate(date: string | Date): string {
+    const d = new Date(date);
+    const month = '' + (d.getMonth() + 1);
+    const day = '' + d.getDate();
+    const year = d.getFullYear();
+
+    return [year, month.padStart(2, '0'), day.padStart(2, '0')].join('-');
   }
 
   /*async onSubmit(){

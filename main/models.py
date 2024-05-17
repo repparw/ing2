@@ -7,8 +7,8 @@ class User(models.Model):
   email = models.CharField(unique=True, max_length=100)
   password = models.CharField(max_length=100)
   date = models.DateField()
-  mailing = models.BooleanField()
-  rating = models.DecimalField(max_digits=2, decimal_places=2, default=0)
+  mailing = models.BooleanField(default=False, blank=True, null=True)
+  rating = models.DecimalField(max_digits=2, decimal_places=2, default=0.00, blank=True)
   suc = models.ForeignKey('Sucursal', on_delete=models.SET_NULL, null=True)
 
 class Admin(models.Model):
