@@ -18,7 +18,7 @@ export class RegistrarUsuarioComponent implements OnInit {
     name: ['', Validators.required],
       dni: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(8)]],
       email: ['', [Validators.required, Validators.pattern('.*@.*')]],
-      fechaNacimiento: ['', Validators.required],
+      date:  new FormControl<Date | null> (null , Validators.required),
       password: ['', [Validators.required, Validators.minLength(6)]],
       suc: [1, Validators.required],
       rating: [0.00],
@@ -43,7 +43,7 @@ export class RegistrarUsuarioComponent implements OnInit {
         this.router.navigateByUrl('/home');
     },
       (error) => {
-        //console.error('Error al crear usuario', error);
+        console.error('Error al crear usuario', error);
         this.registroError = "Error al registrar el usuario. Intente otra vez";
       }   
     )

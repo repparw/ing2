@@ -31,8 +31,8 @@
     </div>
 
     <div>
-      <label for="fechaNacimiento">Fecha de nacimiento</label>
-      <input type="date" formControlName="fechaNacimiento" id="fechaNacimiento" class="form-control" formControlName="fechaNacimiento" [value]="userForm.get('fechaNacimiento')?.value | date: 'yyyy-MM-dd'">
+      <label for="date">Fecha de nacimiento</label>
+      <input type="date" formControlName="fechaNacimiento" id="date" class="form-control" formControlName="date" [value]="userForm.get('date')?.value | date: 'yyyy-MM-dd'">
       <div>
         <small class="text-danger" *ngIf="hasErrors('fechaNacimiento', 'required')">La fecha de nacimiento es requerida</small>
       </div>
