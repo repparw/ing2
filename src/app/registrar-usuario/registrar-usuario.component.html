@@ -16,6 +16,8 @@
       <input type="number" id="dni" class="form-control" formControlName="dni">
       <div>
         <small class="text-danger" *ngIf="hasErrors('dni', 'required')">El DNI es requerido</small>
+        <small class="text-danger" *ngIf="hasErrors('dni', 'minlength')">El DNI debe tener 8 caracteres</small>
+        <small class="text-danger" *ngIf="hasErrors('dni', 'maxlength')">El DNI debe tener 8 caracteres</small>
       </div>
     </div>
 
@@ -30,7 +32,7 @@
 
     <div>
       <label for="fechaNacimiento">Fecha de nacimiento</label>
-      <input type="date" formControlName="fechaNacimiento" id="fechaNacimiento" class="form-control">
+      <input type="date" formControlName="fechaNacimiento" id="fechaNacimiento" class="form-control" formControlName="fechaNacimiento" [value]="userForm.get('fechaNacimiento')?.value | date: 'yyyy-MM-dd'">
       <div>
         <small class="text-danger" *ngIf="hasErrors('fechaNacimiento', 'required')">La fecha de nacimiento es requerida</small>
       </div>
@@ -52,15 +54,7 @@
         <small class="text-danger" *ngIf="hasErrors('suc', 'required')">El número de sucursal es requerido</small>
       </div>
     </div>
-
-    <div>
-      <label for="rating">Valoración</label>
-      <input type="number" id="rating" class="form-control" formControlName="rating" step="0.01">
-      <div>
-        <small class="text-danger" *ngIf="hasErrors('rating', 'required')">La valoración es requerida</small>
-      </div>
-    </div>
-
+    
     <div>
       <label class="form-label" for="mailing">Mailing</label>
       <input type="checkbox" id="mailing" class="form-check-input" formControlName="mailing">

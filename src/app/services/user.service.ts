@@ -55,7 +55,7 @@ export class UserService {
 
   private userUrl = 'http://localhost:8000/users/';
   headerDict: HeadersInit | undefined;
-  private httpClient = inject(HttpClient);
+
 
   constructor(private http: HttpClient){
     
@@ -69,12 +69,12 @@ export class UserService {
 
   createUser(user: User): Observable<User> {
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
-    return this.http.post<User>(this.userUrl, user, { headers });
+    return this.http.post<User>(this.userUrl, user, {headers});
   }
 
   login (formValue: any){
     return firstValueFrom(
-      this.httpClient.post<any>(`${this.userUrl}/login`, formValue)
+      this.http.post<any>(`${this.userUrl}/login`, formValue)
     );
   }
 

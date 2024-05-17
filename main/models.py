@@ -6,9 +6,9 @@ class User(models.Model):
   dni = models.CharField(unique=True, max_length=8)
   email = models.CharField(unique=True, max_length=100)
   password = models.CharField(max_length=100)
-  date = models.DateField()
+  date = models.DateField(blank=True, null=True)
   mailing = models.BooleanField(default=False, blank=True, null=True)
-  rating = models.DecimalField(max_digits=2, decimal_places=2, default=0.00, blank=True)
+  rating = models.FloatField(default=0.00, blank=True, null=True)
   suc = models.ForeignKey('Sucursal', on_delete=models.SET_NULL, null=True)
 
 class Admin(models.Model):
