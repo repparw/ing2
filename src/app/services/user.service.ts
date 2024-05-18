@@ -9,50 +9,6 @@ import { User } from './user';
 })
 export class UserService {
 
-  /*currentUserLoginOn: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  currentUserData: BehaviorSubject<User> = new BehaviorSubject<User>({ name: '', dni: 0, email:'', password: '', date: new Date(), mailing: false, valoracion: 0, suc: 0});
-
-  private userUrl = 'http://localhost:8000/users/'; 
-  headerDict: HeadersInit | undefined;
-
-  constructor(private http: HttpClient) { }
-
-  
-  
-  //return this.http.get(this.heroesUrl, requestOptions)
-
-  login(credential:LoginRequest): Observable<User>{
-    const headers = new HttpHeaders().set('Content-Type', 'application/json');
-    return this.http.get<User>(this.userUrl, {headers}).pipe(
-      tap((userData: User) => {
-        this.currentUserData.next(userData);
-        this.currentUserLoginOn.next(true);
-      }),
-      catchError(this.handleError)
-    );
-
-  }
-
-  private handleError (error:HttpErrorResponse ){
-    if (error.status === 0){
-      console.error('se ha producido un error', error.error);
-    }
-    else{
-      console.error('Backend retorno el error', error.status, error.error);
-    }
-    return throwError(() => new Error('Algo fallo. Intente nuevamente'));
-  }
-
-
-  get userData():Observable<User>{
-    return this.currentUserData.asObservable();
-  }
-
-  get userLoginOn():Observable<boolean>{
-    return this.currentUserLoginOn.asObservable();
-  }*/
-
-
   private userUrl = 'http://localhost:8000/users/';
   headerDict: HeadersInit | undefined;
 
@@ -60,12 +16,6 @@ export class UserService {
   constructor(private http: HttpClient){
     
   }
-
-  /*register (formValue: any){
-    return firstValueFrom(
-      this.httpClient.post<any>(`${this.userUrl}`, formValue)
-    );
-  }*/
 
   createUser(user: User): Observable<User> {
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
@@ -90,5 +40,31 @@ export class UserService {
     }
     return throwError(() => new Error('Por favor, inténtelo de nuevo más tarde.'));
   }
+
+  
+  /*login(): void {
+    let credentials: SigafCredentials = {
+      username: this.username,
+      password: this.password,
+      }
+      this.loginErrorMessage = "";
+      this.sigafService.login(credentials)
+      .subscribe(user => { this.isLoggedIn = (user != null) }, err => {
+          this.loginErrorMessage = err.message;
+      });
+  }
+    
+  logout(): void {
+      this.sigafService.logout();
+      this.isLoggedIn = false;
+  }*/
+
+  /*login(){
+    let credentials: LoginRequest{
+      email: this.email,
+      password: this.password,
+    }
+    
+  }*/
 
 }
