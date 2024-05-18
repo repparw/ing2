@@ -1,5 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators, ValidationErrors } from '@angular/forms';
 import { User } from '../services/user';
 import { UserService } from '../services/user.service';
 import { Router } from '@angular/router';
@@ -12,13 +12,16 @@ import { zip } from 'rxjs';
   styleUrls: ['./registrar-usuario.component.css']
 })
 export class RegistrarUsuarioComponent implements OnInit {
+esMayorDeEdad(arg0: never) {
+throw new Error('Method not implemented.');
+}
   
   registroError: string = "";
   userForm= this.formBuilder.group({
     name: ['', Validators.required],
       dni: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(8)]],
       email: ['', [Validators.required, Validators.pattern('.*@.*')]],
-      date:  new FormControl<Date | null> (null , Validators.required),
+      date:  new FormControl<Date | null> (null , [Validators.required, this.esMayorDeEdadV()]),
       password: ['', [Validators.required, Validators.minLength(6)]],
       suc: [1, Validators.required],
       rating: [0.00],
@@ -32,11 +35,16 @@ export class RegistrarUsuarioComponent implements OnInit {
 
   onSubmit() {
     //console.log(this.userForm.controls['fechaNacimiento'].value);
-    if (this.userForm.invalid) {
+    if (this.userForm.invalid ) {
       console.log("formulario invalido");
       console.log(this.userForm.errors);
       return
     }
+    const fechaNacimiento = this.userForm.get('fechaNacimiento');
+    if (!fechaNacimiento) {
+      console.log("El usuario debe ser mayor de 18 años para registrarse.");
+      return;
+  }
     this.userService.createUser(this.userForm.value as User).subscribe(
       (response) => {
         console.log('usuario creado exitosamente', response);
@@ -49,29 +57,31 @@ export class RegistrarUsuarioComponent implements OnInit {
     )
   }
 
-  formatDate(date: string | Date): string {
-    const d = new Date(date);
-    const month = '' + (d.getMonth() + 1);
-    const day = '' + d.getDate();
-    const year = d.getFullYear();
-
-    return [year, month.padStart(2, '0'), day.padStart(2, '0')].join('-');
-  }
-
   hasErrors(controlName: string, errorType: string) {
     const control = this.userForm.get(controlName);
     return control && control.hasError(errorType) && (control.dirty || control.touched);
   }
 
-  esMayorDeEdad(fechaNacimiento: string): boolean {
-    const hoy = new Date();
-    const fechaNacimientoObj = new Date(fechaNacimiento);
-    const edad = hoy.getFullYear() - fechaNacimientoObj.getFullYear();
-    const mes = hoy.getMonth() - fechaNacimientoObj.getMonth();
-    if (mes < 0 || (mes === 0 && hoy.getDate() < fechaNacimientoObj.getDate())) {
-      return edad < 18 ? false : true;
-    }
-    return edad < 18 ? false : true;
+  esMayorDeEdadV(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const value = control.value;
+  
+      if (!value || isNaN(new Date(value).getTime())) {
+        return { 'invalidDate': true };
+      }
+  
+      const hoy = new Date();
+      const fechaNacimientoObj = new Date(value);
+      const edad = hoy.getFullYear() - fechaNacimientoObj.getFullYear();
+      const mes = hoy.getMonth() - fechaNacimientoObj.getMonth();
+      
+      if (mes < 0 || (mes === 0 && hoy.getDate() < fechaNacimientoObj.getDate())) {
+        return edad < 18 ? { 'menorDeEdad': true } : null;
+      }
+      
+      return null;
+    };
   }
+
 
 }
