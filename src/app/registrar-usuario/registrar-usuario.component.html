@@ -35,6 +35,7 @@
       <input type="date" formControlName="fechaNacimiento" id="date" class="form-control" formControlName="date" [value]="userForm.get('date')?.value | date: 'yyyy-MM-dd'">
       <div>
         <small class="text-danger" *ngIf="hasErrors('fechaNacimiento', 'required')">La fecha de nacimiento es requerida</small>
+        <small class="text-danger" *ngIf="userForm.hasError('menorDeEdad')">El usuario debe ser mayor de 18 años</small>
       </div>
     </div>
 
