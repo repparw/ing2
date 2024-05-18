@@ -33,36 +33,42 @@ export class RegistroComponent implements OnInit {
     return this.loginForm.controls.password;
   }
 
-  async login (){
-    const response = await this.userService.login(this.loginForm.value);
-    console.log(response);
+  login() {
+    if (this.loginForm.valid) {
+      const {email, password } = this.loginForm?.value;
+      this.userService.login( email! , password!).subscribe(
+      response => {
+        console.log('Login successful', response);
+      },
+      error => {
+        console.error('Login failed', error);
+      }
+    );
+    }
+  }
+
+  /*login() {
+    if (this.loginForm.invalid) {
+      console.log("Formulario inválido");
+      return;
+    }
     
-  }
 
-
-  /*login(){
-    if(this.loginForm.valid){
-      this.loginService.login(this.loginForm.value as LoginRequest).subscribe({
-        next: (userData) => {
-          console.log(userData);
-        },
-        error: (errorData) => {
-          console.error(errorData);
-          this.loginError=errorData;
-        },
-        complete: () => {
-          console.info("Login completo");
-          this.router.navigateByUrl('/home');
-          this.loginForm.reset;
-        }
-      })
-    }
-    else{
-      this.loginForm.markAllAsTouched();
-    }
-  }
+    this.userService.login(this.loginForm.value).subscribe(
+      response => {
+        console.log('Login exitoso', response);
+        //localStorage.setItem('token', response);
+        //localStorage.setItem('user', JSON.stringify(response.user));
+        this.router.navigate(['/home']);
+      },
+      error => {
+        console.error('Error al hacer login', error);
+        this.loginError = "Email o contraseña incorrectos";
+      }
+    );
+  }*/
 
   hasErrors(controlName: string, errortype: string){
     return this.loginForm.get(controlName)?.hasError(errortype) && this.loginForm.get(controlName)?.touched
-  }*/
+  }
 }

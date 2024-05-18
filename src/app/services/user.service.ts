@@ -3,6 +3,7 @@ import { LoginRequest } from './loginRequest';
 import { HttpClient, HttpErrorResponse,HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable, catchError, firstValueFrom, tap, throwError } from 'rxjs';
 import { User } from './user';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +11,7 @@ import { User } from './user';
 export class UserService {
 
   private userUrl = 'http://localhost:8000/users/';
+  private loginUrl = 'http://localhost:8000/login/';
   headerDict: HeadersInit | undefined;
 
 
@@ -22,13 +24,30 @@ export class UserService {
     return this.http.post<User>(this.userUrl, user, {headers});
   }
 
-  login (formValue: any){
-    return firstValueFrom(
-      this.http.post<any>(`${this.userUrl}/login`, formValue)
-    );
+  /*login(loginRequest: LoginRequest): Observable<LoginRequest> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.post<LoginRequest>(this.loginUrl, loginRequest, { headers });
+  }*/
+
+  login(username: string, password: string): Observable<any> {
+    return this.http.post<any>(`${this.loginUrl}api-token-auth/`, { username, password })
+      .pipe(map(response => {
+        if (response.token) {
+          localStorage.setItem('token', response.token);
+        }
+        return response;
+      }));
   }
 
-  get employee(): Observable<User[]> {
+  logout(): void {
+    localStorage.removeItem('token');
+  }
+
+  isAuthenticated(): boolean {
+    return !!localStorage.getItem('token');
+  }
+
+  get user(): Observable<User[]> {
     return this.http.get<User[]>(this.userUrl);
   }
 
