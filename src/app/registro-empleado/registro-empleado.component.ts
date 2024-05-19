@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { EmployeeService } from '../services/empleado.service';
-import { Empleado } from '../services/empleado'
+import { UserService } from '../services/user.service';
+import { User } from '../services/user';
 
 @Component({
   selector: 'app-registro-empleado',
@@ -23,10 +23,11 @@ export class RegistroEmpleadoComponent {
       Validators.required,
       Validators.minLength(6)]),
     suc: new FormControl(1,
-      Validators.required)
+      Validators.required),
+    is_employee: new FormControl (true)
   });
 
-  constructor(private formBuilder: FormBuilder, private router:Router, private employeeService:EmployeeService){ }
+  constructor(private formBuilder: FormBuilder, private router:Router, private userService: UserService){ }
 
   hasErrors(controlName: string, errorType: string) {
     const control = this.employeeForm.get(controlName);
@@ -38,7 +39,7 @@ export class RegistroEmpleadoComponent {
       return; // Detener el envío del formulario si hay errores de validación
     }
 
-  this.employeeService.createEmployee(this.employeeForm.value as Empleado).subscribe(
+  this.userService.createUser(this.employeeForm.value as User).subscribe(
     (response) => {
       console.log('Empleado creado exitosamente', response);
       // go to home
