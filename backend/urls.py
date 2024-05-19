@@ -28,7 +28,6 @@ router.register('branches', SucursalViewSet, basename='branches' )
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('publications/<int:pk>/photos/', serve_publication_image, name='publication-image'),
-    path('login/api-token-auth/', CustomAuthToken.as_view(), name='api_token_auth'),
     path('login/', auth_views.LoginView.as_view(), name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
 ] + router.urls

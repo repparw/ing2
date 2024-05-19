@@ -37,13 +37,13 @@ class UserViewSet(viewsets.ModelViewSet):
             return [AllowAny()]
         return [IsAuthenticated()]
 
-def create_user(name,dni, email, password, date, mailing, rating, suc, is_employee):
-  if not name or not dni or not email or not password or not date or not suc:
+def create_user(name,username, email, password, date, mailing, rating, suc, is_employee):
+  if not name or not username or not email or not password or not date or not suc:
     raise ValueError("Missing required fields. Please provide dni, email, and password.")
   # Create the user object
   user = User(
       name=name,
-      dni=dni,
+      username=username,
       email=email,
       password=password,
       date=date,

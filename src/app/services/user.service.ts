@@ -12,7 +12,7 @@ export class UserService {
 
   private userUrl = 'http://localhost:8000/users/';
   private loginUrl = 'http://localhost:8000/login/';
-  headerDict: HeadersInit | undefined;
+  //headerDict: HeadersInit | undefined;
 
 
   constructor(private http: HttpClient){
@@ -24,19 +24,26 @@ export class UserService {
     return this.http.post<User>(this.userUrl, user, { headers, withCredentials: true });
   }
 
-  /*login(loginRequest: LoginRequest): Observable<LoginRequest> {
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.post<LoginRequest>(this.loginUrl, loginRequest, { headers });
-  }*/
-
   login(username: string, password: string): Observable<any> {
-    return this.http.post<any>(`${this.loginUrl}`, { username, password }, {withCredentials: true})
+    const headers = new HttpHeaders().set('Content-Type', 'application/json');
+    return this.http.post<any>(`${this.loginUrl}`, { username, password }, { headers, withCredentials: true})
       .pipe(map(response => {
         if (response.token) {
           localStorage.setItem('token', response.token);
+          //sessionStorage.setItem('token', response.token);
         }
         return response;
       }));
+  }
+
+  authorizeUser(username: string, password: string, csrfmiddlewaretoken: string): Observable<any>{
+    const encodedBody = new URLSearchParams();
+    encodedBody.set('username', username);
+    encodedBody.set('password', password);
+    encodedBody.set('csrfmiddlewaretoken', csrfmiddlewaretoken)
+  
+    return this.http.post(this.loginUrl, encodedBody);
+  
   }
 
   logout(): void {

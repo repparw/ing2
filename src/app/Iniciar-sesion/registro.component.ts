@@ -3,23 +3,35 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { Route, Router } from '@angular/router';
 import { LoginRequest } from '../services/loginRequest';
 import { UserService } from '../services/user.service';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
+//import { cookieExtractor } from './cookie-extractor.service';
 
 @Component({
   selector: 'app-registro',
   templateUrl: './registro.component.html',
   styleUrls: ['./registro.component.css']
 })
-export class RegistroComponent implements OnInit {
+export class RegistroComponent implements OnInit, HttpInterceptor {
   loginError:string = "";
   loginForm= this.formBuilder.group({
     email: ['', [Validators.required]],
     password: ['', Validators.required],
   });
   
+  //xsrf: string   = <string>this.cookieExtractor.getToken(); 
   userService = inject(UserService);
 
   constructor(private formBuilder:FormBuilder, private router:Router){}
+  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+
+    /*request = request.clone({
+      headers:  new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded', 'Cookie': this.xsrf }),
+      withCredentials: true
+    });*/
+
+    return next.handle(request);
+  }
 
   ngOnInit(): void{
 
@@ -35,6 +47,7 @@ export class RegistroComponent implements OnInit {
 
   login() {
     if (this.loginForm.valid) {
+
       const {email, password } = this.loginForm?.value;
       this.userService.login( email! , password!).subscribe(
       response => {

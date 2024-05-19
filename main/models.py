@@ -5,14 +5,13 @@ from django.conf import settings
 
 class User(AbstractUser):
   name = models.CharField(max_length=100, default='0')
-  dni = models.CharField(unique=True, max_length=8)
+  username = models.CharField(unique=True, max_length=8)
   email = models.EmailField(unique=True, max_length=100)
   date = models.DateField(blank=True, null=True)
   mailing = models.BooleanField(default=False, blank=True, null=True)
   rating = models.FloatField(default=0.00, blank=True, null=True)
   suc = models.ForeignKey('Sucursal', on_delete=models.SET_NULL, null=True)
   is_employee = models.BooleanField(default=False, blank=True, null=True)
-  USERNAME_FIELD = 'dni'
   EMAIL_FIELD = "email"
 
 class Admin(models.Model):

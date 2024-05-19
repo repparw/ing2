@@ -37,7 +37,13 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:4200"
     ]
 
+CSRF_COOKIE_SECURE = True
+
 # Application definition
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:4200"
+    ]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
