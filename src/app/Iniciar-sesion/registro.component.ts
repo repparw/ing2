@@ -61,26 +61,14 @@ export class RegistroComponent implements OnInit, HttpInterceptor {
     }
   }
 
-  /*login() {
-    if (this.loginForm.invalid) {
-      console.log("Formulario inválido");
-      return;
-    }
-    
+  logout() {
+    this.userService.logout();
+    this.router.navigateByUrl('/login'); // Redirige al usuario a la página de inicio de sesión
+  }
 
-    this.userService.login(this.loginForm.value).subscribe(
-      response => {
-        console.log('Login exitoso', response);
-        //localStorage.setItem('token', response);
-        //localStorage.setItem('user', JSON.stringify(response.user));
-        this.router.navigate(['/home']);
-      },
-      error => {
-        console.error('Error al hacer login', error);
-        this.loginError = "Email o contraseña incorrectos";
-      }
-    );
-  }*/
+  isAuthenticated(): boolean {
+    return this.userService.isAuthenticated();
+  }
 
   hasErrors(controlName: string, errortype: string){
     return this.loginForm.get(controlName)?.hasError(errortype) && this.loginForm.get(controlName)?.touched
