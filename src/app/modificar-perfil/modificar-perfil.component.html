@@ -13,10 +13,10 @@
     </div>
 
     <div>
-      <label for="dni">
+      <label for="username">
         DNI
       </label>
-      <input type="number" id="dni" class="form-control" formControlName="dni" readonly>
+      <input type="string" id="username" class="form-control" formControlName="username" readonly>
     </div>
 
     <div>
@@ -44,35 +44,6 @@
     </div>
 
     <br/>
-
-    <div>
-      <button type="button" class="btn btn-secondary" (click)="showForm()">Cambiar Contraseña</button>
-    </div>
-
-    <br/>
-
-    <div *ngIf="contraVisible">
-      <label for="passwordActual">Contraseña actual</label>
-      <input type="password" id="passwordActual" class="form-control" formControlName="passwordActual">
-      <div>
-        <small class="text-danger" *ngIf="hasErrors('passwordActual', 'required')">La contraseña es requerida</small>
-        <small class="text-danger" *ngIf="hasErrors('passwordActual', 'minlength')">La contraseña debe tener 6 o más caracteres</small>
-        <div class="text-danger" *ngIf="hasErrors('passwordActual', 'pattern') ">La nueva contraseña debe tener al menos 1 símbolo.</div>      
-      </div>
-
-      <label for="passwordNueva">Nueva contraseña</label>
-      <input type="password" id="passwordNueva" class="form-control" formControlName="passwordNueva">
-      <div>
-        <small class="text-danger" *ngIf="hasErrors('passwordNueva', 'required')">La contraseña es requerida</small>
-        <small class="text-danger" *ngIf="hasErrors('passwordNueva', 'minlength')">La contraseña debe tener 6 o más caracteres</small>
-        <div class="text-danger" *ngIf="hasErrors('passwordNueva', 'pattern') ">La nueva contraseña debe tener al menos 1 símbolo.</div>
-      </div>
-      <div>
-        <button type="button" class="btn btn-danger" (click)="ocultarForm()">Cancelar</button>
-      </div>
-    </div>
-
-    <br/>
 <!--
     <div>
       <label class="form-label" for="mailing">Mailing</label>
@@ -81,7 +52,7 @@
 -->
     <br/>
 
-    <div>   
+    <div>
       <button type="submit" class="btn btn-primary" [disabled]="userForm.invalid" [disabled]="!userForm.dirty">Guardar Cambios</button>
     </div>
 

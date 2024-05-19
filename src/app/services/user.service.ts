@@ -23,7 +23,7 @@ export class UserService {
     return this.http.post<User>(this.userUrl, user, { headers, withCredentials: true });
   }
 
-  updateUser( id: number, user: User): Observable<User> {
+  updateUser(id: number, user: User): Observable<User> {
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
     return this.http.put<User>(`${this.userUrl}${id}/`, user, { headers });
   }

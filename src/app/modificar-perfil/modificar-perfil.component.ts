@@ -3,45 +3,46 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { __values } from 'tslib';
 import { Router } from '@angular/router';
 import { state } from '@angular/animations';
+import { UserService } from '../services/user.service';
+import { User } from '../services/user';
 
 @Component({
   selector: 'app-modificar-perfil',
   templateUrl: './modificar-perfil.component.html',
   styleUrls: ['./modificar-perfil.component.css']
 })
-export class ModificarPerfilComponent implements OnInit{
-  fecha: Date = new Date(2003, 5, 16);
+export class ModificarPerfilComponent implements OnInit {
 
-  name = 'nombre'
-  dni = '44823594'
-  email = 'patricioserres@gmail.com'
-  password = 'abcdefg@'
-
-  contraVisible = false;
-
-  userForm = new FormGroup({
-    name: new FormControl('',
-      Validators.required),
-    dni: new FormControl(''),
-    email: new FormControl(''),
-    suc: new FormControl('La Plata',
-    Validators.required),
-    date: new FormControl(this.fecha.toISOString().substr(0, 10)),
-    passwordActual: new FormControl('', [Validators.required, Validators.minLength(6), Validators.pattern(".*[!@#$%^&*()_+}{:;'?/><,.\|~`]")]),
-    passwordNueva: new FormControl('', [Validators.required, Validators.minLength(6),  Validators.pattern(".*[!@#$%^&*()_+}{:;'?/><,.\|~`]")])
-  });
+  userForm : FormGroup<any> = new FormGroup<any>({});
 
   private _router = inject(Router)
 
-  constructor(private formBuilder: FormBuilder){
+  constructor(private formBuilder: FormBuilder, private userService: UserService){
   }
 
-  ngOnInit(): void {
-    this.userForm.get('name')?.setValue(this.name)
-    this.userForm.get('dni')?.setValue(this.dni)
-    this.userForm.get('email')?.setValue(this.email)
-    this.userForm.get('passwordActual')?.setValue(this.password)
-    this.userForm.get('passwordNueva')?.setValue(this.password)
+  ngOnInit() {
+    this.userService.getCurrentUser().subscribe(
+      (user: User) => {
+      this.userForm = new FormGroup({
+      name: new FormControl(user.name, Validators.required),
+      username: new FormControl(user.username),
+      email: new FormControl(user.email),
+      suc: new FormControl(user.suc, Validators.required),
+      mailing: new FormControl(user.mailing),
+      date: new FormControl(user.date),
+      });
+      });
+  }
+
+  getForm(user: User) {
+    return new FormGroup({
+      name: new FormControl(user.name, Validators.required),
+      username: new FormControl(user.username),
+      email: new FormControl(user.email),
+      suc: new FormControl(user.suc, Validators.required),
+      mailing: new FormControl(user.mailing),
+      date: new FormControl(user.date),
+    });
   }
 
   hasErrors(controlName: string, errorType: string) {
@@ -51,18 +52,6 @@ export class ModificarPerfilComponent implements OnInit{
 
   navigate(ruta: string): void{
     this._router.navigate([ruta])
-  }
-
-  showForm(){
-    this.contraVisible = true;
-    this.userForm.get('passwordActual')?.setValue('')
-    this.userForm.get('passwordNueva')?.setValue('')
-  }
-
-  ocultarForm(){
-    this.contraVisible = false;
-    this.userForm.get('passwordActual')?.setValue(this.password)
-    this.userForm.get('passwordNueva')?.setValue(this.password)
   }
 
   onSubmit(): void {
