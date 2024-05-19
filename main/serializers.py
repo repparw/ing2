@@ -22,8 +22,24 @@ class UserSerializer(serializers.ModelSerializer):
         user = User(**validated_data)
         user.set_password(password)  # Hash the password
         user.save()
-
         return user
+
+    def update_password(self, instance, validated_data):
+      password = validated_data.pop('password')
+      instance.set_password(password)
+      instance.save()
+      return instance
+
+    def update(self, instance, validated_data):
+      instance.name = validated_data.get('name', instance.name)
+      instance.username = validated_data.get('username', instance.username)
+      instance.email = validated_data.get('email', instance.email)
+      instance.date = validated_data.get('date', instance.date)
+      instance.rating = validated_data.get('rating', instance.rating)
+      instance.suc = validated_data.get('suc', instance.suc)
+      instance.mailing = validated_data.get('mailing', instance.mailing)
+      instance.save()
+      return instance
 
 class SucursalSerializer(serializers.ModelSerializer):
     class Meta:
