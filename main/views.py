@@ -3,13 +3,26 @@ from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.views import APIView
-from rest_framework import status
+from rest_framework import serializers, status
 from django.http import HttpResponse, Http404
+from django.contrib.auth import get_user_model
 from .models import Pub, User, Sucursal
-from .serializers import PubSerializer, UserSerializer, SucursalSerializer
+from .serializers import CustomAuthTokenSerializer, PubSerializer, UserSerializer, SucursalSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
 # Create your views here.
+
+
+class CustomAuthToken(ObtainAuthToken):
+    user = get_user_model()
+    serializer_class = CustomAuthTokenSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        token, created = Token.objects.get_or_create(user=user)
+        return Response({'token': token.key, 'user_id': user.id, 'username': user.username, 'email': user.email})
 
 class SucursalViewSet(viewsets.ModelViewSet):
   queryset = Sucursal.objects.all()
@@ -32,10 +45,10 @@ class UserViewSet(viewsets.ModelViewSet):
   queryset = User.objects.all()
   serializer_class = UserSerializer
 
-  def get_permissions(self):
-        if self.action == 'create':
-            return [AllowAny()]
-        return [IsAuthenticated()]
+# def get_permissions(self):
+#       if self.action == 'create':
+#           return [AllowAny()]
+#       return [IsAuthenticated()]
 
 def create_user(name,username, email, password, date, mailing, rating, suc, is_employee):
   if not name or not username or not email or not password or not date or not suc:
@@ -158,12 +171,3 @@ def create_publication(title, desc, user, photos, is_paused, price, category, de
   pub.save()
 
   return pub
-
-class CustomAuthToken(ObtainAuthToken):
-    def post(self, request, *args, **kwargs):
-        serializer = self.serializer_class(data=request.data,
-                                           context={'request': request})
-        serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data['user']
-        token, created = Token.objects.get_or_create(user=user)
-        return Response({'token': token.key, 'user_id': user.id, 'email': user.email})

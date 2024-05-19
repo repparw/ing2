@@ -11,12 +11,12 @@ import { map } from 'rxjs/operators';
 export class UserService {
 
   private userUrl = 'http://localhost:8000/users/';
-  private loginUrl = 'http://localhost:8000/login/';
+  private loginUrl = 'http://localhost:8000/api-token-auth/';
   //headerDict: HeadersInit | undefined;
 
 
   constructor(private http: HttpClient){
-    
+
   }
 
   createUser(user: User): Observable<User> {
@@ -26,7 +26,7 @@ export class UserService {
 
   login(username: string, password: string): Observable<any> {
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
-    return this.http.post<any>(`${this.loginUrl}`, { username, password }, { headers, withCredentials: true})
+    return this.http.post<any>(`${this.loginUrl}`, { username, password }, { headers })
       .pipe(map(response => {
         if (response.token) {
           localStorage.setItem('token', response.token);
@@ -34,16 +34,6 @@ export class UserService {
         }
         return response;
       }));
-  }
-
-  authorizeUser(username: string, password: string, csrfmiddlewaretoken: string): Observable<any>{
-    const encodedBody = new URLSearchParams();
-    encodedBody.set('username', username);
-    encodedBody.set('password', password);
-    encodedBody.set('csrfmiddlewaretoken', csrfmiddlewaretoken)
-  
-    return this.http.post(this.loginUrl, encodedBody);
-  
   }
 
   logout(): void {
