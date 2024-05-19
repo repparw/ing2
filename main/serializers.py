@@ -29,7 +29,7 @@ class CustomAuthTokenSerializer(serializers.Serializer):
     password = serializers.CharField()
 
     def validate(self, attrs):
-        email = attrs.get('username')
+        username = attrs.get('username')
         password = attrs.get('password')
 
         if email and password:
@@ -43,5 +43,28 @@ class CustomAuthTokenSerializer(serializers.Serializer):
             attrs['user'] = user
         else:
             raise serializers.ValidationError('Else')
+
+        return attrs
+
+    def validate(self, attrs):
+        username = attrs.get('username')
+        password = attrs.get('password')
+
+        if username and password:
+            # Try to authenticate by username or email
+            user = authenticate(username=username, password=password)
+            if not user:
+                try:
+                    user_instance = User.objects.get(email=username)
+                    user = authenticate(username=user_instance.username, password=password)
+                except User.DoesNotExist:
+                    raise serializers.ValidationError('Invalid username/email or password.')
+
+            if not user:
+                raise serializers.ValidationError('Invalid username/email or password.')
+
+            attrs['user'] = user
+        else:
+            raise serializers.ValidationError('Must include "username_or_email" and "password".')
 
         return attrs

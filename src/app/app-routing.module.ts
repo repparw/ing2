@@ -23,7 +23,7 @@ const routes: Routes = [
   {path: 'crear publi', component: CrearPublicacionComponent},
   {path: 'cambiar contra', component: CambiarContraComponent},
   {path: 'publicacion/:id', component: VerPublicacionComponent},
-  {path: 'editar publi', component: EditarPublicacionComponent},
+  {path: 'publicacion/:id/editar', component: EditarPublicacionComponent},
   {path: '**', redirectTo: '/home', pathMatch:'full'}
 ];
 

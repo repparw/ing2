@@ -14,7 +14,6 @@ export class UserService {
   private loginUrl = 'http://localhost:8000/api-token-auth/';
   //headerDict: HeadersInit | undefined;
 
-
   constructor(private http: HttpClient){
 
   }
@@ -23,6 +22,11 @@ export class UserService {
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
     return this.http.post<User>(this.userUrl, user, { headers, withCredentials: true });
   }
+
+  updateUser( id: number, user: User): Observable<User> {
+    const headers = new HttpHeaders().set('Content-Type', 'application/json');
+    return this.http.put<User>(`${this.userUrl}${id}/`, user, { headers });
+      }
 
   login(username: string, password: string): Observable<any> {
     const headers = new HttpHeaders().set('Content-Type', 'application/json');

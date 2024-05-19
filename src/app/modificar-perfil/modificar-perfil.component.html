@@ -11,7 +11,7 @@
         <small class="text-danger" *ngIf="hasErrors('name', 'required')" >El nombre es requerido</small>
       </div>
     </div>
-  
+
     <div>
       <label for="dni">
         DNI
@@ -34,35 +34,35 @@
     </div>
 
     <div>
-      <label for="fechaDeNacimiento">
+      <label for="date">
         Fecha De Nacimiento
       </label>
-      <input type="date" id="fechaDeNacimiento" class="form-control" formControlName="fechaDeNacimiento">
+      <input type="date" id="date" class="form-control" formControlName="date">
       <div>
-      <small class="text-danger" *ngIf="hasErrors('fechaDeNacimiento', 'required')" >La fecha de nacimiento es requerida</small>
-      <small class="text-danger" *ngIf="hasErrors('fechaDeNacimiento', 'esMenorDeEdad')" >No puede ser menor de edad</small>
+      <small class="text-danger" *ngIf="hasErrors('date', 'required')" >La fecha de nacimiento es requerida</small>
+      <small class="text-danger" *ngIf="hasErrors('date', 'esMenorDeEdad')" >No puede ser menor de edad</small>
     </div>
     </div>
 
     <div>
-      <label for="sucursal">
+      <label for="suc">
         Sucursal Mas Cercana
       </label>
-      <input type="text" class="form-control" id="sucursal" formControlName="sucursal">
+      <input type="text" class="form-control" id="suc" formControlName="suc">
       <div>
-        <small class="text-danger" *ngIf="hasErrors('name', 'required')" >El nombre es requerido</small>
+        <small class="text-danger" *ngIf="hasErrors('suc', 'required')" >La sucursal es requerida</small>
       </div>
     </div>
-    
+
     <div>
       <button type="button" class="btn btn-secondary" (click)="navigate('cambiar contra')">Cambiar Contraseña</button>
       <button type="submit" class="btn btn-primary" [disabled]="userForm.invalid">Modificar</button>
     </div>
 
     <!-- Add more fields as needed -->
-  
-    
+
+
   </form>
   </div>
 </html>
-  
+
