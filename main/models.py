@@ -1,5 +1,4 @@
 from django.db import models
-from django.db.models import signals
 from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 
@@ -12,6 +11,7 @@ class User(AbstractUser):
   rating = models.FloatField(default=0.00, blank=True, null=True)
   suc = models.ForeignKey('Sucursal', on_delete=models.SET_NULL, null=True)
   is_employee = models.BooleanField(default=False, blank=True, null=True)
+  USERNAME_FIELD = "username"
   EMAIL_FIELD = "email"
 
 class Admin(models.Model):
