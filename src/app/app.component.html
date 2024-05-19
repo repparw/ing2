@@ -9,15 +9,33 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link" routerLink="inicio sesion">Inicio Sesion</a>
-        </li>
+        <div *ngIf="isAuthenticated()">
+          <li  class="nav-item">
+            <a class="nav-link"  routerLink="inicio sesion">Cerrar Sesion</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="ver mi perfil">Ver Mi Perfil</a>
+          </li>
+          <li  class="nav-item">
+            <a class="nav-link"  routerLink="inicio sesion">Inicio Sesion</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="crear publi">Crear publicación</a>
+          </li>
+          
+          
+        </div>
+        <div *ngIf="!isAuthenticated()">
+          <li  class="nav-item">
+            <a class="nav-link"  routerLink="inicio sesion">Inicio Sesion</a>
+          </li>
         <li class="nav-item">
           <a class="nav-link" routerLink="registrar empleado">Registrar empleado</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" routerLink="registrar usuario">Registrar usuario</a>
         </li>
+<<<<<<< Updated upstream
         <li class="nav-item">
           <a class="nav-link" routerLink="ver mi perfil">Ver Mi Perfil</a>
         </li>
@@ -27,6 +45,14 @@
         <li class="nav-item">
           <a class="nav-link" routerLink="cambiar contra">Cambiar contraseña</a>
         </li>
+=======
+        </div>
+       
+        <li class="nav-item">
+          <a class="nav-link" routerLink="cambiar contra">Cambiar contraseña</a>
+        </li>
+       
+>>>>>>> Stashed changes
       </ul>
     </div>
   </div>
