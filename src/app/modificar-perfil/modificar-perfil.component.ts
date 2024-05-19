@@ -1,6 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { __values } from 'tslib';
+import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { state } from '@angular/animations';
 import { UserService } from '../services/user.service';
@@ -13,7 +14,14 @@ import { User } from '../services/user';
 })
 export class ModificarPerfilComponent implements OnInit {
 
-  userForm : FormGroup<any> = new FormGroup<any>({});
+  userForm = new FormGroup({
+      name: new FormControl('', Validators.required),
+      username: new FormControl(''),
+      email: new FormControl(''),
+      suc: new FormControl(0, Validators.required),
+      mailing: new FormControl(false),
+      date: new FormControl(new Date()),
+      });
 
   private _router = inject(Router)
 
@@ -23,45 +31,21 @@ export class ModificarPerfilComponent implements OnInit {
   ngOnInit() {
     this.userService.getCurrentUser().subscribe(
       (user: User) => {
-      this.userForm = new FormGroup({
-      name: new FormControl(user.name, Validators.required),
-      username: new FormControl(user.username),
-      email: new FormControl(user.email),
-      suc: new FormControl(user.suc, Validators.required),
-      mailing: new FormControl(user.mailing),
-      date: new FormControl(user.date),
+      this.userForm.controls['name'].setValue(user.name);
+      this.userForm.controls['username'].setValue(user.username);
+      this.userForm.controls['email'].setValue(user.email);
+      this.userForm.controls['suc'].setValue(user.suc);
+      this.userForm.controls['mailing'].setValue(user.mailing as boolean);
+      this.userForm.controls['date'].setValue(user.date);
       });
-      });
-    this.userForm.get('dni')?.disable()
+    this.userForm.get('username')?.disable()
     this.userForm.get('email')?.disable()
-    this.userForm.get('date')?.disable()     
-  }
-
-  getForm(user: User) {
-    return new FormGroup({
-      name: new FormControl(user.name, Validators.required),
-      username: new FormControl(user.username),
-      email: new FormControl(user.email),
-      suc: new FormControl(user.suc, Validators.required),
-      mailing: new FormControl(user.mailing),
-      date: new FormControl(user.date),
-    });
+    this.userForm.get('date')?.disable()
   }
 
   hasErrors(controlName: string, errorType: string) {
     const control = this.userForm.get(controlName);
     return control && control.hasError(errorType) && (control.dirty || control.touched);
-  }
-
-  sonIguales(controlName: string, controlName2: string): boolean{
-    const contra1 = this.userForm.get(controlName);
-    const contra2 = this.userForm.get(controlName2);
-    if (contra1 == contra2){
-      return true;
-    } 
-    else{
-      return false;
-    }
   }
 
   navigate(ruta: string): void{
@@ -70,12 +54,17 @@ export class ModificarPerfilComponent implements OnInit {
 
   onSubmit(): void {
     if (this.userForm.invalid) {
-      console.log('El formulario es inválido o el usuario es menor de 18 años. No se puede modificar.');
+      console.error('El formulario es inválido. No se puede modificar.');
       return; // Detener el envío del formulario si hay errores de validación
     }
     //Caso contrario modificar
-    console.log('El formulario es válido y el usuario es mayor de 18 años. Realizando el registro...');
-    console.log(this.userForm.value);
+    console.log('El formulario es válido. Realizando el registro...');
+    const userData = this.userForm.value as User;
+    this.userService.updateUser(userData).subscribe(
+      (user: User) => {
+        console.log('Usuario modificado:', user);
+        alert('Usuario modificado correctamente');
+      });
   }
 
 }
