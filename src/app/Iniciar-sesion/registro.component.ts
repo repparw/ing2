@@ -13,7 +13,7 @@ import { HttpClient } from '@angular/common/http';
 export class RegistroComponent implements OnInit {
   loginError:string = "";
   loginForm= this.formBuilder.group({
-    email: ['', [Validators.required, Validators.email]],
+    email: ['', [Validators.required]],
     password: ['', Validators.required],
   });
   
@@ -39,6 +39,7 @@ export class RegistroComponent implements OnInit {
       this.userService.login( email! , password!).subscribe(
       response => {
         console.log('Login successful', response);
+        this.router.navigateByUrl('/home');
       },
       error => {
         console.error('Login failed', error);

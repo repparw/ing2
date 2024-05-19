@@ -21,7 +21,7 @@ export class UserService {
 
   createUser(user: User): Observable<User> {
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
-    return this.http.post<User>(this.userUrl, user, {headers});
+    return this.http.post<User>(this.userUrl, user, { headers, withCredentials: true });
   }
 
   /*login(loginRequest: LoginRequest): Observable<LoginRequest> {
@@ -30,7 +30,7 @@ export class UserService {
   }*/
 
   login(username: string, password: string): Observable<any> {
-    return this.http.post<any>(`${this.loginUrl}api-token-auth/`, { username, password })
+    return this.http.post<any>(`${this.loginUrl}`, { username, password }, {withCredentials: true})
       .pipe(map(response => {
         if (response.token) {
           localStorage.setItem('token', response.token);
@@ -60,30 +60,5 @@ export class UserService {
     return throwError(() => new Error('Por favor, inténtelo de nuevo más tarde.'));
   }
 
-  
-  /*login(): void {
-    let credentials: SigafCredentials = {
-      username: this.username,
-      password: this.password,
-      }
-      this.loginErrorMessage = "";
-      this.sigafService.login(credentials)
-      .subscribe(user => { this.isLoggedIn = (user != null) }, err => {
-          this.loginErrorMessage = err.message;
-      });
-  }
-    
-  logout(): void {
-      this.sigafService.logout();
-      this.isLoggedIn = false;
-  }*/
-
-  /*login(){
-    let credentials: LoginRequest{
-      email: this.email,
-      password: this.password,
-    }
-    
-  }*/
 
 }

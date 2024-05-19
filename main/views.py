@@ -5,8 +5,10 @@ from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.views import APIView
 from rest_framework import status
 from django.http import HttpResponse, Http404
-from .models import Pub, User, Employee, Sucursal
-from .serializers import PubSerializer, UserSerializer, EmployeeSerializer, SucursalSerializer
+from .models import Pub, User, Sucursal
+from .serializers import PubSerializer, UserSerializer, SucursalSerializer
+from rest_framework.permissions import AllowAny, IsAuthenticated
+
 # Create your views here.
 
 class SucursalViewSet(viewsets.ModelViewSet):
@@ -26,30 +28,16 @@ def create_sucursal(address, phone, email, city):
   suc.save()
   return suc
 
-class EmployeeViewSet(viewsets.ModelViewSet):
-  queryset = Employee.objects.all()
-  serializer_class = EmployeeSerializer
-
-def create_employee(name, dni, email, password, suc):
-  if not name or not dni or not email or not password or not suc:
-    raise ValueError("Missing required fields. Please provide dni, email, password, and suc.")
-  # Create the employee object
-  empl = Employee(
-      name=name,
-      dni=dni,
-      email=email,
-      password=password,
-      suc=suc)
-  # Save the employee to the database
-  empl.save()
-
-  return empl
-
 class UserViewSet(viewsets.ModelViewSet):
   queryset = User.objects.all()
   serializer_class = UserSerializer
 
-def create_user(name,dni, email, password, date, mailing, ratin, suc):
+  def get_permissions(self):
+        if self.action == 'create':
+            return [AllowAny()]
+        return [IsAuthenticated()]
+
+def create_user(name,dni, email, password, date, mailing, rating, suc, is_employee):
   if not name or not dni or not email or not password or not date or not suc:
     raise ValueError("Missing required fields. Please provide dni, email, and password.")
   # Create the user object
@@ -60,8 +48,9 @@ def create_user(name,dni, email, password, date, mailing, ratin, suc):
       password=password,
       date=date,
       mailing=mailing,
-      ratin=ratin,
-      suc=suc)
+      rating=rating,
+      suc=suc,
+      is_employee=is_employee)
   # Save the user to the database
   user.save()
 
@@ -70,6 +59,11 @@ def create_user(name,dni, email, password, date, mailing, ratin, suc):
 class PubViewSet(viewsets.ModelViewSet):
   queryset = Pub.objects.all()
   serializer_class = PubSerializer
+
+  def get_permissions(self):
+        if self.action in ['list', 'retrieve']:
+            return [AllowAny()]
+        return [IsAuthenticated()]
 
 def get_all_ids():
   return Pub.objects.values_list('id', flat=True)

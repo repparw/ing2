@@ -25,7 +25,8 @@ throw new Error('Method not implemented.');
       password: ['', [Validators.required, Validators.minLength(6)]],
       suc: [1, Validators.required],
       rating: [0.00],
-      mailing: [false]
+      mailing: [false],
+      is_employee: new FormControl (false)
   });
 
   constructor(private formBuilder: FormBuilder, private router: Router, private userService: UserService){
@@ -37,11 +38,12 @@ throw new Error('Method not implemented.');
     //console.log(this.userForm.controls['fechaNacimiento'].value);
     if (this.userForm.invalid ) {
       console.log("formulario invalido");
+      
       console.log(this.userForm.errors);
       return
     }
     const fechaNacimiento = this.userForm.get('fechaNacimiento');
-    if (!fechaNacimiento) {
+    if (fechaNacimiento) {
       console.log("El usuario debe ser mayor de 18 años para registrarse.");
       return;
   }
@@ -79,7 +81,7 @@ throw new Error('Method not implemented.');
         return edad < 18 ? { 'menorDeEdad': true } : null;
       }
       
-      return null;
+      return edad < 18 ? { 'menorDeEdad': true } : null;
     };
   }
 

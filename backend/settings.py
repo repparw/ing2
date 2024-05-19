@@ -16,6 +16,10 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 CORS_ALLOW_CREDENTIALS=True
 
+CSRF_COOKIE_SECURE = False  # Set to True in production (even if disabling CSRF)
+CSRF_COOKIE_HTTPONLY = False  # Set to True in production (even if disabling CSRF)
+CSRF_ENABLED = False  # This disables CSRF protection globally
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
@@ -26,6 +30,8 @@ SECRET_KEY = 'django-insecure-lxw_nq-n^^gq(@__)1fe8o@6gtvsmfnl62@e8k1*4-avjp-wae
 DEBUG = True
 
 ALLOWED_HOSTS = []
+
+AUTH_USER_MODEL = 'main.User'
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:4200"
