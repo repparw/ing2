@@ -4,6 +4,7 @@ import { Pub } from '../services/pub'
 import { PublicationService } from '../services/publicacion.service';
 import { Location } from '@angular/common';
 import { Observable } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 import { FileSelectDirective, FileUploader } from 'ng2-file-upload';
 
 @Component({
@@ -13,9 +14,8 @@ import { FileSelectDirective, FileUploader } from 'ng2-file-upload';
 })
 
 export class EditarPublicacionComponent implements OnInit {
-  id = 1;
-  public uploader: FileUploader = new FileUploader({ url: 'http://localhost:8000/publications/'+this.id+'/', itemAlias: 'photos' })
-
+  id!: number;
+  public uploader!: FileUploader;
   prodForm = new FormGroup({
     title: new FormControl('', Validators.required),
     desc: new FormControl('', Validators.required),
@@ -32,9 +32,12 @@ export class EditarPublicacionComponent implements OnInit {
     private formBuilder: FormBuilder,
     private publicationService: PublicationService,
     private location: Location,
+    private route: ActivatedRoute,
   ){ }
 
   ngOnInit() {
+    this.id = parseInt(this.route.snapshot.params['id']);
+    this.uploader = new FileUploader({ url: 'http://localhost:8000/publications/'+this.id+'/', itemAlias: 'photos' })
     this.getPublication(this.id);
     this.uploader.onBeforeUploadItem = this.onBeforeUploadItem;
   }

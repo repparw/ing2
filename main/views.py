@@ -13,7 +13,6 @@ from rest_framework.views import APIView
 
 # Create your views here.
 
-
 class CustomAuthToken(ObtainAuthToken):
     user = get_user_model()
     serializer_class = CustomAuthTokenSerializer
@@ -53,9 +52,6 @@ class UserViewSet(viewsets.ModelViewSet):
   queryset = User.objects.all()
   serializer_class = UserSerializer
 
-def create_user(name,username, email, password, date, mailing, rating, suc, is_employee):
-  serializer_class = UserSerializer
-
   def create(self, request, *args, **kwargs):
     serializer = self.get_serializer(data=request.data)
     serializer.is_valid(raise_exception=True)
@@ -64,8 +60,6 @@ def create_user(name,username, email, password, date, mailing, rating, suc, is_e
       "user": serializer.data,
       "message": "Usuario creado exitosamente",
           }, status=status.HTTP_201_CREATED)
-
-  return user
 
 class PubViewSet(viewsets.ModelViewSet):
   queryset = Pub.objects.all()
