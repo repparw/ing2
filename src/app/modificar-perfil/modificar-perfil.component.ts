@@ -40,6 +40,9 @@ export class ModificarPerfilComponent implements OnInit{
     this.userForm.get('name')?.setValue(this.name)
     this.userForm.get('dni')?.setValue(this.dni)
     this.userForm.get('email')?.setValue(this.email)
+    this.userForm.get('dni')?.disable()
+    this.userForm.get('email')?.disable()
+    this.userForm.get('date')?.disable()   
     this.userForm.get('passwordActual')?.setValue(this.password)
     this.userForm.get('passwordNueva')?.setValue(this.password)
   }
@@ -47,6 +50,17 @@ export class ModificarPerfilComponent implements OnInit{
   hasErrors(controlName: string, errorType: string) {
     const control = this.userForm.get(controlName);
     return control && control.hasError(errorType) && (control.dirty || control.touched);
+  }
+
+  sonIguales(controlName: string, controlName2: string): boolean{
+    const contra1 = this.userForm.get(controlName);
+    const contra2 = this.userForm.get(controlName2);
+    if (contra1 == contra2){
+      return true;
+    } 
+    else{
+      return false;
+    }
   }
 
   navigate(ruta: string): void{

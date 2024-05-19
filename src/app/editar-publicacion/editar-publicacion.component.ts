@@ -37,6 +37,9 @@ export class EditarPublicacionComponent implements OnInit {
   ngOnInit() {
     this.getPublication(this.id);
     this.uploader.onBeforeUploadItem = this.onBeforeUploadItem;
+    
+    this.prodForm.get('category')?.disable()
+
   }
 
   onBeforeUploadItem(item: any) {

@@ -44,20 +44,14 @@
     </div>
 
     <br/>
-
-    <div>
-      <button type="button" class="btn btn-secondary" (click)="showForm()">Cambiar Contraseña</button>
-    </div>
-
-    <br/>
-
+<!--
     <div *ngIf="contraVisible">
       <label for="passwordActual">Contraseña actual</label>
       <input type="password" id="passwordActual" class="form-control" formControlName="passwordActual">
       <div>
-        <small class="text-danger" *ngIf="hasErrors('passwordActual', 'required')">La contraseña es requerida</small>
+        <small class="text-danger" *ngIf="hasErrors('passwordActual', 'required')">La contraseña anterior es requerida</small>
         <small class="text-danger" *ngIf="hasErrors('passwordActual', 'minlength')">La contraseña debe tener 6 o más caracteres</small>
-        <div class="text-danger" *ngIf="hasErrors('passwordActual', 'pattern') ">La nueva contraseña debe tener al menos 1 símbolo.</div>      
+        <small class="text-danger" *ngIf="hasErrors('passwordActual', 'pattern') ">La contraseña debe tener al menos 1 símbolo.</small>      
       </div>
 
       <label for="passwordNueva">Nueva contraseña</label>
@@ -65,27 +59,25 @@
       <div>
         <small class="text-danger" *ngIf="hasErrors('passwordNueva', 'required')">La contraseña es requerida</small>
         <small class="text-danger" *ngIf="hasErrors('passwordNueva', 'minlength')">La contraseña debe tener 6 o más caracteres</small>
-        <div class="text-danger" *ngIf="hasErrors('passwordNueva', 'pattern') ">La nueva contraseña debe tener al menos 1 símbolo.</div>
+        <small class="text-danger" *ngIf="hasErrors('passwordNueva', 'pattern') ">La nueva contraseña debe tener al menos 1 símbolo.</small>
+        <small class="text-danger" *ngIf="sonIguales('passwordNueva', 'passwordActual') ">La nueva contraseña debe ser distinta a la anterior.</small>
       </div>
       <div>
         <button type="button" class="btn btn-danger" (click)="ocultarForm()">Cancelar</button>
       </div>
     </div>
+-->
 
-    <br/>
 <!--
     <div>
       <label class="form-label" for="mailing">Mailing</label>
       <input type="checkbox" id="mailing" class="form-check-input" formControlName="mailing">
     </div>
 -->
-    <br/>
 
     <div>   
       <button type="submit" class="btn btn-primary" [disabled]="userForm.invalid" [disabled]="!userForm.dirty">Guardar Cambios</button>
     </div>
-
-
 
   </form>
   </div>
