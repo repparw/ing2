@@ -15,18 +15,18 @@ export class RegistrarUsuarioComponent implements OnInit {
 esMayorDeEdad(arg0: never) {
 throw new Error('Method not implemented.');
 }
-  
+
   registroError: string = "";
   userForm= this.formBuilder.group({
     name: ['', Validators.required],
     username: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(8)]],
     email: ['', [Validators.required, Validators.pattern('.*@.*')]],
-      date:  new FormControl<Date | null> (null , [Validators.required, this.esMayorDeEdadV()]),
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      suc: [1, Validators.required],
-      rating: [0.00],
-      mailing: [false],
-      is_employee: new FormControl (false)
+    date:  new FormControl<Date | null> (null , [Validators.required, this.esMayorDeEdadV()]),
+    password: ['', [Validators.required, Validators.minLength(6)]],
+    suc: [1, Validators.required],
+    rating: [0.00],
+    mailing: [false],
+    is_employee: new FormControl (false)
   });
 
   constructor(private formBuilder: FormBuilder, private router: Router, private userService: UserService){
@@ -38,7 +38,7 @@ throw new Error('Method not implemented.');
     //console.log(this.userForm.controls['fechaNacimiento'].value);
     if (this.userForm.invalid ) {
       console.log("formulario invalido");
-      
+
       console.log(this.userForm.errors);
       return
     }
@@ -55,7 +55,7 @@ throw new Error('Method not implemented.');
       (error) => {
         console.error('Error al crear usuario', error);
         this.registroError = "Error al registrar el usuario. Intente otra vez";
-      }   
+      }
     )
   }
 
@@ -67,20 +67,20 @@ throw new Error('Method not implemented.');
   esMayorDeEdadV(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       const value = control.value;
-  
+
       if (!value || isNaN(new Date(value).getTime())) {
         return { 'invalidDate': true };
       }
-  
+
       const hoy = new Date();
       const fechaNacimientoObj = new Date(value);
       const edad = hoy.getFullYear() - fechaNacimientoObj.getFullYear();
       const mes = hoy.getMonth() - fechaNacimientoObj.getMonth();
-      
+
       if (mes < 0 || (mes === 0 && hoy.getDate() < fechaNacimientoObj.getDate())) {
         return edad < 18 ? { 'menorDeEdad': true } : null;
       }
-      
+
       return edad < 18 ? { 'menorDeEdad': true } : null;
     };
   }

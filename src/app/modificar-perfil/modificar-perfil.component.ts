@@ -21,10 +21,10 @@ export class ModificarPerfilComponent {
     email: new FormControl('patricio@gmail.com',[
       Validators.required,
       Validators.pattern('.*@.*')]),
-    sucursal: new FormControl('La Plata',
+    suc: new FormControl('La Plata',
     Validators.required),
-    fechaDeNacimiento: new FormControl(this.fecha.toISOString().substr(0, 10),[
-      Validators.required, 
+    date: new FormControl(this.fecha.toISOString().substr(0, 10),[
+      Validators.required,
     MyValidations.esMenorDeEdad])
   });
 

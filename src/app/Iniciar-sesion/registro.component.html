@@ -5,10 +5,10 @@
     <div class="col-lg-6">
       <form [formGroup]="loginForm">
         <div class="mb-3">
-          <label for="exampleInputEmail1" class="form-label">Mail</label>
+          <label for="exampleInputEmail1" class="form-label">Email/DNI</label>
           <input formControlName="email" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
           <div *ngIf="email.invalid && (email.dirty || email.touched)" class="text-danger">
-            <div *ngIf="email.errors?.['required']">El email es requerido.</div>
+            <div *ngIf="email.errors?.['required']">El email/DNI es requerido.</div>
           <!-- <div *ngIf="email.errors?.['email']">El email debe tener un formato válido.</div> -->
           </div>
         </div>
