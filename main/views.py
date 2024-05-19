@@ -2,13 +2,14 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
-from rest_framework.views import APIView
 from rest_framework import serializers, status
+from rest_framework.decorators import action
 from django.http import HttpResponse, Http404
 from django.contrib.auth import get_user_model
 from .models import Pub, User, Sucursal
-from .serializers import CustomAuthTokenSerializer, PubSerializer, UserSerializer, SucursalSerializer
+from .serializers import CurrentUserSerializer, CustomAuthTokenSerializer, PubSerializer, UserSerializer, SucursalSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.views import APIView
 
 # Create your views here.
 
@@ -41,14 +42,16 @@ def create_sucursal(address, phone, email, city):
   suc.save()
   return suc
 
+class CurrentUserView(APIView):
+  permission_classes = [IsAuthenticated]
+
+  def get(self, request):
+    serializer = CurrentUserSerializer(request.user)
+    return Response(serializer.data)
+
 class UserViewSet(viewsets.ModelViewSet):
   queryset = User.objects.all()
   serializer_class = UserSerializer
-
-# def get_permissions(self):
-#       if self.action == 'create':
-#           return [AllowAny()]
-#       return [IsAuthenticated()]
 
 def create_user(name,username, email, password, date, mailing, rating, suc, is_employee):
   serializer_class = UserSerializer
