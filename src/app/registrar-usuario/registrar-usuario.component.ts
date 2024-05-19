@@ -19,8 +19,8 @@ throw new Error('Method not implemented.');
   registroError: string = "";
   userForm= this.formBuilder.group({
     name: ['', Validators.required],
-      dni: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(8)]],
-      email: ['', [Validators.required, Validators.pattern('.*@.*')]],
+    username: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(8)]],
+    email: ['', [Validators.required, Validators.pattern('.*@.*')]],
       date:  new FormControl<Date | null> (null , [Validators.required, this.esMayorDeEdadV()]),
       password: ['', [Validators.required, Validators.minLength(6)]],
       suc: [1, Validators.required],

@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, importProvidersFrom } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { ReactiveFormsModule } from '@angular/forms';
 
@@ -11,13 +11,13 @@ import { VerPerfilComponent } from './ver-perfil/ver-perfil.component';
 import { CambiarContraComponent } from './cambiar-contra/cambiar-contra.component';
 import { CrearPublicacionComponent } from './crear-publicacion/crear-publicacion.component';
 import { VerPublicacionComponent } from './ver-publicacion/ver-publicacion.component';
-import { HttpClientModule} from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule, HttpClientXsrfModule} from '@angular/common/http';
 import { VerMiPerfilComponent } from './ver-mi-perfil/ver-mi-perfil.component';
 import { ModificarPerfilComponent } from './modificar-perfil/modificar-perfil.component';
 import { EditarPublicacionComponent } from './editar-publicacion/editar-publicacion.component';
-import { EliminarPublicacionComponent } from './eliminar-publicacion/eliminar-publicacion.component';
 import { RegistrarUsuarioComponent } from './registrar-usuario/registrar-usuario.component';
 import { FileUploadModule } from 'ng2-file-upload';
+
 
 @NgModule({
   declarations: [
@@ -32,7 +32,6 @@ import { FileUploadModule } from 'ng2-file-upload';
     VerMiPerfilComponent,
     ModificarPerfilComponent,
     EditarPublicacionComponent,
-//    EliminarPublicacionComponent,
     RegistrarUsuarioComponent,
   ],
   imports: [
@@ -41,8 +40,22 @@ import { FileUploadModule } from 'ng2-file-upload';
     ReactiveFormsModule,
     HttpClientModule,
     FileUploadModule,
+    HttpClientXsrfModule.withOptions({
+      cookieName: 'csrftoken',
+      headerName: 'X-CSRFToken'
+    })
   ],
-  providers: [],
-  bootstrap: [AppComponent]
-})
+  providers: [
+    importProvidersFrom(HttpClientModule),
+    importProvidersFrom(
+      HttpClientXsrfModule.withOptions({
+      cookieName: 'csrftoken',
+      headerName: 'X-CSRFToken',
+    }),
+  )
+  ],
+  bootstrap: [AppComponent],
+}) 
+
+
 export class AppModule { }

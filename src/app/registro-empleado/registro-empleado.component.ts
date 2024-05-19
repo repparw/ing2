@@ -14,7 +14,7 @@ export class RegistroEmpleadoComponent {
   employeeForm = new FormGroup({
     name: new FormControl('',
       Validators.required),
-    dni: new FormControl('',
+    username: new FormControl('',
       Validators.required),
     email: new FormControl('',[
       Validators.required,
