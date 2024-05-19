@@ -12,16 +12,16 @@ import { ActivatedRoute } from '@angular/router';
 export class VerPublicacionComponent implements OnInit{
   data!: Pub;
   linkFoto!: any;
-  constructor (private route: ActivatedRoute, private  publi: PublicationService ){
+  constructor (private route: ActivatedRoute, private  publicationService: PublicationService ){
 
   }
   ngOnInit(): void {
     const productID:number=parseInt(this.route.snapshot.params['id']);
     console.log(productID)
-    this.publi.getPublication(productID).subscribe(data => {
+    this.publicationService.getPublication(productID).subscribe(data => {
       if (data) { // Check if data is not null
         this.data = data;
-        this.linkFoto = this.publi.getPhotos(productID);
+        this.linkFoto = this.publicationService.getPhotos(productID);
         console.log(this.linkFoto);
         console.log(this.data);
       } else {
@@ -31,7 +31,11 @@ export class VerPublicacionComponent implements OnInit{
     console.log(this.data);
   }
 
-
+  deletePublication(id: number) {
+    this.publicationService.deletePublication(id).subscribe((pub: Pub) => {
+      console.log('Publicación eliminada');
+    });
+  }
 }
 
 

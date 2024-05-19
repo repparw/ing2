@@ -51,21 +51,16 @@ class UserViewSet(viewsets.ModelViewSet):
 #       return [IsAuthenticated()]
 
 def create_user(name,username, email, password, date, mailing, rating, suc, is_employee):
-  if not name or not username or not email or not password or not date or not suc:
-    raise ValueError("Missing required fields. Please provide dni, email, and password.")
-  # Create the user object
-  user = User(
-      name=name,
-      username=username,
-      email=email,
-      password=password,
-      date=date,
-      mailing=mailing,
-      rating=rating,
-      suc=suc,
-      is_employee=is_employee)
-  # Save the user to the database
-  user.save()
+  serializer_class = UserSerializer
+
+  def create(self, request, *args, **kwargs):
+    serializer = self.get_serializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    user = serializer.save()
+    return Response({
+      "user": serializer.data,
+      "message": "Usuario creado exitosamente",
+          }, status=status.HTTP_201_CREATED)
 
   return user
 
