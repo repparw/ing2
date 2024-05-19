@@ -17,6 +17,7 @@ import { ModificarPerfilComponent } from './modificar-perfil/modificar-perfil.co
 import { EditarPublicacionComponent } from './editar-publicacion/editar-publicacion.component';
 import { RegistrarUsuarioComponent } from './registrar-usuario/registrar-usuario.component';
 import { FileUploadModule } from 'ng2-file-upload';
+import { CambiarContraPerfilComponent } from './cambiar-contra-perfil/cambiar-contra-perfil.component';
 
 
 @NgModule({
@@ -33,6 +34,7 @@ import { FileUploadModule } from 'ng2-file-upload';
     ModificarPerfilComponent,
     EditarPublicacionComponent,
     RegistrarUsuarioComponent,
+    CambiarContraPerfilComponent,
   ],
   imports: [
     BrowserModule,

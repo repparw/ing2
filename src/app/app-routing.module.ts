@@ -7,6 +7,7 @@ import { VerPerfilComponent } from './ver-perfil/ver-perfil.component';
 import { VerMiPerfilComponent } from './ver-mi-perfil/ver-mi-perfil.component';
 import { ModificarPerfilComponent } from './modificar-perfil/modificar-perfil.component';
 import { CambiarContraComponent } from './cambiar-contra/cambiar-contra.component';
+import { CambiarContraPerfilComponent } from './cambiar-contra-perfil/cambiar-contra-perfil.component';
 import { CrearPublicacionComponent } from './crear-publicacion/crear-publicacion.component';
 import { EditarPublicacionComponent } from './editar-publicacion/editar-publicacion.component';
 import { VerPublicacionComponent } from './ver-publicacion/ver-publicacion.component';
@@ -22,6 +23,7 @@ const routes: Routes = [
   {path: 'modificar perfil', component: ModificarPerfilComponent},
   {path: 'crear publi', component: CrearPublicacionComponent},
   {path: 'cambiar contra', component: CambiarContraComponent},
+  {path: 'cambiar contra perfil', component: CambiarContraPerfilComponent},
   {path: 'publicacion/:id', component: VerPublicacionComponent},
   {path: 'publicacion/:id/editar', component: EditarPublicacionComponent},
   {path: '**', redirectTo: '/home', pathMatch:'full'}
