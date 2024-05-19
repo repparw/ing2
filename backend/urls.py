@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from rest_framework import routers
-from main.views import  CustomAuthToken, PubViewSet, SucursalViewSet, UserViewSet, serve_publication_image
+from main.views import  CurrentUserView, CustomAuthToken, PubViewSet, SucursalViewSet, UserViewSet, serve_publication_image
 
 router = routers.DefaultRouter()
 router.register('publications', PubViewSet, basename='publications' )
@@ -26,6 +26,7 @@ router.register('branches', SucursalViewSet, basename='branches' )
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('publications/<int:pk>/photos/', serve_publication_image, name='publication-image'),
+    path('publications/<int:pk>/photos/', serve_publication_image, name='publication_image'),
     path('api-token-auth/', CustomAuthToken.as_view(), name='api_token_auth'),
+    path('users/current/', CurrentUserView.as_view(), name='current_user'),
 ] + router.urls

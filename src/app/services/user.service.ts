@@ -26,6 +26,19 @@ export class UserService {
   updateUser( id: number, user: User): Observable<User> {
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
     return this.http.put<User>(`${this.userUrl}${id}/`, user, { headers });
+  }
+
+  getCurrentUser(): Observable<User> {
+    const authToken = localStorage.getItem('token');
+    if (!authToken) {
+      throw new Error('No token found');
+    }
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Token ${authToken}`
+    });
+    return this.http.get<User>(`${this.userUrl}current/`, { headers, withCredentials: true });
       }
 
   login(username: string, password: string): Observable<any> {
