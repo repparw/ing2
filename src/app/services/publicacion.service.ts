@@ -42,13 +42,8 @@ export class PublicationService {
   }
 
   public getPublicationsById(id: number): Observable<Pub[]> {
-    const authToken = localStorage.getItem('token');
-    if (!authToken) {
-      throw new Error('No token found');
-    }
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
-      'Authorization': `Token ${authToken}`
     });
     return this.http.get<Pub[]>(this.byUserUrl + id, { headers, withCredentials: true })
       .pipe(catchError(this.handleError));
