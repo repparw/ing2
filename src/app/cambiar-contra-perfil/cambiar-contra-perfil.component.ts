@@ -1,8 +1,10 @@
 import { formatCurrency } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Observable, pluck, take } from 'rxjs';
 import { Router } from '@angular/router';
 import { UserService } from '../services/user.service';
+import { User } from '../services/user';
 
 @Component({
   selector: 'app-cambiar-contra-perfil',
@@ -13,7 +15,6 @@ export class CambiarContraPerfilComponent {
 
   id: number = 0;
   submitted = false;
-  contraseñaReal?: string;
 
   contraForm = new FormGroup({
     passwordActual: new FormControl('', [Validators.required, Validators.minLength(6), Validators.pattern(".*[!@#$%^&*()_+}{:;'?/><,.\|~`].*")]),
@@ -34,27 +35,32 @@ export class CambiarContraPerfilComponent {
 
   onSubmit(): void {
     this.submitted = true;
+
     if (this.contraForm.invalid) {
       console.log('El formulario es inválido. No se puede modificar.');
-      return; // Detener el envío del formulario si hay errores de validación
+      return; // Stop form submission if there are validation errors
     }
-    if (this.contraForm.get('passwordActual')?.value == this.contraForm.get('passwordNueva')?.value){
-      console.log('Las contraseñas son iguales. No se puede modificar.');
-      return; // Detener el envío del formulario si las 2 contraseñas son iguales
-    }
-    this.userService.getCurrentUser().subscribe(user => 
-      this.id = user.id);
 
-    if (this.contraForm.get('passwordActual')?.value != this.contraseñaReal){
-      console.log('La contraseña actual no corresponde con la almacenada en la base de datos.')
+    if (this.contraForm.get('passwordActual')?.value === this.contraForm.get('passwordNueva')?.value) {
+      console.log('Las contraseñas son iguales. No se puede modificar.');
+      return; // Stop form submission if the new password is the same as the current password
     }
-    //Caso contrario modificar
+
+    const passwordActual = this.contraForm.get('passwordActual')?.value ?? '';
+    const passwordNueva = this.contraForm.get('passwordNueva')?.value ?? '';
+
     console.log('El formulario es válido. Realizando cambio de contraseña...');
-    console.log(this.contraForm.value);
-    alert('Contraseña cambiada correctamente');
-    this.userService.changePassword(this.id, this.contraForm.get('passwordNueva')?.value as string);
-    this.navigate('ver mi perfil')
+    this.userService.changePassword(passwordActual, passwordNueva, passwordNueva).subscribe(
+      () => {
+        console.log('Contraseña modificada correctamente.');
+        this.navigate('ver mi perfil'); // Navigate to 'ver mi perfil' after successful password change
+      },
+      error => {
+        console.log('Error al modificar la contraseña.', error);
+      }
+    );
   }
+
 }
 
 

@@ -1,11 +1,18 @@
 from django.contrib.auth import authenticate
 from rest_framework import serializers
+from django.contrib.auth.password_validation import validate_password
 from .models import Pub, User, Sucursal
 
 class PubSerializer(serializers.ModelSerializer):
     class Meta:
         model = Pub
         fields = '__all__'
+
+class UpdatePasswordSerializer(serializers.Serializer):
+  Model = User
+  old_password = serializers.CharField(required=True)
+  new_password = serializers.CharField(required=True)
+  new_password2 = serializers.CharField(required=True)
 
 class CurrentUserSerializer(serializers.ModelSerializer):
     class Meta:

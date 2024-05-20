@@ -1,6 +1,7 @@
 import { Component, Inject, Injectable, OnInit } from '@angular/core';
 import { Pub } from '../services/pub';
-import { Observable } from 'rxjs';
+import { Observable, pluck, take, map, switchMap } from 'rxjs';
+import { forkJoin } from 'rxjs';
 import { PublicationService } from '../services/publicacion.service';
 import { ActivatedRoute } from '@angular/router';
 import { UserService } from '../services/user.service'
@@ -17,30 +18,37 @@ export class VerPublicacionComponent implements OnInit{
   linkFoto!: any;
   productID!: number;
   canEdit!: boolean;
+
   constructor (private route: ActivatedRoute, private  publicationService: PublicationService, private userService: UserService, private router:Router ){
 
   }
+
   ngOnInit(): void {
-    this.productID=parseInt(this.route.snapshot.params['id']);
-    console.log(this.productID)
-    this.publicationService.getPublication(this.productID).subscribe(data => {
-      if (data) { // Check if data is not null
-        this.data = data;
+    this.productID = parseInt(this.route.snapshot.params['id']);
+    console.log(this.productID);
+
+    this.publicationService.getPublication(this.productID).pipe(
+      switchMap(publication => {
+        this.data = publication;
         this.linkFoto = this.publicationService.getPhotos(this.productID);
-        this.userService.isOwner(this.data).subscribe(
-          isOwner => {
-          this.canEdit = isOwner;
-        });
-        this.userService.getUser(this.data.user).subscribe(
-          (user) => {
-            this.username = user.username;
-          }
-    );
-        console.log(this.linkFoto);
-        console.log(this.data);
-      } else {
-        console.log('No data received'); // Handle no data case (optional)
-      }
+
+        return forkJoin([
+          this.userService.isOwner(publication).pipe(take(1)),
+          this.userService.getUser(publication.user).pipe(take(1), pluck('username'))
+        ]).pipe(
+          map(([isOwner, username]) => {
+            return { isOwner, username };
+          })
+        );
+      })
+    ).subscribe(result => {
+      this.canEdit = result.isOwner;
+      this.username = result.username;
+
+      console.log(this.linkFoto);
+      console.log(this.data);
+      console.log(this.canEdit);
+      console.log(this.username);
     });
   }
 
@@ -64,6 +72,7 @@ export class VerPublicacionComponent implements OnInit{
   navigate(ruta: string): void{
     this.router.navigate([`usuarios/${ruta}`])
   }
+
 }
 
 
