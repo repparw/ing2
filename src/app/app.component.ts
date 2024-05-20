@@ -8,12 +8,12 @@ import { UserService } from './services/user.service'
 export class AppComponent {
   title = 'Fedeteria';
 
-  constructor (private userservice: UserService){
+  constructor (private userService: UserService){
 
   }
 
 
   isAuthenticated(){
-    return this.userservice.isAuthenticated()
+    return this.userService.isAuthenticated()
   }
 }
