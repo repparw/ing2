@@ -12,7 +12,7 @@ import { PublicationService } from '../services/publicacion.service';
 })
 export class VerPerfilComponent {
   username!: string;
-  publicaciones?: object[];
+  publicaciones: any[]=[];
   user!: User;
 
   constructor(private route: ActivatedRoute,
@@ -30,5 +30,9 @@ export class VerPerfilComponent {
         this.publicaciones = publicaciones;
               });
       });
+  }
+
+  public getPhotos(id:number){
+    return this.publicationService.getPhotos(id)
   }
 }
