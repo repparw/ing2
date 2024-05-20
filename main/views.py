@@ -8,10 +8,26 @@ from django.http import HttpResponse, Http404
 from django.contrib.auth import get_user_model
 from .models import Pub, User, Sucursal
 from .serializers import CurrentUserSerializer, CustomAuthTokenSerializer, PubSerializer, UserSerializer, SucursalSerializer
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.views import APIView
 
 # Create your views here.
+
+def serve_publication_image(request, pk):
+      try:
+          pub= Pub.objects.get(pk=pk)
+      except Pub.DoesNotExist:
+          raise Http404('Publicacion no encontrada')
+
+      # Validate user permissions if applicable (e.g., only authenticated users can access)
+      if not pub.photos:
+          # Handle case where no image is uploaded
+          return HttpResponse('No hay foto disponible', status=404)
+
+      # Set appropriate content type (e.g., image/jpeg, image/png)
+      content_type = 'image/jpeg, image/png, image/jpg'
+
+      return HttpResponse(pub.photos.read(), content_type=content_type)
 
 class CustomAuthToken(ObtainAuthToken):
     user = get_user_model()
@@ -41,8 +57,11 @@ def create_sucursal(address, phone, email, city):
   suc.save()
   return suc
 
+def profile_view(request, username):
+ return User.objects.get(username=username)
+
 class CurrentUserView(APIView):
-  permission_classes = [IsAuthenticated]
+  permission_classes = [IsAuthenticatedOrReadOnly]
 
   def get(self, request):
     serializer = CurrentUserSerializer(request.user)
@@ -63,6 +82,15 @@ class UserViewSet(viewsets.ModelViewSet):
       return [AllowAny()]
     return [IsAuthenticated()]
 
+
+  def profile_by_username(self, request, username=None):
+    try:
+        user = User.objects.get(username=username)
+        serializer = self.get_serializer(user)
+        return Response(serializer.data)
+    except User.DoesNotExist:
+        return Response({'error': 'User not found'}, status=404)
+
   def create(self, request, *args, **kwargs):
     serializer = self.get_serializer(data=request.data)
     serializer.is_valid(raise_exception=True)
@@ -77,114 +105,105 @@ class PubViewSet(viewsets.ModelViewSet):
   serializer_class = PubSerializer
 
   def get_permissions(self):
-        if self.action in ['list', 'retrieve']:
-            return [AllowAny()]
-        return [IsAuthenticated()]
+          if self.action in ['list', 'retrieve']:
+              return [AllowAny()]
+          return [IsAuthenticated()]
 
-def get_all_ids():
-  return Pub.objects.values_list('id', flat=True)
+  @action(methods=['get'], detail=False, permission_classes=[AllowAny], url_path='publications-by/(?P<user>[0-9]+)')
+  def get_user_publications(self, request, user=None):
+    publications = Pub.objects.filter(user=user)
+    serializer = self.get_serializer(publications, many=True)
+    return Response(serializer.data)
 
-def serve_publication_image(request, pk):
+  def get_all_ids():
+    return Pub.objects.values_list('id', flat=True)
+
+
+  @action(methods=['put', 'patch'], detail=True, permission_classes=[IsAuthenticated])
+  def put(self, request, pk=None):
+      pub = self.get_object()
+      partial = request.method == 'PATCH'
+      serializer = self.get_serializer(pub, data=request.data, partial=partial)
+      serializer.is_valid(raise_exception=True)
+      return response({
+        "pub": serializer.data,
+        "message": "usuario creado exitosamente",
+            }, status=status.http_201_created)
+
+  def perform_update(self, serializer):
+          serializer.save()
+
+  def update_publication(pub_id, title, desc, user, photos, is_paused, price, category, desired):
+    """
+    This function updates an existing publication object and saves it to the database.
+    Args:
+        pub_id (int): The ID of the publication to update.
+        title (str): The new title of the publication.
+        desc (str): The new description of the publication.
+        user (User object): The new user who created the publication.
+        photos (File object): The new image file for the publication (optional).
+        is_paused (bool): Whether the publication is paused (not visible).
+        price (float): The new price of the publication (optional).
+        category (str): The new category of the publication.
+        desired (str): The new desired outcome of the publication (optional).
+    Returns:
+        Pub object: The updated publication object.
+    Raises:
+        ValueError: If the publication with the given ID does not exist.
+    """
+    # Get the publication object with the given ID
     try:
-        pub= Pub.objects.get(pk=pk)
+      pub = Pub.objects.get(id=pub_id)
     except Pub.DoesNotExist:
-        raise Http404('Publicacion no encontrada')
+      raise ValueError(f"Publication with ID {pub_id} does not exist.")
+    # Update the publication object
+    pub.title = title
+    pub.desc = desc
+    pub.photos = photos
+    pub.is_paused = is_paused
+    pub.category = category
+    # Save the updated publication to the database
+    pub.save(update_fields=['title', 'desc', 'photos', 'is_paused', 'desired'])
 
-    # Validate user permissions if applicable (e.g., only authenticated users can access)
-    if not pub.photos:
-        # Handle case where no image is uploaded
-        return HttpResponse('No hay foto disponible', status=404)
+    return pub
 
-    # Set appropriate content type (e.g., image/jpeg, image/png)
-    content_type = 'image/jpeg, image/png, image/jpg'
+  def create_publication(title, desc, user, photos, is_paused, price, category, desired):
+    """
+    This function creates a new publication object and saves it to the database.
 
-    return HttpResponse(pub.photos.read(), content_type=content_type)
+    Args:
+        title (str): The title of the publication.
+        desc (str): The description of the publication (up to 1000 characters).
+        user (User object): The user who created the publication.
+        photos (File object): The image file for the publication (optional).
+        is_paused (bool): Whether the publication is paused (not visible).
+        price (float): The price of the publication (optional).
+        category (str): The category of the publication.
+        desired (str): The desired outcome of the publication (optional).
 
-@action(methods=['put', 'patch'], detail=True, permission_classes=[IsAuthenticated])
-def put(self, request, pk=None):
-    pub = self.get_object()
-    partial = request.method == 'PATCH'
-    serializer = self.get_serializer(pub, data=request.data, partial=partial)
-    serializer.is_valid(raise_exception=True)
-    return response({
-      "pub": serializer.data,
-      "message": "usuario creado exitosamente",
-          }, status=status.http_201_created)
+    Returns:
+        Pub object: The newly created publication object.
 
-def perform_update(self, serializer):
-        serializer.save()
+    Raises:
+        ValueError: If any of the required fields (title, desc, user, category) are missing.
+    """
 
-def update_publication(pub_id, title, desc, user, photos, is_paused, price, category, desired):
-  """
-  This function updates an existing publication object and saves it to the database.
-  Args:
-      pub_id (int): The ID of the publication to update.
-      title (str): The new title of the publication.
-      desc (str): The new description of the publication.
-      user (User object): The new user who created the publication.
-      photos (File object): The new image file for the publication (optional).
-      is_paused (bool): Whether the publication is paused (not visible).
-      price (float): The new price of the publication (optional).
-      category (str): The new category of the publication.
-      desired (str): The new desired outcome of the publication (optional).
-  Returns:
-      Pub object: The updated publication object.
-  Raises:
-      ValueError: If the publication with the given ID does not exist.
-  """
-  # Get the publication object with the given ID
-  try:
-    pub = Pub.objects.get(id=pub_id)
-  except Pub.DoesNotExist:
-    raise ValueError(f"Publication with ID {pub_id} does not exist.")
-  # Update the publication object
-  pub.title = title
-  pub.desc = desc
-  pub.photos = photos
-  pub.is_paused = is_paused
-  pub.category = category
-  # Save the updated publication to the database
-  pub.save(update_fields=['title', 'desc', 'photos', 'is_paused', 'desired'])
+    if not title or not desc or not user or not category:
+      raise ValueError("Missing required fields. Please provide title, description, user, and category.")
 
-  return pub
+    # Create the publication object
+    pub = Pub(
+        title=title,
+        desc=desc,
+        user=user,
+        photos=photos,
+        is_paused=is_paused,
+        price=price,
+        category=category,
+        desired=desired
+    )
 
-def create_publication(title, desc, user, photos, is_paused, price, category, desired):
-  """
-  This function creates a new publication object and saves it to the database.
+    # Save the publication to the database
+    pub.save()
 
-  Args:
-      title (str): The title of the publication.
-      desc (str): The description of the publication (up to 1000 characters).
-      user (User object): The user who created the publication.
-      photos (File object): The image file for the publication (optional).
-      is_paused (bool): Whether the publication is paused (not visible).
-      price (float): The price of the publication (optional).
-      category (str): The category of the publication.
-      desired (str): The desired outcome of the publication (optional).
-
-  Returns:
-      Pub object: The newly created publication object.
-
-  Raises:
-      ValueError: If any of the required fields (title, desc, user, category) are missing.
-  """
-
-  if not title or not desc or not user or not category:
-    raise ValueError("Missing required fields. Please provide title, description, user, and category.")
-
-  # Create the publication object
-  pub = Pub(
-      title=title,
-      desc=desc,
-      user=user,
-      photos=photos,
-      is_paused=is_paused,
-      price=price,
-      category=category,
-      desired=desired
-  )
-
-  # Save the publication to the database
-  pub.save()
-
-  return pub
+    return pub

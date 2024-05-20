@@ -1,4 +1,9 @@
 import { Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { User } from '../services/user';
+import { UserService } from '../services/user.service';
+import { Pub } from '../services/pub';
+import { PublicationService } from '../services/publicacion.service';
 
 @Component({
   selector: 'app-ver-perfil',
@@ -6,9 +11,24 @@ import { Component } from '@angular/core';
   styleUrls: ['./ver-perfil.component.css']
 })
 export class VerPerfilComponent {
-  fotoDePerfil: string = './assets/logos/Principal.png';  //Poner foto de perfil por defecto en algún lado
-  nombre: string = 'Patricio Serres';
-  valoracion: number = 7.2;
+  username!: string;
   publicaciones?: object[];
+  user!: User;
 
+  constructor(private route: ActivatedRoute,
+              private userService: UserService,
+              private publicationService: PublicationService,
+             ) { }
+
+  ngOnInit(){
+    this.username=this.route.snapshot.params['username'];
+    this.userService.getUser(this.username).subscribe(
+      (user: User) => {
+        this.user = user;
+    this.publicationService.getPublicationsById(this.user.id).subscribe(
+      (publicaciones: Pub[]) => {
+        this.publicaciones = publicaciones;
+              });
+      });
+  }
 }

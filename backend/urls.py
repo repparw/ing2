@@ -29,4 +29,6 @@ urlpatterns = [
     path('publications/<int:pk>/photos/', serve_publication_image, name='publication_image'),
     path('api-token-auth/', CustomAuthToken.as_view(), name='api_token_auth'),
     path('users/current/', CurrentUserView.as_view(), name='current_user'),
+    path('profiles/<str:username>/', UserViewSet.as_view({'get': 'profile_by_username'}), name='profile-by-username'),
+    path('publications-by/<int:user>/', PubViewSet.as_view({'get': 'get_user_publications'}), name='publications-by-user'),
 ] + router.urls

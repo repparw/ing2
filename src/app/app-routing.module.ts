@@ -18,7 +18,7 @@ const routes: Routes = [
   {path: 'inicio sesion', component: RegistroComponent},
   {path: 'registrar empleado', component: RegistroEmpleadoComponent},
   {path: 'registrar usuario', component: RegistrarUsuarioComponent},
-  {path: 'ver perfil', component: VerPerfilComponent},
+  {path: 'usuarios/:username', component: VerPerfilComponent},
   {path: 'ver mi perfil', component: VerMiPerfilComponent},
   {path: 'modificar perfil', component: ModificarPerfilComponent},
   {path: 'crear publi', component: CrearPublicacionComponent},

@@ -10,6 +10,7 @@ import { Pub } from './pub';
 export class PublicationService {
   private baseUrl = 'http://127.0.0.1:8000/';
   private apiUrl = this.baseUrl + 'publications/';
+  private byUserUrl = this.baseUrl + 'publications-by/';
 
   constructor(private http: HttpClient) { }
 
@@ -39,6 +40,19 @@ export class PublicationService {
     return this.http.get<Pub>(this.apiUrl + id + '/', { withCredentials: true })
       .pipe(catchError(this.handleError));
   }
+
+  public getPublicationsById(id: number): Observable<Pub[]> {
+    const authToken = localStorage.getItem('token');
+    if (!authToken) {
+      throw new Error('No token found');
+    }
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Token ${authToken}`
+    });
+    return this.http.get<Pub[]>(this.byUserUrl + id, { headers, withCredentials: true })
+      .pipe(catchError(this.handleError));
+      }
 
   public getPhotos(id: number): string {
     return `${this.apiUrl}${id}/photos/`;
