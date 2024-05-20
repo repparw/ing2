@@ -13,7 +13,7 @@
         </div>
 
         <label for="passwordNueva">Nueva contraseña</label>
-        <input type="password" id="passwordNueva" class="form-control" formControlName="passwordNueva">
+        <input type="password" id="passwordNueva" class="form-control" formControlName="passwordNueva" maxlength="9">
         <div>
             <div class="text-danger" *ngIf="hasErrors('passwordNueva', 'required')">La contraseña nueva es requerida</div>
             <div class="text-danger" *ngIf="hasErrors('passwordNueva', 'minlength')">La contraseña nueva debe tener 6 o más caracteres</div>
