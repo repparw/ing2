@@ -12,7 +12,8 @@ import { Router } from '@angular/router';
 })
 
 export class CrearPublicacionComponent {
-  public uploader: FileUploader = new FileUploader({ url: 'http://localhost:8000/publications/', itemAlias: 'photos' })
+  authToken = localStorage.getItem('token');
+  public uploader: FileUploader = new FileUploader({ url: 'http://localhost:8000/publications/', itemAlias: 'photos' , headers: [{name: 'Authorization', value: `Token ${this.authToken}`}]})
 
   prodForm = this.formBuilder.group({
       title: ['', Validators.required],
@@ -37,7 +38,7 @@ export class CrearPublicacionComponent {
   }
 
   onSubmit() {
-    
+
   if (this.prodForm.invalid) {
     this.prodForm.markAllAsTouched();
     return; // Detener el envío del formulario si hay errores de validación
@@ -54,7 +55,7 @@ export class CrearPublicacionComponent {
   console.log('Agregando formulario a la base de datos');
   this.uploader.uploadAll();
   console.log('Formulario agregado a la base de datos', this.prodForm.value);
-  this.router.navigate(['/publicacion/19']);
+  this.router.navigate(['/home']);
   }
 
 }
