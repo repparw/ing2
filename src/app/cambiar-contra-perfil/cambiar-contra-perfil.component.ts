@@ -2,6 +2,7 @@ import { formatCurrency } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { UserService } from '../services/user.service';
 
 @Component({
   selector: 'app-cambiar-contra-perfil',
@@ -10,14 +11,16 @@ import { Router } from '@angular/router';
 })
 export class CambiarContraPerfilComponent {
 
+  id: number = 0;
   submitted = false;
 
   contraForm = new FormGroup({
     passwordActual: new FormControl('', [Validators.required, Validators.minLength(6), Validators.pattern(".*[!@#$%^&*()_+}{:;'?/><,.\|~`].*")]),
-    passwordNueva: new FormControl('', [Validators.required, Validators.minLength(6),  Validators.pattern(".*[!@#$%^&*()_+}{:;'?/><,.\|~`].*")])    
+    passwordNueva: new FormControl('', [Validators.required, Validators.minLength(6),  Validators.pattern(".*[!@#$%^&*()_+}{:;'?/><,.\|~`].*")])
   })
 
   private _router = inject(Router)
+  private userService = inject(UserService)
 
   hasErrors(controlName: string, errorType: string) {
     const control = this.contraForm.get(controlName);
@@ -42,6 +45,8 @@ export class CambiarContraPerfilComponent {
     console.log('El formulario es válido. Realizando cambio de contraseña...');
     console.log(this.contraForm.value);
     alert('Contraseña cambiada correctamente');
+    this.userService.getCurrentUser().subscribe(user => this.id = user.id);
+    this.userService.changePassword(this.id, this.contraForm.get('passwordNueva')?.value as string);
     this.navigate('ver mi perfil')
   }
 }
