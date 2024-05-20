@@ -54,7 +54,7 @@ export class PublicationService {
       .pipe(catchError(this.handleError));
   }
 
-  public updatePublication(id: number, pub: Pub): Observable<Pub> {
+  public updatePublication(id: number, pub: Partial<Pub>): Observable<Pub> {
     const authToken = localStorage.getItem('token');
     if (!authToken) {
       throw new Error('No token found');
@@ -63,7 +63,7 @@ export class PublicationService {
       'Content-Type': 'application/json',
       'Authorization': `Token ${authToken}`
     });
-    return this.http.put<Pub>(this.apiUrl + id + '/', pub, { headers, withCredentials: true })
+    return this.http.patch<Pub>(this.apiUrl + id + '/', pub, { headers, withCredentials: true })
       .pipe(catchError(this.handleError));
   }
 
