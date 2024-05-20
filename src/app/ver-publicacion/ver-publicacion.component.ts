@@ -33,6 +33,13 @@ export class VerPublicacionComponent implements OnInit{
     console.log(this.data);
   }
 
+  confirmDeletePublication(productID: number): void {
+    if (window.confirm('¿Estás seguro de que deseas eliminar esta publicación?')) {
+      this.deletePublication(productID);
+    }
+  }
+
+
   deletePublication(id: number) {
     this.publicationService.deletePublication(id).subscribe((pub: Pub) => {
       console.log('Publicación eliminada');

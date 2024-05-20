@@ -37,16 +37,10 @@ export class EditarPublicacionComponent implements OnInit {
 
   ngOnInit() {
     this.id = parseInt(this.route.snapshot.params['id']);
-    this.uploader = new FileUploader({ url: 'http://localhost:8000/publications/'+this.id+'/', itemAlias: 'photos' })
+    const authToken = localStorage.getItem('token');
+    this.uploader = new FileUploader({ url: 'http://localhost:8000/publications/'+this.id+'/', itemAlias: 'photos', headers: [{name: 'Authorization', value: `Token ${authToken}`}], method: 'PUT' })
     this.getPublication(this.id);
-    this.uploader.onBeforeUploadItem = this.onBeforeUploadItem;
-    
-    this.prodForm.get('category')?.disable()
-
-  }
-
-  onBeforeUploadItem(item: any) {
-    item.method = 'PUT';
+    this.prodForm.get('cat')?.disable()
   }
 
   getPublication(id: number): void {
@@ -105,17 +99,29 @@ export class EditarPublicacionComponent implements OnInit {
     this.prodForm.markAllAsTouched();
     return; // Detener el envío del formulario si hay errores de validación
   }
-  this.uploader.onBuildItemForm = (fileItem: any, form: any) => {
-    form.append('title', this.prodForm.get('title')?.value);
-    form.append('desc', this.prodForm.get('desc')?.value);
-    form.append('category', this.prodForm.get('category')?.value);
-    form.append('is_paused', this.prodForm.get('is_paused')?.value);
-    form.append('desired', this.prodForm.get('desired')?.value);
-    form.append('price', this.prodForm.get('price')?.value);
-    form.append('user', this.prodForm.get('user')?.value);
+
+  if (this.uploader.queue.length > 0) {
+    this.uploader.onBuildItemForm = (fileItem: any, form: any) => {
+      form.append('title', this.prodForm.get('title')?.value);
+      form.append('desc', this.prodForm.get('desc')?.value);
+      form.append('category', this.prodForm.get('category')?.value);
+      form.append('is_paused', this.prodForm.get('is_paused')?.value);
+      form.append('desired', this.prodForm.get('desired')?.value);
+      form.append('price', this.prodForm.get('price')?.value);
+      form.append('user', this.prodForm.get('user')?.value);
+    }
+    console.log('Agregando formulario a la base de datos');
+    this.uploader.uploadAll();
+    console.log('Formulario agregado a la base de datos', this.prodForm.value);
   }
-  console.log('Agregando formulario a la base de datos');
-  this.uploader.uploadAll();
-  console.log('Formulario agregado a la base de datos', this.prodForm.value);
+  else
+    console.log('Actualizando formulario sin cambiar foto en la base de datos');
+    const pub = this.prodForm.value as Pub;
+    this.publicationService.updatePublication(this.id, pub).subscribe(
+      (pub: Pub) => {
+      console.log('Publicación actualizada:', pub);
+      alert('Publicación actualizada correctamente');
+      });
   }
+
 }

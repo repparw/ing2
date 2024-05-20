@@ -48,6 +48,12 @@ class CurrentUserView(APIView):
     serializer = CurrentUserSerializer(request.user)
     return Response(serializer.data)
 
+  def put(self, request):
+    serializer = CurrentUserSerializer(request.user, data=request.data, partial=True)
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
+    return Response(serializer.data)
+
 class UserViewSet(viewsets.ModelViewSet):
   queryset = User.objects.all()
   serializer_class = UserSerializer
