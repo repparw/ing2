@@ -1,7 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Pub } from '../services/pub'
+import { User } from '../services/user'
 import { PublicationService } from '../services/publicacion.service';
+import { UserService } from '../services/user.service';
 import { Location } from '@angular/common';
 import { Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
@@ -16,12 +18,13 @@ import { FileSelectDirective, FileUploader } from 'ng2-file-upload';
 export class EditarPublicacionComponent implements OnInit {
   id!: number;
   public uploader!: FileUploader;
+  userId!: number;
+
   prodForm = new FormGroup({
     title: new FormControl('', Validators.required),
     desc: new FormControl('', Validators.required),
     category: new FormControl(''),
     is_paused: new FormControl(false),
-    photos: new FormControl<File | null>(null),
     desired: new FormControl(''),
     rating: new FormControl(0),
     price: new FormControl(0),
@@ -31,6 +34,7 @@ export class EditarPublicacionComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private publicationService: PublicationService,
+    private userService: UserService,
     private location: Location,
     private route: ActivatedRoute,
   ){ }
@@ -38,15 +42,24 @@ export class EditarPublicacionComponent implements OnInit {
   ngOnInit() {
     this.id = parseInt(this.route.snapshot.params['id']);
     const authToken = localStorage.getItem('token');
+    this.userService.getCurrentUser().subscribe(
+      user => {
+        this.userId = user.id;
+        this.getPublication(this.id);
+      });
     this.uploader = new FileUploader({ url: 'http://localhost:8000/publications/'+this.id+'/', itemAlias: 'photos', headers: [{name: 'Authorization', value: `Token ${authToken}`}], method: 'PUT' })
-    this.getPublication(this.id);
     this.prodForm.get('cat')?.disable()
   }
 
   getPublication(id: number): void {
    this.publicationService.getPublication(id).subscribe((pub: Pub) => {
-    this.prodForm = this.getForm(pub);
-          })
+        if (pub.user !== this.userId) {
+          alert('No está autorizado para editar esta publicación')
+          this.location.back();
+        } else {
+          this.prodForm = this.getForm(pub);
+        }
+        })
   }
 
   getForm(data: Pub) {
@@ -55,7 +68,6 @@ export class EditarPublicacionComponent implements OnInit {
       desc: new FormControl(data.desc, Validators.required),
       category: new FormControl(data.category),
       is_paused: new FormControl(data.is_paused),
-      photos: new FormControl<File | null>(data.photos),
       desired: new FormControl(data.desired),
       rating: new FormControl(data.rating),
       price: new FormControl(data.price),
@@ -116,7 +128,7 @@ export class EditarPublicacionComponent implements OnInit {
   }
   else
     console.log('Actualizando formulario sin cambiar foto en la base de datos');
-    const pub = this.prodForm.value as Pub;
+    const pub = this.prodForm.value as Partial<Pub>;
     this.publicationService.updatePublication(this.id, pub).subscribe(
       (pub: Pub) => {
       console.log('Publicación actualizada:', pub);

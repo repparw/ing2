@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { PublicationService } from '../services/publicacion.service';
 import { ActivatedRoute } from '@angular/router';
 import { UserService } from '../services/user.service'
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-ver-publicacion',
@@ -14,7 +15,8 @@ export class VerPublicacionComponent implements OnInit{
   data!: Pub;
   linkFoto!: any;
   productID!: number;
-  constructor (private route: ActivatedRoute, private  publicationService: PublicationService, private userservice: UserService ){
+  canEdit!: boolean;
+  constructor (private route: ActivatedRoute, private  publicationService: PublicationService, private userService: UserService, private router:Router ){
 
   }
   ngOnInit(): void {
@@ -24,6 +26,10 @@ export class VerPublicacionComponent implements OnInit{
       if (data) { // Check if data is not null
         this.data = data;
         this.linkFoto = this.publicationService.getPhotos(this.productID);
+        this.userService.isOwner(this.data).subscribe(
+          isOwner => {
+          this.canEdit = isOwner;
+        });
         console.log(this.linkFoto);
         console.log(this.data);
       } else {
@@ -46,8 +52,8 @@ export class VerPublicacionComponent implements OnInit{
     });
   }
 
-  isAuthenticated(){
-    return this.userservice.isAuthenticated()
+  editar(id:number){
+    this.router.navigate([`publicacion/${id}/editar`])
   }
 }
 

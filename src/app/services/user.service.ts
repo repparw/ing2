@@ -3,6 +3,7 @@ import { LoginRequest } from './loginRequest';
 import { HttpClient, HttpErrorResponse,HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable, catchError, firstValueFrom, tap, throwError } from 'rxjs';
 import { User } from './user';
+import { Pub } from './pub';
 import { map } from 'rxjs/operators';
 
 @Injectable({
@@ -20,7 +21,7 @@ export class UserService {
 
   createUser(user: User): Observable<User> {
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
-    return this.http.post<User>(this.userUrl, user, { headers, withCredentials: true });
+    return this.http.post<User>(this.userUrl, user, { headers });
   }
 
   updateUser(user: User): Observable<User> {
@@ -67,6 +68,16 @@ export class UserService {
 
   isAuthenticated(): boolean {
     return !!localStorage.getItem('token');
+  }
+
+  isOwner(pub: Pub): Observable<boolean> {
+    return this.getCurrentUser().pipe(
+      map(user => {
+        console.log(user.id); // Logging for verification
+        console.log(pub.user); // Logging for verification
+        return pub.user == user.id; // Return true if the current user owns the publication
+      })
+    );
   }
 
   get user(): Observable<User[]> {
