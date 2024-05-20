@@ -8,11 +8,46 @@ from rest_framework.decorators import action, api_view, permission_classes
 from django.http import HttpResponse, Http404
 from django.contrib.auth import get_user_model
 from .models import Pub, User, Sucursal
-from .serializers import CurrentUserSerializer, CustomAuthTokenSerializer, PubSerializer, UserSerializer, SucursalSerializer
+from .serializers import CurrentUserSerializer, CustomAuthTokenSerializer, PubSerializer, UpdatePasswordSerializer, UserSerializer, SucursalSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.views import APIView
+from rest_framework.generics import UpdateAPIView
 
 # Create your views here.
+
+class UpdatePasswordView(UpdateAPIView):
+  """
+  An endpoint for changing password.
+  """
+  serializer_class = UpdatePasswordSerializer
+  model = User
+  permission_classes = (IsAuthenticated,)
+
+  def get_object(self, queryset=None):
+      obj = self.request.user
+      return obj
+
+  def update(self, request, *args, **kwargs):
+      self.object = self.get_object()
+      serializer = self.get_serializer(data=request.data)
+
+      if serializer.is_valid():
+          # Check old password
+          if not self.object.check_password(serializer.data.get("old_password")):
+              return Response({"old_password": ["Wrong password."]}, status=status.HTTP_400_BAD_REQUEST)
+          # set_password also hashes the password that the user will get
+          self.object.set_password(serializer.data.get("new_password"))
+          self.object.save()
+          response = {
+              'status': 'success',
+              'code': status.HTTP_200_OK,
+              'message': 'Password updated successfully',
+              'data': []
+          }
+
+          return Response(response)
+
+      return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 def serve_publication_image(request, pk):
       try:
