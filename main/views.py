@@ -59,17 +59,10 @@ def create_sucursal(address, phone, email, city):
   return suc
 
 @api_view(['GET'])
-@permission_classes([AllowAny])
-def profile_view(request, username):
- user = get_object_or_404(User, username=username)
- data = {
-    'id': user.id,
-    'name': user.name,
-    'username': user.username,
-    'email': user.email,
-    'rating': user.rating,
-    'suc': user.suc,
-     }
+def get_all_sucursales(request):
+  sucursales = Sucursal.objects.all()
+  serializer = SucursalSerializer(sucursales, many=True)
+  return Response(serializer.data)
 
 class CurrentUserView(APIView):
   permission_classes = [IsAuthenticatedOrReadOnly]
@@ -91,16 +84,15 @@ class UserViewSet(viewsets.ModelViewSet):
   def get_permissions(self):
     if self.action in ['create']:
       return [AllowAny()]
-    return [IsAuthenticated()]
+    return [IsAuthenticatedOrReadOnly()]
 
-
-  def profile_by_username(self, request, username=None):
+  def profile_by_username(self, request, username=None) -> Response:
     try:
-        user = User.objects.get(username=username)
-        serializer = self.get_serializer(user)
-        return Response(serializer.data)
+        user = get_object_or_404(User, username=username)
+        data = UserSerializer(user).data
+        return Response(data)
     except User.DoesNotExist:
-        return Response({'error': 'User not found'}, status=404)
+        return Response({'error': 'Usuario no encontrado'}, status=404)
 
   def create(self, request, *args, **kwargs):
     serializer = self.get_serializer(data=request.data)
@@ -118,9 +110,8 @@ class PubViewSet(viewsets.ModelViewSet):
   def get_permissions(self):
           if self.action in ['list', 'retrieve']:
               return [AllowAny()]
-          return [IsAuthenticated()]
+          return [IsAuthenticatedOrReadOnly()]
 
-  @action(methods=['get'], detail=False, permission_classes=[AllowAny], url_path='publications-by/(?P<user>[0-9]+)')
   def get_user_publications(self, request, user=None):
     publications = Pub.objects.filter(user=user)
     serializer = self.get_serializer(publications, many=True)

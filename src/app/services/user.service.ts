@@ -81,15 +81,18 @@ export class UserService {
     );
   }
 
-  getUser(username: string): Observable<User> {
+  getUserByUsername(username: string): Observable<User> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
     });
     return this.http.get<User>(`${this.profileUrl}${username}/`, { headers });
   }
 
-  get user(): Observable<User[]> {
-    return this.http.get<User[]>(this.userUrl);
+  getUser(id: number): Observable<User> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+    return this.http.get<User>(`${this.userUrl}${id}/`, { headers });
   }
 
   private handleError(error: HttpErrorResponse) {
