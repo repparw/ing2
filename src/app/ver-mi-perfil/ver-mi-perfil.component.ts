@@ -1,6 +1,8 @@
 import { Component, OnInit, inject} from '@angular/core';
 import { Router } from '@angular/router';
 import { UserService } from '../services/user.service';
+import { PublicationService } from '../services/publicacion.service';
+import { Pub } from '../services/pub';
 
 @Component({
   selector: 'app-ver-mi-perfil',
@@ -17,7 +19,7 @@ export class VerMiPerfilComponent implements OnInit {
   mail: string = '';
   sucursal: number = 1;
 
-  constructor(private userService: UserService){}
+  constructor(private userService: UserService, private publicationService: PublicationService){}
 
   ngOnInit(): void {
     this.userService.getCurrentUser().subscribe(
@@ -28,10 +30,13 @@ export class VerMiPerfilComponent implements OnInit {
       this.mail = user.email;
       this.sucursal = user.suc;
       this.valoracion = user.rating!;
-      //this.publicaciones = user.publications;
+      this.publicationService.getPublicationsById(user.id).subscribe(
+          (publications: Pub[]) => {
+            this.publicaciones = publications;
+      });
       }
     )
-      }
+  }
 
   private _router = inject(Router)
 
@@ -40,5 +45,4 @@ export class VerMiPerfilComponent implements OnInit {
   }
 
 }
-
 
