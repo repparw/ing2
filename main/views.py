@@ -58,6 +58,11 @@ class UserViewSet(viewsets.ModelViewSet):
   queryset = User.objects.all()
   serializer_class = UserSerializer
 
+  def get_permissions(self):
+    if self.action in ['create']:
+      return [AllowAny()]
+    return [IsAuthenticated()]
+
   def create(self, request, *args, **kwargs):
     serializer = self.get_serializer(data=request.data)
     serializer.is_valid(raise_exception=True)
@@ -94,6 +99,20 @@ def serve_publication_image(request, pk):
     content_type = 'image/jpeg, image/png, image/jpg'
 
     return HttpResponse(pub.photos.read(), content_type=content_type)
+
+@action(methods=['put', 'patch'], detail=True, permission_classes=[IsAuthenticated])
+def put(self, request, pk=None):
+    pub = self.get_object()
+    partial = request.method == 'PATCH'
+    serializer = self.get_serializer(pub, data=request.data, partial=partial)
+    serializer.is_valid(raise_exception=True)
+    return response({
+      "pub": serializer.data,
+      "message": "usuario creado exitosamente",
+          }, status=status.http_201_created)
+
+def perform_update(self, serializer):
+        serializer.save()
 
 def update_publication(pub_id, title, desc, user, photos, is_paused, price, category, desired):
   """
