@@ -14,8 +14,9 @@ html{
 }
 
 .container {
-    display: flex; /* Use flexbox for layout */
-    align-items: center; /* Center items vertically */
+  background-color: #DFD0B8;  
+  display: flex; /* Use flexbox for layout */
+  align-items: center; /* Center items vertically */
 }
 
 .carousel-container {
@@ -56,7 +57,7 @@ h4{
     margin-left: 10%;
     max-height: 450px;
     max-width: 450px;
-
+    
 }
 
 a {
