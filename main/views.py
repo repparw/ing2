@@ -1,9 +1,10 @@
+from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework import serializers, status
-from rest_framework.decorators import action
+from rest_framework.decorators import action, api_view, permission_classes
 from django.http import HttpResponse, Http404
 from django.contrib.auth import get_user_model
 from .models import Pub, User, Sucursal
@@ -57,8 +58,18 @@ def create_sucursal(address, phone, email, city):
   suc.save()
   return suc
 
+@api_view(['GET'])
+@permission_classes([AllowAny])
 def profile_view(request, username):
- return User.objects.get(username=username)
+ user = get_object_or_404(User, username=username)
+ data = {
+    'id': user.id,
+    'name': user.name,
+    'username': user.username,
+    'email': user.email,
+    'rating': user.rating,
+    'suc': user.suc,
+     }
 
 class CurrentUserView(APIView):
   permission_classes = [IsAuthenticatedOrReadOnly]

@@ -82,15 +82,8 @@ export class UserService {
   }
 
   getUser(username: string): Observable<User> {
-
-    const authToken = localStorage.getItem('token');
-    if (!authToken) {
-      throw new Error('No token found');
-    }
-
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
-      'Authorization': `Token ${authToken}`
     });
     return this.http.get<User>(`${this.profileUrl}${username}/`, { headers });
   }
