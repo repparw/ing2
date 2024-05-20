@@ -12,6 +12,7 @@ import { map } from 'rxjs/operators';
 export class UserService {
 
   private userUrl = 'http://localhost:8000/users/';
+  private profileUrl = 'http://localhost:8000/profiles/';
   private loginUrl = 'http://localhost:8000/api-token-auth/';
   //headerDict: HeadersInit | undefined;
 
@@ -78,6 +79,20 @@ export class UserService {
         return pub.user == user.id; // Return true if the current user owns the publication
       })
     );
+  }
+
+  getUser(username: string): Observable<User> {
+
+    const authToken = localStorage.getItem('token');
+    if (!authToken) {
+      throw new Error('No token found');
+    }
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Token ${authToken}`
+    });
+    return this.http.get<User>(`${this.profileUrl}${username}/`, { headers });
   }
 
   get user(): Observable<User[]> {
