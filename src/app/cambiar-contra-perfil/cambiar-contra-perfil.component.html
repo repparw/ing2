@@ -1,1 +1,32 @@
-<p>cambiar-contra-perfil works!</p>
+<html>
+<body>
+    <form [formGroup]="contraForm" (ngSubmit)="onSubmit()"> 
+        <label for="passwordActual">Contraseña actual</label>
+        <input type="password" id="passwordActual" class="form-control" formControlName="passwordActual" maxlength="9">
+        <div>
+            <div class="text-danger" *ngIf="hasErrors('passwordActual', 'required')">La contraseña actual es requerida</div>
+            <div class="text-danger" *ngIf="hasErrors('passwordActual', 'minlength')">La contraseña actual debe tener 6 o más caracteres</div>
+            <div class="text-danger" *ngIf="hasErrors('passwordActual', 'pattern') ">La contraseña actual debe tener al menos 1 símbolo.</div>      
+            <div *ngIf="contraForm.controls['passwordActual']?.touched && !hasErrors('passwordActual', 'required') && !hasErrors('passwordActual', 'minlength') && !hasErrors('passwordActual', 'pattern')">
+                <div class="text-success">La contraseña es correcta</div>
+            </div>
+        </div>
+
+        <label for="passwordNueva">Nueva contraseña</label>
+        <input type="password" id="passwordNueva" class="form-control" formControlName="passwordNueva">
+        <div>
+            <div class="text-danger" *ngIf="hasErrors('passwordNueva', 'required')">La contraseña nueva es requerida</div>
+            <div class="text-danger" *ngIf="hasErrors('passwordNueva', 'minlength')">La contraseña nueva debe tener 6 o más caracteres</div>
+            <div class="text-danger" *ngIf="hasErrors('passwordNueva', 'pattern') ">La contraseña nueva debe tener al menos 1 símbolo.</div>
+            
+            <div *ngIf=" contraForm.controls['passwordNueva']?.touched && !hasErrors('passwordNueva', 'required') && !hasErrors('passwordNueva', 'minlength') && !hasErrors('passwordNueva', 'pattern')">
+                <div class="text-success">La repetición de contraseña es correcta</div>
+            </div>
+            <div class="text-danger" *ngIf="contraForm.controls['passwordNueva']?.touched && contraForm.get('passwordActual')?.value == contraForm.get('passwordNueva')?.value">Las contraseñas no pueden ser iguales.</div>
+        </div>
+        <div>
+            <button type="submit" class="btn-primary" [disabled]="contraForm.invalid">Cambiar contraseña</button>
+        </div>
+    </form>
+</body>
+</html>
