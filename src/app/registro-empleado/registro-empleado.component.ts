@@ -10,12 +10,13 @@ import { User } from '../services/user';
   styleUrls: ['./registro-empleado.component.css']
 })
 
+
 export class RegistroEmpleadoComponent {
   employeeForm = new FormGroup({
     name: new FormControl('',
       Validators.required),
-    username: new FormControl('',
-      Validators.required),
+    username: new FormControl('',[
+      Validators.required, Validators.minLength(8), Validators.maxLength(8), Validators.pattern(/^([0-9])*$/)]),
     email: new FormControl('',[
       Validators.required,
       Validators.pattern('.*@.*')]),

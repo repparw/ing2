@@ -13,10 +13,11 @@
 
     <div>
       <label for="username">DNI</label>
-      <input type="string" id="username" class="form-control" formControlName="username">
+      <input type="text" id="username" class="form-control" formControlName="username">
       <div>
         <small class="text-danger" *ngIf="hasErrors('username', 'required')">El DNI es requerido</small>
         <div class="text-danger" *ngIf="hasErrors('username', 'minlength')">El DNI debe tener 8 caracteres</div>
+        <div class="text-danger" *ngIf="hasErrors('username', 'maxlength')">El DNI debe tener 8 caracteres</div>
         <div class="text-danger" *ngIf="hasErrors('username', 'pattern') ">El DNI debe consistir solo de numeros</div>      
       </div>
     </div>
