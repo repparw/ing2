@@ -37,8 +37,8 @@
             <!-- Add questions if logged in -->
             <p>Preguntas(solo si esta logueado)</p>
         </div>
-        <button type="button" (click)="editar(productID)" class="btn btn-primary">Modificar publicacion</button>
-        <button type="button" (click)="confirmDeletePublication(productID)" class="btn btn-primary">Eliminar publicacion</button>
+        <button *ngIf="canEdit" type="button" (click)="editar(productID)" class="btn btn-primary">Modificar publicacion</button>
+        <button *ngIf="canEdit" type="button" (click)="confirmDeletePublication(productID)" class="btn btn-primary">Eliminar publicacion</button>
     </div>
 </body>
 
