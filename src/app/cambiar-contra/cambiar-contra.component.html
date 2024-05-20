@@ -17,14 +17,14 @@
       <div class="text-danger" *ngIf="hasErrors('repetirContrasena', 'required') ">La repetición de contraseña es requerida.</div>
       <div class="text-danger" *ngIf="hasErrors('repetirContrasena', 'minlength') ">La repetición de contraseña debe tener al menos 6 caracteres.</div>
       <div class="text-danger" *ngIf="hasErrors('repetirContrasena', 'pattern') ">La nueva contraseña debe tener al menos 1 símbolo.</div>
-      <div *ngIf="cambiarContraForm.controls['nuevaContrasena']?.touched && !hasErrors('repetirContrasena', 'required') && !hasErrors('repetirContrasena', 'minlength') && !hasErrors('repetirContrasena', 'pattern')">
+      <div class="text-danger" *ngIf="cambiarContraForm.get('nuevaContrasena')?.value !== cambiarContraForm.get('repetirContrasena')?.value && cambiarContraForm.controls['nuevaContrasena']?.touched ">Las contraseñas no coinciden.</div>      
+      <div *ngIf="cambiarContraForm.controls['repetirContrasena']?.touched && !hasErrors('repetirContrasena', 'required') && !hasErrors('repetirContrasena', 'minlength') && !hasErrors('repetirContrasena', 'pattern')">
         <div class="text-success">La repetición de contraseña es correcta</div>
       </div>
+
     </div>
 
-    <div class="text-danger" *ngIf="cambiarContraForm.get('nuevaContrasena')?.value !== cambiarContraForm.get('repetirContrasena')?.value && submitted">Las contraseñas no coinciden.</div>
-
-    <button type="submit" class="btn-primary" [disabled]="cambiarContraForm.invalid">Cambiar contraseña</button>
+    <button type="submit" class="btn-primary" [disabled]="cambiarContraForm.invalid || cambiarContraForm.get('nuevaContrasena')?.value !== cambiarContraForm.get('repetirContrasena')?.value">Cambiar contraseña</button>
   </form>
 </body>
   </html>
