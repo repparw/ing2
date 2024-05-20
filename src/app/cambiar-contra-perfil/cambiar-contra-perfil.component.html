@@ -20,10 +20,12 @@
             <div class="text-danger" *ngIf="hasErrors('passwordNueva', 'pattern') ">La contraseña nueva debe tener al menos 1 símbolo.</div>
             
             <div *ngIf=" contraForm.controls['passwordNueva']?.touched && !hasErrors('passwordNueva', 'required') && !hasErrors('passwordNueva', 'minlength') && !hasErrors('passwordNueva', 'pattern')">
-                <div class="text-success">La repetición de contraseña es correcta</div>
+                <div class="text-success">La nueva contraseña es correcta</div>
             </div>
-            <div class="text-danger" *ngIf="contraForm.controls['passwordNueva']?.touched && contraForm.get('passwordActual')?.value == contraForm.get('passwordNueva')?.value">Las contraseñas no pueden ser iguales.</div>
         </div>
+
+        <div class="text-danger" *ngIf="contraForm.controls['passwordNueva']?.touched && (contraForm.get('passwordActual')?.value == contraForm.get('passwordNueva')?.value) && submitted">Las contraseñas no pueden ser iguales.</div>
+
         <div>
             <button type="submit" class="btn-primary" [disabled]="contraForm.invalid">Cambiar contraseña</button>
         </div>

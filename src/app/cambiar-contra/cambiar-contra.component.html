@@ -1,18 +1,15 @@
 <html>
 <body>
-<form [formGroup]="cambiarContraForm" (ngSubmit)="enviar()" novalidate>
+<form [formGroup]="cambiarContraForm" (ngSubmit)="onSubmit()">
     <div class="campo-contrasena">
       <label for="nuevaContrasena" class="form-label">Nueva contraseña:</label>
       <input type="password" class="form-control" id="nuevaContrasena" formControlName="nuevaContrasena" maxlength="9">
       <div class="text-danger" *ngIf="hasErrors('nuevaContrasena', 'required') ">La nueva contraseña es requerida.</div>
       <div class="text-danger" *ngIf="hasErrors('nuevaContrasena', 'minlength') ">La nueva contraseña debe tener al menos 6 caracteres.</div>
       <div class="text-danger" *ngIf="hasErrors('nuevaContrasena', 'pattern') ">La nueva contraseña debe tener al menos 1 símbolo.</div>
-      <div *ngIf=" hasErrors('nuevaContrasena', 'required') || hasErrors('nuevaContrasena', 'minlength') || hasErrors('nuevaContrasena', 'pattern')  ; else todoOk"></div>
-      
-      <ng-template #todoOk>
+      <div *ngIf="cambiarContraForm.controls['nuevaContraseña']?.touched && !hasErrors('nuevaContrasena', 'required') && !hasErrors('nuevaContrasena', 'minlength') && !hasErrors('nuevaContrasena', 'pattern')">
         <div class="text-success">La contraseña es correcta</div>
-      </ng-template>
-      <div class="text-" *ngIfElse="hasErrors('nuevaContrasena', 'pattern') ">La nueva contraseña debe tener al menos 1 símbolo.</div>
+      </div>
     </div>
     <div class="campo-contrasena">
       <label for="repetirContrasena" class="form-label">Repetir nueva contraseña:</label>
@@ -20,12 +17,13 @@
       <div class="text-danger" *ngIf="hasErrors('repetirContrasena', 'required') ">La repetición de contraseña es requerida.</div>
       <div class="text-danger" *ngIf="hasErrors('repetirContrasena', 'minlength') ">La repetición de contraseña debe tener al menos 6 caracteres.</div>
       <div class="text-danger" *ngIf="hasErrors('repetirContrasena', 'pattern') ">La nueva contraseña debe tener al menos 1 símbolo.</div>
-      <div *ngIf=" hasErrors('repetirContrasena', 'required') || hasErrors('repetirContrasena', 'minlength') || hasErrors('repetirContrasena', 'pattern')  ; else todoOk"></div>
-      <ng-template #todoOk>
+      <div *ngIf="cambiarContraForm.controls['nuevaContrasena']?.touched && !hasErrors('repetirContrasena', 'required') && !hasErrors('repetirContrasena', 'minlength') && !hasErrors('repetirContrasena', 'pattern')">
         <div class="text-success">La repetición de contraseña es correcta</div>
-      </ng-template>
-      <div class="text-danger" *ngIf="cambiarContraForm.get('nuevaContrasena')?.value !== cambiarContraForm.get('repetirContrasena')?.value && submitted">Las contraseñas no coinciden.</div>
+      </div>
     </div>
+
+    <div class="text-danger" *ngIf="cambiarContraForm.get('nuevaContrasena')?.value !== cambiarContraForm.get('repetirContrasena')?.value && submitted">Las contraseñas no coinciden.</div>
+
     <button type="submit" class="btn-primary" [disabled]="cambiarContraForm.invalid">Cambiar contraseña</button>
   </form>
 </body>
