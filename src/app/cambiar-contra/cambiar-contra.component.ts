@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'cambiar-contra',
@@ -22,6 +23,12 @@ export class CambiarContraComponent implements OnInit {
    
   }
 
+  private _router = inject(Router)
+
+  navigate(ruta: string): void{
+    this._router.navigate([ruta])
+  }
+
   hasErrors(controlName: string, errorType: string) {
     const control = this.cambiarContraForm.get(controlName);
     return control && control.hasError(errorType) && (control.dirty || control.touched);  
@@ -41,6 +48,8 @@ export class CambiarContraComponent implements OnInit {
 
     console.log('El formulario es válido. Realizando cambio de contraseña...');
     console.log(this.cambiarContraForm.value);
+    alert('Contraseña reestablecida correctamente');
+    this.navigate('inicio sesion')
     
     // Aquí puedes realizar la lógica para enviar el formulario al backend
   }
