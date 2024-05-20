@@ -13,6 +13,7 @@ export class CambiarContraPerfilComponent {
 
   id: number = 0;
   submitted = false;
+  contraseñaReal?: string;
 
   contraForm = new FormGroup({
     passwordActual: new FormControl('', [Validators.required, Validators.minLength(6), Validators.pattern(".*[!@#$%^&*()_+}{:;'?/><,.\|~`].*")]),
@@ -41,11 +42,16 @@ export class CambiarContraPerfilComponent {
       console.log('Las contraseñas son iguales. No se puede modificar.');
       return; // Detener el envío del formulario si las 2 contraseñas son iguales
     }
+    this.userService.getCurrentUser().subscribe(user => 
+      this.id = user.id);
+
+    if (this.contraForm.get('passwordActual')?.value != this.contraseñaReal){
+      console.log('La contraseña actual no corresponde con la almacenada en la base de datos.')
+    }
     //Caso contrario modificar
     console.log('El formulario es válido. Realizando cambio de contraseña...');
     console.log(this.contraForm.value);
     alert('Contraseña cambiada correctamente');
-    this.userService.getCurrentUser().subscribe(user => this.id = user.id);
     this.userService.changePassword(this.id, this.contraForm.get('passwordNueva')?.value as string);
     this.navigate('ver mi perfil')
   }
