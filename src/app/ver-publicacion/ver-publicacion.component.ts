@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 })
 export class VerPublicacionComponent implements OnInit{
   data!: Pub;
+  username!: string;
   linkFoto!: any;
   productID!: number;
   canEdit!: boolean;
@@ -37,6 +38,11 @@ export class VerPublicacionComponent implements OnInit{
       }
     });
     console.log(this.data);
+    this.userService.getUser(this.data.user).subscribe(
+      (user) => {
+        this.username = user.username;
+      }
+          );
   }
 
   confirmDeletePublication(productID: number): void {

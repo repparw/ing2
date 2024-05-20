@@ -22,7 +22,7 @@ export class VerPerfilComponent {
 
   ngOnInit(){
     this.username=this.route.snapshot.params['username'];
-    this.userService.getUser(this.username).subscribe(
+    this.userService.getUserByUsername(this.username).subscribe(
       (user: User) => {
         this.user = user;
     this.publicationService.getPublicationsById(this.user.id).subscribe(
