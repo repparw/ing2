@@ -32,10 +32,6 @@ class UserSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
       instance.name = validated_data.get('name', instance.name)
-      instance.username = validated_data.get('username', instance.username)
-      instance.email = validated_data.get('email', instance.email)
-      instance.date = validated_data.get('date', instance.date)
-      instance.rating = validated_data.get('rating', instance.rating)
       instance.suc = validated_data.get('suc', instance.suc)
       instance.mailing = validated_data.get('mailing', instance.mailing)
       instance.save()

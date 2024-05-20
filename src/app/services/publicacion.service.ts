@@ -23,7 +23,15 @@ export class PublicationService {
   }
 
   public createPublication(pub: Pub): Observable<Pub> {
-    return this.http.post<Pub>(this.apiUrl, pub, { withCredentials: true })
+    const authToken = localStorage.getItem('token');
+    if (!authToken) {
+      throw new Error('No token found');
+    }
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Token ${authToken}`
+    });
+    return this.http.post<Pub>(this.apiUrl, pub, { headers, withCredentials: true })
       .pipe(catchError(this.handleError));
   }
 
@@ -47,12 +55,28 @@ export class PublicationService {
   }
 
   public updatePublication(id: number, pub: Pub): Observable<Pub> {
-    return this.http.put<Pub>(this.apiUrl + id + '/', pub, { withCredentials: true })
+    const authToken = localStorage.getItem('token');
+    if (!authToken) {
+      throw new Error('No token found');
+    }
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Token ${authToken}`
+    });
+    return this.http.put<Pub>(this.apiUrl + id + '/', pub, { headers, withCredentials: true })
       .pipe(catchError(this.handleError));
   }
 
   public deletePublication(id: number): Observable<Pub> {
-    return this.http.delete<Pub>(this.apiUrl + id + '/', { withCredentials: true })
+    const authToken = localStorage.getItem('token');
+    if (!authToken) {
+      throw new Error('No token found');
+    }
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Token ${authToken}`
+    });
+    return this.http.delete<Pub>(this.apiUrl + id + '/', { headers, withCredentials: true })
       .pipe(catchError(this.handleError));
   }
 }
