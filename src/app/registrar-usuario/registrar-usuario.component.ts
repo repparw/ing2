@@ -19,7 +19,7 @@ throw new Error('Method not implemented.');
   registroError: string = "";
   userForm= this.formBuilder.group({
     name: ['', Validators.required],
-    username: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(8), Validators.pattern(/^([0-9])*$/)]],
+    username: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(8), Validators.pattern('^([0-9])*$')]],
     email: ['', [Validators.required, Validators.pattern('.*@.*')]],
     date:  new FormControl<Date | null> (null , [Validators.required, this.esMayorDeEdadV()]),
     password: ['', [Validators.required, Validators.minLength(6), Validators.pattern(".*[!@#$%^&*()_+}{:;'?/><,.\|~`].*")]],

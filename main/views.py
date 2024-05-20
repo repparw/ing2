@@ -141,11 +141,7 @@ class UserViewSet(viewsets.ModelViewSet):
 class PubViewSet(viewsets.ModelViewSet):
   queryset = Pub.objects.all()
   serializer_class = PubSerializer
-
-  def get_permissions(self):
-          if self.action in ['list', 'retrieve']:
-              return [AllowAny()]
-          return [IsAuthenticatedOrReadOnly()]
+  permission_classes = [IsAuthenticatedOrReadOnly]
 
   def get_user_publications(self, request, user=None):
     publications = Pub.objects.filter(user=user)
