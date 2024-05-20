@@ -60,6 +60,10 @@ export class VerPublicacionComponent implements OnInit{
   editar(id:number){
     this.router.navigate([`publicacion/${id}/editar`])
   }
+
+  navigate(ruta: string): void{
+    this.router.navigate([`usuarios/${ruta}`])
+  }
 }
 
 

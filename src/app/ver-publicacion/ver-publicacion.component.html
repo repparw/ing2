@@ -32,7 +32,7 @@
             <h2>{{data.title}}</h2>
             <p>Categoria: {{data.category}}</p>
             <p>Precio: ${{data.price}}</p>
-            <p>Dueño: {{data.user}}</p>
+            <a (click)="navigate(username)">Dueño: {{username}}</a>  <!--Este navigate es distinto a los otros-->
             <p>Descripcion: {{data.desc}}</p>
             <!-- Add questions if logged in -->
             <p>Preguntas(solo si esta logueado)</p>
