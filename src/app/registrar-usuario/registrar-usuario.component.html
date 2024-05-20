@@ -40,10 +40,11 @@
 
     <div>
       <label for="password">Contraseña</label>
-      <input type="password" id="password" class="form-control" formControlName="password">
+      <input type="password" id="password" class="form-control" formControlName="password" maxlength="9">
       <div>
         <small class="text-danger" *ngIf="hasErrors('password', 'required')">La contraseña es requerida</small>
         <small class="text-danger" *ngIf="hasErrors('password', 'minlength')">La contraseña debe tener 6 o más caracteres</small>
+        <small class="text-danger" *ngIf="hasErrors('password', 'pattern') ">La contraseña actual debe tener al menos 1 símbolo.</small>      
       </div>
     </div>
 

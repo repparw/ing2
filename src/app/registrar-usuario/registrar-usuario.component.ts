@@ -22,7 +22,7 @@ throw new Error('Method not implemented.');
     username: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(8)]],
     email: ['', [Validators.required, Validators.pattern('.*@.*')]],
     date:  new FormControl<Date | null> (null , [Validators.required, this.esMayorDeEdadV()]),
-    password: ['', [Validators.required, Validators.minLength(6)]],
+    password: ['', [Validators.required, Validators.minLength(6), Validators.pattern(".*[!@#$%^&*()_+}{:;'?/><,.\|~`].*")]],
     suc: [1, Validators.required],
     rating: [0.00],
     mailing: [false],

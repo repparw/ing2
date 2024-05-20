@@ -21,7 +21,9 @@ export class RegistroEmpleadoComponent {
       Validators.pattern('.*@.*')]),
     password: new FormControl('', [
       Validators.required,
-      Validators.minLength(6)]),
+      Validators.minLength(6),
+      Validators.pattern(".*[!@#$%^&*()_+}{:;'?/><,.\|~`].*")
+    ]),
     suc: new FormControl(1,
       Validators.required),
     is_employee: new FormControl (true)
