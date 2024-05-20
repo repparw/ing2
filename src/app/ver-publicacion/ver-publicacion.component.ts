@@ -31,15 +31,23 @@ export class VerPublicacionComponent implements OnInit{
       switchMap(publication => {
         this.data = publication;
         this.linkFoto = this.publicationService.getPhotos(this.productID);
-
-        return forkJoin([
-          this.userService.isOwner(publication).pipe(take(1)),
-          this.userService.getUser(publication.user).pipe(take(1), pluck('username'))
-        ]).pipe(
-          map(([isOwner, username]) => {
-            return { isOwner, username };
-          })
-        );
+        if (this.userService.isAuthenticated()) {
+          return forkJoin([
+            this.userService.isOwner(publication).pipe(take(1)),
+            this.userService.getUser(publication.user).pipe(take(1), pluck('username'))
+          ]).pipe(
+            map(([isOwner, username]) => {
+              return { isOwner, username };
+            })
+          );
+        } else {
+          return this.userService.getUser(publication.user).pipe(
+            take(1),
+            map(user => {
+              return { isOwner: false, username: user.username };
+            })
+          );
+        }
       })
     ).subscribe(result => {
       this.canEdit = result.isOwner;
