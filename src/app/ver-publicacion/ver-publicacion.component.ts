@@ -31,18 +31,17 @@ export class VerPublicacionComponent implements OnInit{
           isOwner => {
           this.canEdit = isOwner;
         });
+        this.userService.getUser(this.data.user).subscribe(
+          (user) => {
+            this.username = user.username;
+          }
+    );
         console.log(this.linkFoto);
         console.log(this.data);
       } else {
         console.log('No data received'); // Handle no data case (optional)
       }
     });
-    console.log(this.data);
-    this.userService.getUser(this.data.user).subscribe(
-      (user) => {
-        this.username = user.username;
-      }
-          );
   }
 
   confirmDeletePublication(productID: number): void {
