@@ -1,30 +1,29 @@
-<html>
-<div class="center">
-    <h1>Perfil de Usuario</h1>
-</div>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil de Usuario</title>
+</head>
+<body>
+    <div class="center">
+        <h1>Perfil de Usuario</h1>
+    </div>
 
     <div class="card">
-        <h3 class="card-title">Nombre: {{user.name}}</h3>
+        <h3 class="card-title">Nombre: {{ user.name }}</h3>
         <div class="card-body">
-            <h5>Valoración: {{user.rating}}</h5> <!-- Valoración por defecto '-'. Poner cantidad de votos? -->
+            <h5>Valoración: {{ user.rating }}</h5> <!-- Valoración por defecto '-' si no está disponible. -->
         </div>
     </div>
 
-<div class="card">
-    <h2 class="card-title">Publicaciones</h2>
-    <div class="card-body">
-        <!-- Lista de publicaciones -->
-        <ul>
-            <li *ngFor="let item of publicaciones" class="fila justified-content-center">
-                <a href="http://localhost:4200/publicacion/{{item.id}}">
-                    <img src="{{ getPhotos(item.id) }}" class="image-thumbnail" width="100" height="100">
-                    <div class="info">
-                        <span class="title">{{ item.title }}</span>
-                        <span class="price"> ${{ item.price }}</span>
-                    </div>
-                </a>
-            </li>
-        </ul>
+    <div class="card">
+        <h2 class="card-title">Publicaciones</h2>
+        <div class="card-body">
+            <!-- Reusable publication list component -->
+            <app-listar-publicaciones [data]="publicaciones"></app-listar-publicaciones>
+        </div>
     </div>
-</div>
+</body>
 </html>
+

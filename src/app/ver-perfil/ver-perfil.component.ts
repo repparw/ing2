@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { User } from '../services/user';
 import { UserService } from '../services/user.service';
@@ -10,29 +10,42 @@ import { PublicationService } from '../services/publicacion.service';
   templateUrl: './ver-perfil.component.html',
   styleUrls: ['./ver-perfil.component.css']
 })
-export class VerPerfilComponent {
+export class VerPerfilComponent implements OnInit {
   username!: string;
-  publicaciones: any[]=[];
+  publicaciones: any[] = [];
   user!: User;
 
-  constructor(private route: ActivatedRoute,
-              private userService: UserService,
-              private publicationService: PublicationService,
-             ) { }
+  constructor(
+    private route: ActivatedRoute,
+    private userService: UserService,
+    private publicationService: PublicationService
+  ) { }
 
-  ngOnInit(){
-    this.username=this.route.snapshot.params['username'];
+  ngOnInit(): void {
+    this.username = this.route.snapshot.params['username'];
     this.userService.getUserByUsername(this.username).subscribe(
       (user: User) => {
         this.user = user;
-    this.publicationService.getPublicationsById(this.user.id).subscribe(
-      (publicaciones: Pub[]) => {
-        this.publicaciones = publicaciones;
-              });
-      });
+        this.loadPublications();
+      },
+      error => {
+        console.error('Error fetching user data', error);
+      }
+    );
   }
 
-  public getPhotos(id:number){
-    return this.publicationService.getPhotos(id)
+  loadPublications(): void {
+    this.publicationService.getPublicationsById(this.user.id).subscribe(
+      data => {
+        this.publicaciones = data;
+      },
+      error => {
+        console.error('Error fetching publications', error);
+      }
+    );
+  }
+
+  public getPhotos(id: number): string {
+    return this.publicationService.getPhotos(id);
   }
 }

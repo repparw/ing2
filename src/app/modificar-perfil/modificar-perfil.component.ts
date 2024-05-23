@@ -2,7 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { __values } from 'tslib';
 import { Observable } from 'rxjs';
-import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 import { state } from '@angular/animations';
 import { UserService } from '../services/user.service';
 import { User } from '../services/user';
@@ -23,9 +23,8 @@ export class ModificarPerfilComponent implements OnInit {
       date: new FormControl(new Date()),
       });
 
-  private _router = inject(Router)
 
-  constructor(private formBuilder: FormBuilder, private userService: UserService){
+  constructor(private formBuilder: FormBuilder, private userService: UserService, private location: Location){
   }
 
   ngOnInit() {
@@ -48,10 +47,6 @@ export class ModificarPerfilComponent implements OnInit {
     return control && control.hasError(errorType) && (control.dirty || control.touched);
   }
 
-  navigate(ruta: string): void{
-    this._router.navigate([ruta])
-  }
-
   onSubmit(): void {
     if (this.userForm.invalid) {
       console.error('El formulario es inválido. No se puede modificar.');
@@ -64,6 +59,7 @@ export class ModificarPerfilComponent implements OnInit {
       (user: User) => {
         console.log('Usuario modificado:', user);
         alert('Usuario modificado correctamente');
+        this.location.back();
       });
   }
 
