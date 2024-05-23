@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-//import { LoginService } from '../services/user.service';
-import { FakeApiService } from '../services/online-data/fake-api.service';
 import { PublicationService } from '../services/publicacion.service';
 
 @Component({
@@ -8,29 +6,29 @@ import { PublicationService } from '../services/publicacion.service';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent implements OnInit{
-    userLoginOn:boolean = false;
-    data: any[]=[];
+export class HomeComponent implements OnInit {
+  userLoginOn: boolean = false;
+  data: any[] = [];
+  filteredData: any[] = [];
 
-    constructor (public publi:PublicationService){
+  constructor(public publicationService: PublicationService) { }
 
-    }
+  ngOnInit(): void {
+    this.llenarData();
+  }
 
-    ngOnInit(): void {
-        this.llenarData();
-        /*this.loginService.currentUserLoginOn.subscribe(
-          {
-            next:(userLoginOn) => {
-              this.userLoginOn= userLoginOn;
-            }
-          }
-        )*/
-    }
+  llenarData(): void {
+    this.publicationService.getPublications().subscribe(data => {
+      this.data = data;
+      this.applyFilter();
+      console.log(this.data);
+    }, error => {
+      console.error('Error fetching data', error);
+    });
+  }
 
-    llenarData(){
-      this.publi.getPublications().subscribe( data => {
-        this.data=data;
-        console.log(this.data);
-      })
-    }
+  applyFilter(): void {
+    // Example filter: only show publications with price 0
+    this.filteredData = this.data.filter(item => item.price === 0); // replace with <>0 in home
+  }
 }

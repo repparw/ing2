@@ -13,7 +13,7 @@ export class VerMiPerfilComponent implements OnInit {
   fotoDePerfil: string = './assets/logos/Principal.png';  //Poner foto de perfil por defecto en algún lado
   nombre: string = '';
   valoracion: number = 0;
-  publicaciones?: any[]=[];
+  publicaciones: any[]=[];
   dni: string = '';
   fechaDeNacimiento: Date = new Date(0, 0, 0);
   mail: string = '';
@@ -44,7 +44,7 @@ export class VerMiPerfilComponent implements OnInit {
     this._router.navigate([ruta])
   }
 
-  
+
   public getPhotos(id:number){
     return this.publicationService.getPhotos(id)
   }
