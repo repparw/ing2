@@ -29,7 +29,7 @@ export class TasarPublicacionComponent implements OnInit {
       is_paused: [{value: false, disabled: true}],
       desired: [''],
       rating: [{ value: 0, disabled: true }],
-      price: [0, Validators.required],
+      price: [0, [Validators.required, Validators.min(0)]],
     });
   }
 
@@ -68,13 +68,6 @@ export class TasarPublicacionComponent implements OnInit {
       return;
     }
 
-    const updatedPrice = this.pubForm.value.price;
-    if (updatedPrice === 0) {
-      // Price has not been modified
-      alert('No se ha modificado el precio.');
-      return;
-    }
-
     const updatedPub = this.pubForm.value as Partial<Pub>;
     this.publicationService.updatePublication(this.id, updatedPub).subscribe(
       (updatedPub: Pub) => {
@@ -87,6 +80,10 @@ export class TasarPublicacionComponent implements OnInit {
         // Handle error
       }
     );
+  }
+
+  isPriceModified(): boolean {
+    return this.pubForm.value.price !== 0;
   }
 
   deletePublication(): void {
