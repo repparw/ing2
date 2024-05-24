@@ -12,7 +12,7 @@ export class CambiarContraComponent implements OnInit {
   cambiarContraForm: FormGroup;
   submitted = false;
 
-  constructor(private formBuilder: FormBuilder) { 
+  constructor(private formBuilder: FormBuilder) {
     this.cambiarContraForm = this.formBuilder.group({
       nuevaContrasena: ['', [Validators.required, Validators.minLength(6), Validators.pattern(".*[!@#$%^&*()_+}{:;'?/><,.\|~`].*")]],
       repetirContrasena: ['', [Validators.required, Validators.minLength(6),  Validators.pattern(".*[!@#$%^&*()_+}{:;'?/><,.\|~`].*")]]
@@ -20,7 +20,7 @@ export class CambiarContraComponent implements OnInit {
   }
 
   ngOnInit(): void {
-   
+
   }
 
   private _router = inject(Router)
@@ -31,7 +31,7 @@ export class CambiarContraComponent implements OnInit {
 
   hasErrors(controlName: string, errorType: string) {
     const control = this.cambiarContraForm.get(controlName);
-    return control && control.hasError(errorType) && (control.dirty || control.touched);  
+    return control && control.hasError(errorType) && (control.dirty || control.touched);
   }
 
   onSubmit() : void{
@@ -49,8 +49,8 @@ export class CambiarContraComponent implements OnInit {
     console.log('El formulario es válido. Realizando cambio de contraseña...');
     console.log(this.cambiarContraForm.value);
     alert('Contraseña reestablecida correctamente');
-    this.navigate('inicio sesion')
-    
+    this.navigate('login')
+
     // Aquí puedes realizar la lógica para enviar el formulario al backend
   }
 }

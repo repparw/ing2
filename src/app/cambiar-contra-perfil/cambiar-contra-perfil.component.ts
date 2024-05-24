@@ -53,7 +53,7 @@ export class CambiarContraPerfilComponent {
     this.userService.changePassword(passwordActual, passwordNueva, passwordNueva).subscribe(
       () => {
         console.log('Contraseña modificada correctamente.');
-        this.navigate('ver mi perfil'); // Navigate to 'ver mi perfil' after successful password change
+        this.navigate('ver-mi-perfil'); // Navigate to 'ver mi perfil' after successful password change
       },
       error => {
         console.log('Error al modificar la contraseña.', error);

@@ -15,6 +15,9 @@
                     <span class="price"> ${{ item.price }}</span>
                 </div>
             </a>
+          <ng-container *ngIf="isEmployee$ | async">
+          <button *ngIf="item.price === 0" [routerLink]="['/publicacion', item.id, '/tasar']">Tasar Publicación</button>
+          </ng-container>
         </li>
     </ul>
 </div>

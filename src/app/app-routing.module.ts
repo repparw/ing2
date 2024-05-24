@@ -11,22 +11,26 @@ import { CambiarContraPerfilComponent } from './cambiar-contra-perfil/cambiar-co
 import { CrearPublicacionComponent } from './crear-publicacion/crear-publicacion.component';
 import { EditarPublicacionComponent } from './editar-publicacion/editar-publicacion.component';
 import { VerPublicacionComponent } from './ver-publicacion/ver-publicacion.component';
+import { TasarPublicacionComponent } from './tasar-publicacion/tasar-publicacion.component';
 import { RegistrarUsuarioComponent } from './registrar-usuario/registrar-usuario.component';
+import { AuthGuard } from './guards/auth.guard';
+import { EmployeeGuard } from './guards/employee.guard';
 
 const routes: Routes = [
-  {path: 'home', component: HomeComponent},
-  {path: 'inicio sesion', component: RegistroComponent},
-  {path: 'registrar empleado', component: RegistroEmpleadoComponent},
-  {path: 'registrar usuario', component: RegistrarUsuarioComponent},
-  {path: 'usuarios/:username', component: VerPerfilComponent},
-  {path: 'ver mi perfil', component: VerMiPerfilComponent},
-  {path: 'modificar perfil', component: ModificarPerfilComponent},
-  {path: 'crear publi', component: CrearPublicacionComponent},
-  {path: 'cambiar contra', component: CambiarContraComponent},
-  {path: 'cambiar contra perfil', component: CambiarContraPerfilComponent},
-  {path: 'publicacion/:id', component: VerPublicacionComponent},
-  {path: 'publicacion/:id/editar', component: EditarPublicacionComponent},
-  {path: '**', redirectTo: '/home', pathMatch:'full'}
+  { path: 'home', component: HomeComponent },
+  { path: 'login', component: RegistroComponent },
+  { path: 'registrar-empleado', component: RegistroEmpleadoComponent },
+  { path: 'registrar-usuario', component: RegistrarUsuarioComponent },
+  { path: 'usuarios/:username', component: VerPerfilComponent },
+  { path: 'ver-mi-perfil', component: VerMiPerfilComponent, canActivate: [AuthGuard] },
+  { path: 'modificar-perfil', component: ModificarPerfilComponent, canActivate: [AuthGuard] },
+  { path: 'crear-publicacion', component: CrearPublicacionComponent, canActivate: [AuthGuard] },
+  { path: 'cambiar-contra', component: CambiarContraComponent },
+  { path: 'cambiar-contra-perfil', component: CambiarContraPerfilComponent, canActivate: [AuthGuard] },
+  { path: 'publicacion/:id', component: VerPublicacionComponent },
+  { path: 'publicacion/:id/tasar', component: TasarPublicacionComponent, canActivate: [EmployeeGuard] },
+  { path: 'publicacion/:id/editar', component: EditarPublicacionComponent },
+  { path: '**', redirectTo: '/home', pathMatch: 'full' }
 ];
 
 @NgModule({
