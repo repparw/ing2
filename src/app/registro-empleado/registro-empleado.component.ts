@@ -27,7 +27,7 @@ export class RegistroEmpleadoComponent {
     ]),
     suc: new FormControl(1,
       Validators.required),
-    is_employee: new FormControl (true)
+    is_employee: new FormControl(true)
   });
 
   constructor(private formBuilder: FormBuilder, private router:Router, private userService: UserService){ }

@@ -22,9 +22,6 @@
         </div>
 
         <button  type="submit" *ngIf="!isAuthenticated()" (click)="login()" class="btn btn-primary">Iniciar Sesión</button>
-        <div>
-          <button *ngIf="isAuthenticated()" (click)="logout()" class="btn btn-primary">Cerrar Sesión</button>
-        </div>
       </form>
     </div>
   </div>

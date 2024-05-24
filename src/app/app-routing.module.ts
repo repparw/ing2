@@ -11,6 +11,7 @@ import { CambiarContraPerfilComponent } from './cambiar-contra-perfil/cambiar-co
 import { CrearPublicacionComponent } from './crear-publicacion/crear-publicacion.component';
 import { EditarPublicacionComponent } from './editar-publicacion/editar-publicacion.component';
 import { VerPublicacionComponent } from './ver-publicacion/ver-publicacion.component';
+import { ListarPublicacionesTasarComponent } from './listar-publicaciones-tasar/listar-publicaciones-tasar.component';
 import { TasarPublicacionComponent } from './tasar-publicacion/tasar-publicacion.component';
 import { RegistrarUsuarioComponent } from './registrar-usuario/registrar-usuario.component';
 import { AuthGuard } from './guards/auth.guard';
@@ -28,8 +29,9 @@ const routes: Routes = [
   { path: 'cambiar-contra', component: CambiarContraComponent },
   { path: 'cambiar-contra-perfil', component: CambiarContraPerfilComponent, canActivate: [AuthGuard] },
   { path: 'publicacion/:id', component: VerPublicacionComponent },
-  { path: 'publicacion/:id/tasar', component: TasarPublicacionComponent, canActivate: [EmployeeGuard] },
-  { path: 'publicacion/:id/editar', component: EditarPublicacionComponent },
+  { path: 'tasar-publicaciones', component: ListarPublicacionesTasarComponent, canActivate: [EmployeeGuard] },
+  { path: 'publicacion/:id/tasar', component: TasarPublicacionComponent },//, canActivate: [EmployeeGuard] },
+  { path: 'publicacion/:id/editar', component: EditarPublicacionComponent, canActivate: [AuthGuard] },
   { path: '**', redirectTo: '/home', pathMatch: 'full' }
 ];
 

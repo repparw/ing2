@@ -10,15 +10,18 @@ import { Observable } from 'rxjs';
 })
 export class ListarPublicacionesComponent implements OnInit {
   @Input() data: any[] = [];
-  isEmployee$: Observable<boolean>;
+  @Input() templateUrl: string = 'http://localhost:4200/publicacion/{{id}}';
 
-  constructor (private publicationService: PublicationService, private userService: UserService){
-    this.isEmployee$ = this.userService.isEmployee$;
+  constructor (private publicationService: PublicationService){
   }
 
   ngOnInit(): void { }
 
   getPhotos(id: number): string {
     return this.publicationService.getPhotos(id);
+  }
+
+  generateLink(id: number): string {
+    return this.templateUrl.replace('{{id}}', id.toString());
   }
 }

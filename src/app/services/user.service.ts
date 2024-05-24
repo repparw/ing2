@@ -32,7 +32,7 @@ export class UserService {
       this.getCurrentUser().pipe(
         take(1),
         map(user => {
-          const isEmployee = !!user && user.is_employee === true;
+          const isEmployee = !!user && user.is_staff === true;
           this.isEmployeeSubject.next(isEmployee);
         }),
         catchError(() => {

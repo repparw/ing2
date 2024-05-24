@@ -8,7 +8,6 @@ class User(AbstractUser):
   mailing = models.BooleanField(default=False, blank=True, null=True)
   rating = models.FloatField(default=0.00, blank=True, null=True)
   suc = models.ForeignKey('Sucursal', on_delete=models.SET_NULL, null=True)
-  is_employee = models.BooleanField(default=False, blank=True, null=True)
 
 class Admin(models.Model):
   dni = models.CharField(unique=True, max_length=8)

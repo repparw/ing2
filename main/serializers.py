@@ -17,7 +17,7 @@ class UpdatePasswordSerializer(serializers.Serializer):
 class CurrentUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'name', 'username', 'email', 'date', 'rating', 'suc', 'mailing')  # Add more fields as needed
+        fields = ('id', 'name', 'username', 'email', 'date', 'rating', 'suc', 'mailing', 'is_staff')  # Add more fields as needed
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
