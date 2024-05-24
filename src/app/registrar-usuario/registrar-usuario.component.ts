@@ -26,7 +26,7 @@ throw new Error('Method not implemented.');
     suc: [1, Validators.required],
     rating: [0.00],
     mailing: [false],
-    is_employee: new FormControl (false)
+    is_staff: new FormControl (false)
   });
 
   constructor(private formBuilder: FormBuilder, private router: Router, private userService: UserService){

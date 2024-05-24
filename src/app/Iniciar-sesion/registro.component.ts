@@ -53,10 +53,6 @@ export class RegistroComponent implements OnInit, HttpInterceptor {
       );
     }
   }
-  logout() {
-    this.userService.logout();
-    this.router.navigateByUrl('/login'); // Redirige al usuario a la página de inicio de sesión
-  }
 
   isAuthenticated(): boolean {
     return this.userService.isAuthenticated();

@@ -8,5 +8,5 @@ export interface User {
   mailing?:boolean,
   rating?:number,
   suc: number;
-  is_employee?: boolean;
+  is_staff?: boolean;
 }

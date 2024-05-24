@@ -20,9 +20,9 @@
             <a class="nav-link" routerLink="cambiar-contra">Reestablecer contraseña</a>
           </li>
         </ng-container>
-        <ng-container *ngIf="isEmployee$ | async">
+        <ng-container *ngIf="(isEmployee$ | async)">
           <li class="nav-item">
-            <a class="nav-link" routerLink="tasar">Tasar publicaciones</a>
+            <a class="nav-link" routerLink="tasar-publicaciones">Tasar publicaciones</a>
           </li>
         </ng-container>
         <ng-container *ngIf="!(isAuthenticated$ | async)">

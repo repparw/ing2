@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { map, take } from 'rxjs/operators';
+import { map, take, tap } from 'rxjs/operators';
 import { UserService } from '../services/user.service'; // Replace with your user service
 
 @Injectable({
@@ -15,16 +15,25 @@ export class EmployeeGuard implements CanActivate {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
 
-    return this.userService.getCurrentUser().pipe(
-      take(1),
-      map(user => {
-        if (user && user.is_employee) {
-          return true;
-        } else {
-          this.router.navigate(['/']); // Redirect to home or unauthorized page
-          return false;
-        }
-      })
-    );
-  }
+  return this.userService.isEmployee$.pipe(
+        map(isEmployee => {
+          if (isEmployee) {
+            return true; // Allow access if user is an employee
+          } else {
+            console.log('Not authorized');
+            this.router.navigate(['/']); // Redirect to home or unauthorized page
+            return false;
+          }
+        })
+      );
+    }
+
+//  canActivateChild(
+//    childRoute: ActivatedRouteSnapshot,
+//    state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
+
+//    return this.canActivate(childRoute, state); // Delegate to canActivate method
+//  }
+
+
 }
