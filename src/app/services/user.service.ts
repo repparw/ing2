@@ -1,10 +1,9 @@
-import { Injectable, inject } from '@angular/core';
-import { LoginRequest } from './loginRequest';
-import { HttpClient, HttpErrorResponse,HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject, Observable, catchError, firstValueFrom, tap, throwError, take } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import { catchError, map, take } from 'rxjs/operators';
 import { User } from './user';
 import { Pub } from './pub';
-import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -14,10 +13,68 @@ export class UserService {
   private userUrl = 'http://localhost:8000/users/';
   private profileUrl = 'http://localhost:8000/profiles/';
   private loginUrl = 'http://localhost:8000/api-token-auth/';
-  //headerDict: HeadersInit | undefined;
 
-  constructor(private http: HttpClient){
+  private isAuthenticatedSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  public isAuthenticated$: Observable<boolean> = this.isAuthenticatedSubject.asObservable();
 
+  private isEmployeeSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  public isEmployee$: Observable<boolean> = this.isEmployeeSubject.asObservable();
+
+  constructor(private http: HttpClient) {
+    this.updateAuthStatus(); // Initialize authentication status
+  }
+
+  private updateAuthStatus(): void {
+    const isAuthenticated = this.isAuthenticated();
+    this.isAuthenticatedSubject.next(isAuthenticated);
+
+    if (isAuthenticated) {
+      this.getCurrentUser().pipe(
+        take(1),
+        map(user => {
+          const isEmployee = !!user && user.is_employee === true;
+          this.isEmployeeSubject.next(isEmployee);
+        }),
+        catchError(() => {
+          this.isEmployeeSubject.next(false);
+          return throwError(false); // Return false if getCurrentUser() fails
+        })
+      ).subscribe();
+    } else {
+      this.isEmployeeSubject.next(false);
+    }
+  }
+
+  login(username: string, password: string): Observable<any> {
+    const headers = new HttpHeaders().set('Content-Type', 'application/json');
+    return this.http.post<any>(`${this.loginUrl}`, { username, password }, { headers })
+      .pipe(map(response => {
+        if (response.token) {
+          localStorage.setItem('token', response.token);
+          this.updateAuthStatus(); // Update isAuthenticated status on successful login
+        }
+        return response;
+      }));
+  }
+
+  logout(): void {
+    localStorage.removeItem('token');
+    this.updateAuthStatus(); // Update isAuthenticated status on logout
+  }
+
+  isAuthenticated(): boolean {
+    return !!localStorage.getItem('token');
+  }
+
+  isEmployee(): boolean {
+    return this.isEmployeeSubject.getValue();
+  }
+
+  isOwner(pub: Pub): Observable<boolean> {
+    return this.getCurrentUser().pipe(
+      take(1),
+      map(user => user.id === pub.user) // Return true if the current user owns the publication
+    );
   }
 
   createUser(user: User): Observable<User> {
@@ -41,7 +98,7 @@ export class UserService {
   changePassword(oldPassword: string, newPassword: string, newPassword2: string): Observable<User> {
     const authToken = localStorage.getItem('token');
     if (!authToken) {
-      throw new Error('No token found');
+      return throwError(new Error('No token found'));
     }
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
@@ -60,35 +117,13 @@ export class UserService {
       'Content-Type': 'application/json',
       'Authorization': `Token ${authToken}`
     });
-    return this.http.get<User>(`${this.userUrl}current/`, { headers, withCredentials: true });
+    return this.http.get<User>(`${this.userUrl}current/`, { headers, withCredentials: true }).pipe(
+      catchError(error => {
+        console.error('Error fetching current user:', error);
+        return throwError(error); // Forward the error to the caller
+      }));
       }
 
-  login(username: string, password: string): Observable<any> {
-    const headers = new HttpHeaders().set('Content-Type', 'application/json');
-    return this.http.post<any>(`${this.loginUrl}`, { username, password }, { headers })
-      .pipe(map(response => {
-        if (response.token) {
-          localStorage.setItem('token', response.token);
-          //sessionStorage.setItem('token', response.token);
-        }
-        return response;
-      }));
-  }
-
-  logout(): void {
-    localStorage.removeItem('token');
-  }
-
-  isAuthenticated(): boolean {
-    return !!localStorage.getItem('token');
-  }
-
-  isOwner(pub: Pub): Observable<boolean> {
-    return this.getCurrentUser().pipe(
-      take(1),
-      map(user => user.id === pub.user) // Return true if the current user owns the publication
-    );
-  }
 
   getUserByUsername(username: string): Observable<User> {
     const headers = new HttpHeaders({
