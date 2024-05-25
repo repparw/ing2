@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError, map, take } from 'rxjs/operators';
-import { User } from './user';
-import { Pub } from './pub';
+import { User } from '../models/user';
+import { Pub } from '../models/pub';
 
 @Injectable({
   providedIn: 'root'
