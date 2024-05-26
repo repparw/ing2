@@ -14,6 +14,8 @@ import { VerPublicacionComponent } from './components/ver-publicacion/ver-public
 import { ListarPublicacionesTasarComponent } from './components/listar-publicaciones-tasar/listar-publicaciones-tasar.component';
 import { TasarPublicacionComponent } from './components/tasar-publicacion/tasar-publicacion.component';
 import { RegistrarUsuarioComponent } from './components/registrar-usuario/registrar-usuario.component';
+import { ListarSucursalesComponent } from './components/listar-sucursales/listar-sucursales.component';
+
 import { AuthGuard } from './guards/auth.guard';
 import { EmployeeGuard } from './guards/employee.guard';
 
@@ -32,6 +34,7 @@ const routes: Routes = [
   { path: 'tasar-publicaciones', component: ListarPublicacionesTasarComponent, canActivate: [EmployeeGuard] },
   { path: 'publicacion/:id/tasar', component: TasarPublicacionComponent },//, canActivate: [EmployeeGuard] },
   { path: 'publicacion/:id/editar', component: EditarPublicacionComponent, canActivate: [AuthGuard] },
+  { path: 'sucursales', component: ListarSucursalesComponent },
   { path: '**', redirectTo: '/home', pathMatch: 'full' }
 ];
 
