@@ -12,6 +12,10 @@ from .serializers import CurrentUserSerializer, CustomAuthTokenSerializer, PubSe
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.views import APIView
 from rest_framework.generics import UpdateAPIView
+from django.core.mail import send_mail
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
 
 # Create your views here.
 
@@ -179,7 +183,7 @@ class PubViewSet(viewsets.ModelViewSet):
       partial = request.method == 'PATCH'
       serializer = self.get_serializer(pub, data=request.data, partial=partial)
       serializer.is_valid(raise_exception=True)
-      return response({
+      return Response({
         "pub": serializer.data,
         "message": "usuario creado exitosamente",
             }, status=status.http_201_created)
@@ -261,3 +265,15 @@ class PubViewSet(viewsets.ModelViewSet):
     pub.save()
 
     return pub
+
+@csrf_exempt
+def send_email(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        subject = data['subject']
+        message = data['message']
+        recipient_list = data['recipient_list']
+
+        send_mail(subject, message, 'tu_correo@gmail.com', recipient_list)
+        return JsonResponse({'message': 'Email sent successfully'})
+    return JsonResponse({'error': 'Invalid request'}, status=400)

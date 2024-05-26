@@ -4,7 +4,7 @@ import { User } from '../../models/user';
 import { UserService } from '../../services/user.service';
 import { Router } from '@angular/router';
 import { __values } from 'tslib';
-import { zip } from 'rxjs';
+import { EmailService } from '../../services/email.service';
 
 @Component({
   selector: 'app-registrar-usuario',
@@ -29,7 +29,7 @@ throw new Error('Method not implemented.');
     is_staff: new FormControl (false)
   });
 
-  constructor(private formBuilder: FormBuilder, private router: Router, private userService: UserService){
+  constructor(private formBuilder: FormBuilder, private router: Router, private userService: UserService, private emailService: EmailService){
   }
 
   ngOnInit(): void {}
@@ -50,6 +50,7 @@ throw new Error('Method not implemented.');
     this.userService.createUser(this.userForm.value as User).subscribe(
       (response) => {
         console.log('usuario creado exitosamente', response);
+        this.sendEmail("Registro exitoso", "Felicitaciones!", [ this.userForm.get('email')?.value?.toString() || '' ])
         this.router.navigateByUrl('/home');
     },
       (error) => {
@@ -83,6 +84,17 @@ throw new Error('Method not implemented.');
 
       return edad < 18 ? { 'menorDeEdad': true } : null;
     };
+  }
+
+  sendEmail(subject:string, message:string, recipientList:string[]) {
+    this.emailService.sendEmail(subject, message, recipientList).subscribe(
+      response => {
+        console.log('Email sent successfully', response);
+      },
+      error => {
+        console.error('Error sending email', error);
+      }
+    );
   }
 
 
