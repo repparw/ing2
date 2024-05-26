@@ -19,6 +19,9 @@
       <div class="form-group">
         <label for="category">Categoría</label>
         <input type="text" formControlName="category" class="form-control" id="category">
+        <div *ngIf="hasErrors('category', 'required')" class="text-danger">
+          La categoría es obligatoria
+        </div>
       </div>
       <div class="form-group">
         <label for="desired">Deseado</label>
@@ -35,7 +38,7 @@
         </div>
       </div>
       <button type="button" class="btn btn-danger" (click)="deletePublication()">Rechazar publicación</button>
-      <button type="submit" class="btn btn-primary" [disabled]="!isPriceModified()">Actualizar</button>
+      <button type="submit" class="btn btn-primary" [disabled]="pubForm.invalid">Actualizar</button>
       <button type="button" class="btn btn-secondary" (click)="goBack()">Cancelar</button>
     </form>
   </div>

@@ -22,7 +22,7 @@ class Pub(models.Model):
   photos = models.ImageField(upload_to='photos/pub')
   price = models.FloatField()
   category = models.CharField(max_length=100)
-  desired = models.CharField(max_length=100)
+  desired = models.CharField(max_length=100, blank=True)
 
 class Sucursal(models.Model):
   address = models.CharField(max_length=100)

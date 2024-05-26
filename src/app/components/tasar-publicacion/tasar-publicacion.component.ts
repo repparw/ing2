@@ -25,11 +25,10 @@ export class TasarPublicacionComponent implements OnInit {
     this.pubForm = this.formBuilder.group({
       title: ['', Validators.required],
       desc: ['', Validators.required],
-      category: [''],
+      category: ['', Validators.required],
       is_paused: [{value: false, disabled: true}],
       desired: [''],
-      rating: [{ value: 0, disabled: true }],
-      price: [0, [Validators.required, Validators.min(0)]],
+      price: [0, [Validators.required, Validators.min(0.01)]],
     });
   }
 
@@ -55,6 +54,8 @@ export class TasarPublicacionComponent implements OnInit {
       desired: pub.desired,
       price: pub.price,
     });
+
+    this.pubForm.get('price')?.markAsTouched();
   }
 
   hasErrors(controlName: string, errorType: string): boolean {
