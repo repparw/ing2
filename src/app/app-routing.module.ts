@@ -32,7 +32,7 @@ const routes: Routes = [
   { path: 'cambiar-contra-perfil', component: CambiarContraPerfilComponent, canActivate: [AuthGuard] },
   { path: 'publicacion/:id', component: VerPublicacionComponent },
   { path: 'tasar-publicaciones', component: ListarPublicacionesTasarComponent, canActivate: [EmployeeGuard] },
-  { path: 'publicacion/:id/tasar', component: TasarPublicacionComponent },//, canActivate: [EmployeeGuard] },
+  { path: 'publicacion/:id/tasar', component: TasarPublicacionComponent, canActivate: [EmployeeGuard] },
   { path: 'publicacion/:id/editar', component: EditarPublicacionComponent, canActivate: [AuthGuard] },
   { path: 'sucursales', component: ListarSucursalesComponent },
   { path: '**', redirectTo: '/home', pathMatch: 'full' }

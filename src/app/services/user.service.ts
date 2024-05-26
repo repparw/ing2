@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
-import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import { ReplaySubject, Observable, throwError } from 'rxjs';
 import { catchError, map, take } from 'rxjs/operators';
 import { User } from '../models/user';
 import { Pub } from '../models/pub';
@@ -14,10 +14,10 @@ export class UserService {
   private profileUrl = 'http://localhost:8000/profiles/';
   private loginUrl = 'http://localhost:8000/api-token-auth/';
 
-  private isAuthenticatedSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  private isAuthenticatedSubject: ReplaySubject<boolean> = new ReplaySubject<boolean>(1);
   public isAuthenticated$: Observable<boolean> = this.isAuthenticatedSubject.asObservable();
 
-  private isEmployeeSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  private isEmployeeSubject: ReplaySubject<boolean> = new ReplaySubject<boolean>(1);
   public isEmployee$: Observable<boolean> = this.isEmployeeSubject.asObservable();
 
   constructor(private http: HttpClient) {
@@ -33,11 +33,13 @@ export class UserService {
         take(1),
         map(user => {
           const isEmployee = !!user && user.is_staff === true;
+          console.log(`updateAuthStatus: isEmployee=${isEmployee}`);
           this.isEmployeeSubject.next(isEmployee);
         }),
-        catchError(() => {
+        catchError((error: any) => {
+          console.error('Error fetching current user:', error);
           this.isEmployeeSubject.next(false);
-          return throwError(false); // Return false if getCurrentUser() fails
+          return throwError(error);
         })
       ).subscribe();
     } else {
@@ -64,10 +66,6 @@ export class UserService {
 
   isAuthenticated(): boolean {
     return !!localStorage.getItem('token');
-  }
-
-  isEmployee(): boolean {
-    return this.isEmployeeSubject.getValue();
   }
 
   isOwner(pub: Pub): Observable<boolean> {

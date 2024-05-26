@@ -16,7 +16,9 @@ export class EmployeeGuard implements CanActivate {
     state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
 
   return this.userService.isEmployee$.pipe(
+        take(1),
         map(isEmployee => {
+          console.log(`canActivate: isEmployee=${isEmployee}`);
           if (isEmployee) {
             return true; // Allow access if user is an employee
           } else {
