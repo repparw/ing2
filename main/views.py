@@ -3,8 +3,8 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
-from rest_framework import serializers, status
-from rest_framework.decorators import action, api_view, permission_classes
+from rest_framework import status
+from rest_framework.decorators import action, api_view
 from django.http import HttpResponse, Http404
 from django.contrib.auth import get_user_model
 from .models import Pub, User, Sucursal
@@ -21,7 +21,7 @@ class UpdatePasswordView(UpdateAPIView):
   """
   serializer_class = UpdatePasswordSerializer
   model = User
-  permission_classes = (IsAuthenticated,)
+  permission_classes = (IsAuthenticated)
 
   def get_object(self, queryset=None):
       obj = self.request.user
@@ -65,6 +65,22 @@ def serve_publication_image(request, pk):
 
       return HttpResponse(pub.photos.read(), content_type=content_type)
 
+def serve_branch_image(request, pk):
+      try:
+          suc= Sucursal.objects.get(pk=pk)
+      except Sucursal.DoesNotExist:
+          raise Http404('Sucursal no encontrada')
+
+      # Validate user permissions if applicable (e.g., only authenticated users can access)
+      if not suc.photos:
+          # Handle case where no image is uploaded
+          return HttpResponse('No hay foto disponible', status=404)
+
+      # Set appropriate content type (e.g., image/jpeg, image/png)
+      content_type = 'image/jpeg, image/png, image/jpg'
+
+      return HttpResponse(suc.photos.read(), content_type=content_type)
+
 class CustomAuthToken(ObtainAuthToken):
     user = get_user_model()
     serializer_class = CustomAuthTokenSerializer
@@ -79,16 +95,17 @@ class CustomAuthToken(ObtainAuthToken):
 class SucursalViewSet(viewsets.ModelViewSet):
   queryset = Sucursal.objects.all()
   serializer_class = SucursalSerializer
+  permission_classes = [IsAuthenticatedOrReadOnly]
 
-def create_sucursal(address, phone, email, city):
-  if not address or not phone or not email or not city:
-    raise ValueError("Missing required fields. Please provide name, address, phone, email, and city.")
+def create_sucursal(address, photos, phone):
+  if not address or not photos or not phone:
+    raise ValueError("Missing required fields. Please provide address, phone, and photos.")
   # Create the sucursal object
   suc = Sucursal(
       address=address,
+      photos=photos,
       phone=phone,
-      email=email,
-      city=city)
+      )
   # Save the sucursal to the database
   suc.save()
   return suc

@@ -6,11 +6,15 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class SucursalService {
-  private apiUrl = 'http://localhost:8000/sucursales/';
+  private apiUrl = 'http://localhost:8000/branches/';
 
   constructor(private http: HttpClient) { }
 
   getSucursales(): Observable<any[]> {
     return this.http.get<any[]>(this.apiUrl);
+  }
+
+  public getPhotos(id: number): string {
+    return `${this.apiUrl}${id}/photos/`;
   }
 }
