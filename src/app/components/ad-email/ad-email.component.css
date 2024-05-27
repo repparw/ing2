@@ -1,0 +1,37 @@
+body {
+    background-color: #e9ecef;
+    font-family: 'Arial', sans-serif;
+}
+
+.container {
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    max-width: 600px;
+    margin: 50px auto;
+}
+
+h2 {
+    color: #343a40;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.form-group label {
+    font-weight: bold;
+}
+
+.form-control {
+    border-radius: 5px;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+}
+
+small {
+    display: block;
+    margin-top: 5px;
+}
