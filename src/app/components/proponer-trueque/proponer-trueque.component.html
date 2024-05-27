@@ -1,0 +1,28 @@
+<form [formGroup]="tradeProposal" (ngSubmit)="onSubmit()">
+
+  <!-- Bind proposer -->
+  <div class="form-group">
+    <label for="proposer">Proposer</label>
+    <input type="text" class="form-control" id="proposer" [value]="proposerName" readonly/>
+  </div>
+  <input type="hidden" formControlName="proposer" />
+
+  <!-- Bind recipient -->
+  <input type="hidden" formControlName="recipient" />
+
+  <!-- Bind publication -->
+  <div class="form-group">
+    <label for="publication">Publication</label>
+    <input type="number" class="form-control" id="publication" formControlName="publication" name="publication"/>
+  </div>
+
+  <!-- Bind proposed items (if applicable, adjust accordingly) -->
+  <div class="form-group">
+    <label for="proposedItems">Proposed Items</label>
+    <select multiple class="form-select" id="proposedItems" formControlName="proposed_items" name="proposedItems">
+      <option *ngFor="let publication of userPublications" [value]="publication.id">{{ publication.title }}</option>
+    </select>
+  </div>
+
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>

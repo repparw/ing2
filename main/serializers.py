@@ -1,12 +1,18 @@
 from django.contrib.auth import authenticate
 from rest_framework import serializers
-from django.contrib.auth.password_validation import validate_password
-from .models import Pub, User, Sucursal
+from .models import Pub, User, Sucursal, TradeProposal
 
 class PubSerializer(serializers.ModelSerializer):
     class Meta:
         model = Pub
         fields = '__all__'
+
+class TradeProposalSerializer(serializers.ModelSerializer):
+    proposed_items = serializers.PrimaryKeyRelatedField(queryset=Pub.objects.all(), many=True)
+
+    class Meta:
+        model = TradeProposal
+        fields = ['id', 'proposer', 'recipient', 'publication', 'proposed_items', 'is_confirmed', 'is_canceled', 'created_at']
 
 class UpdatePasswordSerializer(serializers.Serializer):
   Model = User
@@ -57,39 +63,22 @@ class CustomAuthTokenSerializer(serializers.Serializer):
         username = attrs.get('username')
         password = attrs.get('password')
 
-        if email and password:
-            user = User.objects.filter(email=email).first()
-            if user is None:
-                raise serializers.ValidationError('User = none')
-
-            if not user.check_password(password):
-                raise serializers.ValidationError('User check password')
-
-            attrs['user'] = user
-        else:
-            raise serializers.ValidationError('Else')
-
-        return attrs
-
-    def validate(self, attrs):
-        username = attrs.get('username')
-        password = attrs.get('password')
-
         if username and password:
             # Try to authenticate by username or email
             user = authenticate(username=username, password=password)
+
             if not user:
                 try:
                     user_instance = User.objects.get(email=username)
                     user = authenticate(username=user_instance.username, password=password)
                 except User.DoesNotExist:
-                    raise serializers.ValidationError('Invalid username/email or password.')
+                    raise serializers.ValidationError('Invalid username or password.')
 
             if not user:
-                raise serializers.ValidationError('Invalid username/email or password.')
+                raise serializers.ValidationError('Invalid username or password.')
 
             attrs['user'] = user
         else:
-            raise serializers.ValidationError('Must include "username_or_email" and "password".')
+            raise serializers.ValidationError('Must include "username" and "password".')
 
         return attrs

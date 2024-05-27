@@ -20,16 +20,8 @@ export class EditarPublicacionComponent implements OnInit {
   public uploader!: FileUploader;
   userId!: number;
 
-  prodForm = new FormGroup({
-    title: new FormControl('', Validators.required),
-    desc: new FormControl('', Validators.required),
-    category: new FormControl(''),
-    is_paused: new FormControl(false),
-    desired: new FormControl(''),
-    rating: new FormControl(0),
-    price: new FormControl(0),
-    user: new FormControl(0),
-      });
+  prodForm: FormGroup;
+
 
   constructor(
     private formBuilder: FormBuilder,
@@ -37,7 +29,18 @@ export class EditarPublicacionComponent implements OnInit {
     private userService: UserService,
     private location: Location,
     private route: ActivatedRoute,
-  ){ }
+  ) {
+    this.prodForm = this.formBuilder.group({
+      title: new FormControl('', Validators.required),
+      desc: new FormControl('', Validators.required),
+      category: new FormControl(''),
+      is_paused: new FormControl(false),
+      desired: new FormControl(''),
+      rating: new FormControl(0),
+      price: new FormControl(0),
+      user: new FormControl(0),
+     });
+  }
 
   ngOnInit() {
     this.id = parseInt(this.route.snapshot.params['id']);

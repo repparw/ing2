@@ -1,4 +1,5 @@
 export interface Pub {
+  id?: number;
   title: string;
   desc: string;
   category: string;

@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Pub } from '../models/pub';
+import { TradeProposal } from '../models/tradeProposal';
 
 @Injectable({
   providedIn: 'root'
@@ -14,13 +15,28 @@ export class PublicationService {
 
   constructor(private http: HttpClient) { }
 
-  private handleError(error: HttpErrorResponse) {
-    if (error.error instanceof ErrorEvent) {
-      console.error('Se ha producido un error:', error.error.message);
-    } else {
-      console.error(`Backend retornó el error ${error.status}, ` + `Cuerpo del error: ${error.error}`);
+  createTradeProposal(proposal: TradeProposal): Observable<TradeProposal> {
+    const authToken = localStorage.getItem('token');
+    if (!authToken) {
+      throw new Error('No token found');
     }
-    return throwError(() => new Error('Por favor, inténtelo de nuevo más tarde.'));
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Token ${authToken}`
+    });
+    return this.http.post<TradeProposal>(`${this.baseUrl}/trade-proposals/`, proposal, { headers, withCredentials: true });
+  }
+
+  cancelTradeProposal(id: number): Observable<void> {
+    const authToken = localStorage.getItem('token');
+    if (!authToken) {
+      throw new Error('No token found');
+    }
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Token ${authToken}`
+    });
+    return this.http.put<void>(`${this.baseUrl}/trade-proposals/${id}/cancel/`, {}, { headers, withCredentials: true });
   }
 
   public createPublication(pub: Pub): Observable<Pub> {
@@ -45,7 +61,7 @@ export class PublicationService {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
     });
-    return this.http.get<Pub[]>(this.byUserUrl + id, { headers, withCredentials: true })
+    return this.http.get<Pub[]>(this.byUserUrl + id + '/', { headers, withCredentials: true })
       .pipe(catchError(this.handleError));
       }
 
@@ -88,4 +104,14 @@ export class PublicationService {
     return this.http.delete<Pub>(this.apiUrl + id + '/', { headers, withCredentials: true })
       .pipe(catchError(this.handleError));
   }
+
+  private handleError(error: HttpErrorResponse) {
+    if (error.error instanceof ErrorEvent) {
+      console.error('Se ha producido un error:', error.error.message);
+    } else {
+      console.error(`Backend retornó el error ${error.status}, ` + `Cuerpo del error: ${error.error}`);
+    }
+    return throwError(() => new Error('Por favor, inténtelo de nuevo más tarde.'));
+  }
+
 }

@@ -22,6 +22,7 @@ import { ListarPublicacionesComponent } from './components/listar-publicaciones/
 import { TasarPublicacionComponent } from './components/tasar-publicacion/tasar-publicacion.component';
 import { ListarPublicacionesTasarComponent } from './components/listar-publicaciones-tasar/listar-publicaciones-tasar.component';
 import { ListarSucursalesComponent } from './components/listar-sucursales/listar-sucursales.component';
+import { ProponerTruequeComponent } from './components/proponer-trueque/proponer-trueque.component';
 
 
 @NgModule({
@@ -43,6 +44,7 @@ import { ListarSucursalesComponent } from './components/listar-sucursales/listar
     TasarPublicacionComponent,
     ListarPublicacionesTasarComponent,
     ListarSucursalesComponent,
+    ProponerTruequeComponent,
   ],
   imports: [
     BrowserModule,

@@ -17,12 +17,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from rest_framework import routers
-from main.views import  CurrentUserView, CustomAuthToken, PubViewSet, SucursalViewSet, UpdatePasswordView, UserViewSet, serve_publication_image, serve_branch_image
+from main.views import  CurrentUserView, CustomAuthToken, PubViewSet, SucursalViewSet, TradeProposalViewSet, UpdatePasswordView, UserViewSet, serve_publication_image, serve_branch_image
 
 router = routers.DefaultRouter()
 router.register('publications', PubViewSet, basename='publications' )
 router.register('users', UserViewSet, basename='users' )
 router.register('branches', SucursalViewSet, basename='branches' )
+router.register('proposals', TradeProposalViewSet, basename='proposals' )
 
 urlpatterns = [
     path('admin/', admin.site.urls),

@@ -7,114 +7,54 @@ from rest_framework import status
 from rest_framework.decorators import action, api_view
 from django.http import HttpResponse, Http404
 from django.contrib.auth import get_user_model
-from .models import Pub, User, Sucursal
-from .serializers import CurrentUserSerializer, CustomAuthTokenSerializer, PubSerializer, UpdatePasswordSerializer, UserSerializer, SucursalSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.views import APIView
 from rest_framework.generics import UpdateAPIView
+from .models import Pub, User, Sucursal, TradeProposal
+from .serializers import PubSerializer, UserSerializer, SucursalSerializer, TradeProposalSerializer
+from .serializers import CurrentUserSerializer, CustomAuthTokenSerializer, UpdatePasswordSerializer
 
-# Create your views here.
+# ViewSets
 
-class UpdatePasswordView(UpdateAPIView):
-  """
-  An endpoint for changing password.
-  """
-  serializer_class = UpdatePasswordSerializer
-  model = User
-  permission_classes = (IsAuthenticated)
+class TradeProposalViewSet(viewsets.ModelViewSet):
+    queryset = TradeProposal.objects.all()
+    serializer_class = TradeProposalSerializer
 
-  def get_object(self, queryset=None):
-      obj = self.request.user
-      return obj
+    def perform_create(self, serializer):
+        serializer.save()
 
-  def update(self, request, *args, **kwargs):
-      self.object = self.get_object()
-      serializer = self.get_serializer(data=request.data)
-
-      if serializer.is_valid():
-          # Check old password
-          if not self.object.check_password(serializer.data.get("old_password")):
-              return Response({"old_password": ["Wrong password."]}, status=status.HTTP_400_BAD_REQUEST)
-          # set_password also hashes the password that the user will get
-          self.object.set_password(serializer.data.get("new_password"))
-          self.object.save()
-          response = {
-              'status': 'success',
-              'code': status.HTTP_200_OK,
-              'message': 'Password updated successfully',
-              'data': []
-          }
-
-          return Response(response)
-
-      return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-def serve_publication_image(request, pk):
-      try:
-          pub= Pub.objects.get(pk=pk)
-      except Pub.DoesNotExist:
-          raise Http404('Publicacion no encontrada')
-
-      # Validate user permissions if applicable (e.g., only authenticated users can access)
-      if not pub.photos:
-          # Handle case where no image is uploaded
-          return HttpResponse('No hay foto disponible', status=404)
-
-      # Set appropriate content type (e.g., image/jpeg, image/png)
-      content_type = 'image/jpeg, image/png, image/jpg'
-
-      return HttpResponse(pub.photos.read(), content_type=content_type)
-
-def serve_branch_image(request, pk):
-      try:
-          suc= Sucursal.objects.get(pk=pk)
-      except Sucursal.DoesNotExist:
-          raise Http404('Sucursal no encontrada')
-
-      # Validate user permissions if applicable (e.g., only authenticated users can access)
-      if not suc.photos:
-          # Handle case where no image is uploaded
-          return HttpResponse('No hay foto disponible', status=404)
-
-      # Set appropriate content type (e.g., image/jpeg, image/png)
-      content_type = 'image/jpeg, image/png, image/jpg'
-
-      return HttpResponse(suc.photos.read(), content_type=content_type)
-
-class CustomAuthToken(ObtainAuthToken):
-    user = get_user_model()
-    serializer_class = CustomAuthTokenSerializer
-
-    def post(self, request, *args, **kwargs):
-        serializer = self.serializer_class(data=request.data, context={'request': request})
-        serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data['user']
-        token, created = Token.objects.get_or_create(user=user)
-        return Response({'token': token.key, 'user_id': user.id, 'username': user.username, 'email': user.email})
+    def update(self, request, *args, **kwargs):
+        proposal = self.get_object()
+        status = request.data.get('status')
+        if status in ['accepted', 'rejected']:
+            proposal.status = status
+            proposal.save()
+            return Response(status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
 
 class SucursalViewSet(viewsets.ModelViewSet):
   queryset = Sucursal.objects.all()
   serializer_class = SucursalSerializer
   permission_classes = [IsAuthenticatedOrReadOnly]
 
-def create_sucursal(address, photos, phone):
-  if not address or not photos or not phone:
-    raise ValueError("Missing required fields. Please provide address, phone, and photos.")
-  # Create the sucursal object
-  suc = Sucursal(
-      address=address,
-      photos=photos,
-      phone=phone,
-      )
-  # Save the sucursal to the database
-  suc.save()
-  return suc
+  def create_sucursal(address, photos, phone):
+    if not address or not photos or not phone:
+      raise ValueError("Missing required fields. Please provide address, phone, and photos.")
+    # Create the sucursal object
+    suc = Sucursal(
+        address=address,
+        photos=photos,
+        phone=phone,
+        )
+    # Save the sucursal to the database
+    suc.save()
+    return suc
 
-@api_view(['GET'])
-def get_all_sucursales(request):
-  sucursales = Sucursal.objects.all()
-  serializer = SucursalSerializer(sucursales, many=True)
-  return Response(serializer.data)
+  @api_view(['GET'])
+  def get_all_sucursales(request):
+    sucursales = Sucursal.objects.all()
+    serializer = SucursalSerializer(sucursales, many=True)
+    return Response(serializer.data)
 
 class CurrentUserView(APIView):
   permission_classes = [IsAuthenticatedOrReadOnly]
@@ -261,3 +201,86 @@ class PubViewSet(viewsets.ModelViewSet):
     pub.save()
 
     return pub
+
+## APIViews
+
+class UpdatePasswordView(UpdateAPIView):
+  """
+  An endpoint for changing password.
+  """
+  serializer_class = UpdatePasswordSerializer
+  model = User
+  permission_classes = (IsAuthenticated)
+
+  def get_object(self, queryset=None):
+      obj = self.request.user
+      return obj
+
+  def update(self, request, *args, **kwargs):
+      self.object = self.get_object()
+      serializer = self.get_serializer(data=request.data)
+
+      if serializer.is_valid():
+          # Check old password
+          if not self.object.check_password(serializer.data.get("old_password")):
+              return Response({"old_password": ["Wrong password."]}, status=status.HTTP_400_BAD_REQUEST)
+          # set_password also hashes the password that the user will get
+          self.object.set_password(serializer.data.get("new_password"))
+          self.object.save()
+          response = {
+              'status': 'success',
+              'code': status.HTTP_200_OK,
+              'message': 'Password updated successfully',
+              'data': []
+          }
+
+          return Response(response)
+
+      return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class CustomAuthToken(ObtainAuthToken):
+    user = get_user_model()
+    serializer_class = CustomAuthTokenSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        # created currently unused, but included for consistency with ObtainAuthToken, can't delete
+        token, created = Token.objects.get_or_create(user=user)
+
+        return Response({'token': token.key, 'user_id': user.id, 'username': user.username, 'email': user.email})
+
+## functions
+
+def serve_publication_image(request, pk):
+      try:
+          pub= Pub.objects.get(pk=pk)
+      except Pub.DoesNotExist:
+          raise Http404('Publicacion no encontrada')
+
+      # Validate user permissions if applicable (e.g., only authenticated users can access)
+      if not pub.photos:
+          # Handle case where no image is uploaded
+          return HttpResponse('No hay foto disponible', status=404)
+
+      # Set appropriate content type (e.g., image/jpeg, image/png)
+      content_type = 'image/jpeg, image/png, image/jpg'
+
+      return HttpResponse(pub.photos.read(), content_type=content_type)
+
+def serve_branch_image(request, pk):
+      try:
+          suc= Sucursal.objects.get(pk=pk)
+      except Sucursal.DoesNotExist:
+          raise Http404('Sucursal no encontrada')
+
+      # Validate user permissions if applicable (e.g., only authenticated users can access)
+      if not suc.photos:
+          # Handle case where no image is uploaded
+          return HttpResponse('No hay foto disponible', status=404)
+
+      # Set appropriate content type (e.g., image/jpeg, image/png)
+      content_type = 'image/jpeg, image/png, image/jpg'
+
+      return HttpResponse(suc.photos.read(), content_type=content_type)

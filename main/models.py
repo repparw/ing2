@@ -4,15 +4,10 @@ from django.conf import settings
 
 class User(AbstractUser):
   name = models.CharField(max_length=100, default='0')
-  date = models.DateField(blank=True, null=True)
-  mailing = models.BooleanField(default=False, blank=True, null=True)
-  rating = models.FloatField(default=0.00, blank=True, null=True)
+  date = models.DateField(blank=True)
+  mailing = models.BooleanField(default=False)
+  rating = models.FloatField(default=0.00, blank=True)
   suc = models.ForeignKey('Sucursal', on_delete=models.SET_NULL, null=True)
-
-class Admin(models.Model):
-  dni = models.CharField(unique=True, max_length=8)
-  email = models.EmailField(unique=True, max_length=100)
-  password = models.CharField(max_length=100)
 
 class Pub(models.Model):
   title = models.CharField(max_length=100)
@@ -23,6 +18,14 @@ class Pub(models.Model):
   price = models.FloatField()
   category = models.CharField(max_length=100)
   desired = models.CharField(max_length=100, blank=True)
+
+class TradeProposal(models.Model):
+    proposer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='proposals_made')
+    recipient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='proposals_received')
+    publication = models.ForeignKey(Pub, on_delete=models.CASCADE)
+    proposed_items = models.ManyToManyField(Pub, related_name='trade_proposals')
+    status = models.CharField(max_length=20, choices=[('pending', 'Pending'), ('accepted', 'Accepted'), ('rejected', 'Rejected')], default='pending')
+    created_at = models.DateTimeField(auto_now_add=True)
 
 class Sucursal(models.Model):
   address = models.CharField(max_length=100)
