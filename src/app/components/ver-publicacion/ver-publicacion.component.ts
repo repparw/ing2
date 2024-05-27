@@ -6,6 +6,7 @@ import { PublicationService } from '../../services/publicacion.service';
 import { ActivatedRoute } from '@angular/router';
 import { UserService } from '../../services/user.service'
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-ver-publicacion',
@@ -13,8 +14,9 @@ import { Router } from '@angular/router';
   styleUrls: ['./ver-publicacion.component.css']
 })
 export class VerPublicacionComponent implements OnInit{
-  data!: Pub;
-  username!: string;
+  data: Pub | null = null;
+  username: string | null = null;
+  owner: string | null = null;
   linkFoto!: any;
   productID!: number;
   canEdit!: boolean;
@@ -23,47 +25,57 @@ export class VerPublicacionComponent implements OnInit{
 
   }
 
-  ngOnInit(): void {
-    this.productID = parseInt(this.route.snapshot.params['id']);
-    console.log(this.productID);
+ ngOnInit(): void {
+    this.productID = parseInt(this.route.snapshot.params['id'], 10);
 
-    this.publicationService.getPublication(this.productID).pipe(
-      switchMap(publication => {
+    this.publicationService.getPublication(this.productID).subscribe(
+      publication => {
         this.data = publication;
         this.linkFoto = this.publicationService.getPhotos(this.productID);
-        if (this.userService.isAuthenticated()) {
-          return forkJoin([
-            this.userService.isOwner(publication).pipe(take(1)),
-            this.userService.getUser(publication.user).pipe(take(1), pluck('username'))
-          ]).pipe(
-            map(([isOwner, username]) => {
-              return { isOwner, username };
-            })
-          );
-        } else {
-          return this.userService.getUser(publication.user).pipe(
-            take(1),
-            map(user => {
-              return { isOwner: false, username: user.username };
-            })
-          );
-        }
-      })
-    ).subscribe(result => {
-      this.canEdit = result.isOwner;
-      this.username = result.username;
-
-      console.log(this.linkFoto);
-      console.log(this.data);
-      console.log(this.canEdit);
-      console.log(this.username);
-    });
+        this.loadAdditionalData(publication);
+      },
+      error => {
+        console.error('Error fetching publication:', error);
+      }
+    );
   }
 
-  confirmDeletePublication(productID: number): void {
-    if (window.confirm('¿Estás seguro de que deseas eliminar esta publicación?')) {
-      this.deletePublication(productID);
+  loadAdditionalData(publication: Pub): void {
+    if (this.userService.isAuthenticated()) {
+      this.userService.isOwner(publication).subscribe(
+        isOwner => {
+          this.canEdit = isOwner;
+        },
+        error => {
+          console.error('Error checking owner status:', error);
+        }
+      );
+
+      this.userService.getUser(publication.user).subscribe(
+        user => {
+          this.username = user.username;
+          this.owner = user.name;
+        },
+        error => {
+          console.error('Error fetching user:', error);
+        }
+      );
     }
+  }
+  confirmDeletePublication(productID: number): void {
+    Swal.fire({
+      title: 'Confirmar',
+      text: '¿Estás seguro de que deseas eliminar esta publicación?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, eliminar'
+          }).then((result) => {
+      if (result.isConfirmed) {
+        this.deletePublication(productID);
+      }
+          });
   }
 
 
@@ -76,6 +88,10 @@ export class VerPublicacionComponent implements OnInit{
   editar(id:number){
     this.router.navigate([`publicacion/${id}/editar`])
   }
+
+  proponerTrueque(id:number){
+    this.router.navigate([`publicacion/${id}/proponer`])
+    }
 
   navigate(ruta: string): void{
     this.router.navigate([`usuarios/${ruta}`])
