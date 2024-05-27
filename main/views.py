@@ -297,7 +297,7 @@ def send_email(request):
         message = data['message']
         recipient_list = data['recipient_list']
 
-        send_mail(subject, message, 'tu_correo@gmail.com', recipient_list)
+        send_mail(subject, message, '1francoagostinelli2000@gmail.com', recipient_list)
         return JsonResponse({'message': 'Email sent successfully'})
     return JsonResponse({'error': 'Invalid request'}, status=400)
 

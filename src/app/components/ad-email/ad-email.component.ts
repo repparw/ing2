@@ -38,7 +38,15 @@ export class AdEmailComponent {
       const { subject, message } = this.adEmailForm.value;
       console.log('Sending ad email to:', this.allEmails);
       // Implement your logic to send the email using the emails in this.allEmails
-      this.emailService.sendEmail(subject, message, this.allEmails)
+      this.emailService.sendEmail(subject, message, this.allEmails).subscribe(
+        response => {
+          console.log('Email sent successfully', response);
+        },
+        error => {
+          console.error('Error sending email', error);
+        }
+      );
+    }
     }
   }
-}
+
