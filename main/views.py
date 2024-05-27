@@ -13,6 +13,10 @@ from rest_framework.generics import UpdateAPIView
 from .models import Pub, User, Sucursal, TradeProposal
 from .serializers import PubSerializer, UserSerializer, SucursalSerializer, TradeProposalSerializer
 from .serializers import CurrentUserSerializer, CustomAuthTokenSerializer, UpdatePasswordSerializer
+from django.core.mail import send_mail
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
 
 # ViewSets
 
@@ -119,7 +123,7 @@ class PubViewSet(viewsets.ModelViewSet):
       partial = request.method == 'PATCH'
       serializer = self.get_serializer(pub, data=request.data, partial=partial)
       serializer.is_valid(raise_exception=True)
-      return response({
+      return Response({
         "pub": serializer.data,
         "message": "usuario creado exitosamente",
             }, status=status.http_201_created)
@@ -284,3 +288,15 @@ def serve_branch_image(request, pk):
       content_type = 'image/jpeg, image/png, image/jpg'
 
       return HttpResponse(suc.photos.read(), content_type=content_type)
+
+@csrf_exempt
+def send_email(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        subject = data['subject']
+        message = data['message']
+        recipient_list = data['recipient_list']
+
+        send_mail(subject, message, 'tu_correo@gmail.com', recipient_list)
+        return JsonResponse({'message': 'Email sent successfully'})
+    return JsonResponse({'error': 'Invalid request'}, status=400)
