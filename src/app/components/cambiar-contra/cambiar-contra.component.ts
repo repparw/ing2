@@ -1,6 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'cambiar-contra',
@@ -48,7 +49,7 @@ export class CambiarContraComponent implements OnInit {
 
     console.log('El formulario es válido. Realizando cambio de contraseña...');
     console.log(this.cambiarContraForm.value);
-    alert('Contraseña reestablecida correctamente');
+    Swal.fire('OK!','Contraseña reestablecida correctamente','success');
     this.navigate('login')
 
     // Aquí puedes realizar la lógica para enviar el formulario al backend

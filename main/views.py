@@ -165,6 +165,11 @@ class PubViewSet(viewsets.ModelViewSet):
 
     return pub
 
+  def destroy(self, request, *args, **kwargs):
+    pub = self.get_object()
+    pub.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
+
   def create_publication(title, desc, user, photos, is_paused, price, category, desired):
     """
     This function creates a new publication object and saves it to the database.

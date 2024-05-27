@@ -34,7 +34,6 @@ export class UserService {
         take(1),
         map(user => {
           const isEmployee = !!user && user.is_staff === true;
-          console.log(`updateAuthStatus: isEmployee=${isEmployee}`);
           this.isEmployeeSubject.next(isEmployee);
         }),
         catchError((error: any) => {

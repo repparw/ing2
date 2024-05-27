@@ -8,6 +8,7 @@ import { Location } from '@angular/common';
 import { Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { FileSelectDirective, FileUploader } from 'ng2-file-upload';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-editar-publicacion',
@@ -57,7 +58,7 @@ export class EditarPublicacionComponent implements OnInit {
   getPublication(id: number): void {
    this.publicationService.getPublication(id).subscribe((pub: Pub) => {
         if (pub.user !== this.userId) {
-          alert('No está autorizado para editar esta publicación')
+          Swal.fire('Error','No está autorizado para editar esta publicación','error');
           this.location.back();
         } else {
           this.prodForm = this.getForm(pub);
@@ -135,7 +136,7 @@ export class EditarPublicacionComponent implements OnInit {
     this.publicationService.updatePublication(this.id, pub).subscribe(
       (pub: Pub) => {
       console.log('Publicación actualizada:', pub);
-      alert('Publicación actualizada correctamente');
+      Swal.fire('Actualizada', 'Publicación actualizada correctamente', 'success');
       });
   }
 

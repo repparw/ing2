@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { catchError, switchMap, take, map } from 'rxjs/operators';
 import { of } from 'rxjs';
+import Swal from 'sweetalert2';
 
 import { PublicationService } from '../../services/publicacion.service';
 import { UserService } from '../../services/user.service';
@@ -24,13 +26,14 @@ export class ProponerTruequeComponent implements OnInit {
               private userService: UserService,
               private route: ActivatedRoute,
               private formBuilder: FormBuilder,
+              private location: Location,
              ){
               this.tradeProposal = this.formBuilder.group({
                 proposer: [0, Validators.required],
                 recipient: [0, Validators.required],
                 publication: [0, Validators.required],
                 proposed_items: [[], Validators.required],
-                status: ['PENDING', Validators.required],
+                status: ['pending', Validators.required],
               });
              }
 
@@ -56,7 +59,7 @@ export class ProponerTruequeComponent implements OnInit {
 
   proposeTrade(proposal: TradeProposal) {
     this.publicationService.createTradeProposal(proposal).subscribe(response => {
-      alert('Propuesta de trueque enviada exitosamente!');
+      Swal.fire('Propuesta de trueque enviada exitosamente!', "", 'success');
     });
   }
 
@@ -64,6 +67,10 @@ export class ProponerTruequeComponent implements OnInit {
     if (this.tradeProposal.valid) {
       this.proposeTrade(this.tradeProposal.value);
     }
+  }
+
+  onCancel() {
+    this.location.back();
   }
 
   private getCurrentUserAndPublications(): void {

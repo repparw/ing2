@@ -12,7 +12,7 @@ class TradeProposalSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TradeProposal
-        fields = ['id', 'proposer', 'recipient', 'publication', 'proposed_items', 'is_confirmed', 'is_canceled', 'created_at']
+        fields = ['id', 'proposer', 'recipient', 'publication', 'proposed_items', 'status', 'created_at']
 
 class UpdatePasswordSerializer(serializers.Serializer):
   Model = User

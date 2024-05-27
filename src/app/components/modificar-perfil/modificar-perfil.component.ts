@@ -4,6 +4,8 @@ import { __values } from 'tslib';
 import { Observable } from 'rxjs';
 import { Location } from '@angular/common';
 import { state } from '@angular/animations';
+import Swal from 'sweetalert2';
+
 import { UserService } from '../../services/user.service';
 import { User } from '../../models/user';
 
@@ -58,7 +60,7 @@ export class ModificarPerfilComponent implements OnInit {
     this.userService.updateUser(userData).subscribe(
       (user: User) => {
         console.log('Usuario modificado:', user);
-        alert('Usuario modificado correctamente');
+        Swal.fire('Usuario modificado correctamente', '', 'success');
         this.location.back();
       });
   }

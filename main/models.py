@@ -4,7 +4,7 @@ from django.conf import settings
 
 class User(AbstractUser):
   name = models.CharField(max_length=100, default='0')
-  date = models.DateField(blank=True)
+  date = models.DateField(blank=True, default='2000-01-01')
   mailing = models.BooleanField(default=False)
   rating = models.FloatField(default=0.00, blank=True)
   suc = models.ForeignKey('Sucursal', on_delete=models.SET_NULL, null=True)

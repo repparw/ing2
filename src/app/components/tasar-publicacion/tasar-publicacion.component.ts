@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { Location } from '@angular/common';
+import Swal from 'sweetalert2';
+
 import { PublicationService } from '../../services/publicacion.service';
 import { Pub } from '../../models/pub';
 
@@ -19,7 +20,6 @@ export class TasarPublicacionComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private publicationService: PublicationService,
-    private location: Location,
     private route: ActivatedRoute,
   ) {
     this.pubForm = this.formBuilder.group({
@@ -73,8 +73,10 @@ export class TasarPublicacionComponent implements OnInit {
     this.publicationService.updatePublication(this.id, updatedPub).subscribe(
       (updatedPub: Pub) => {
         console.log('Publicación actualizada:', updatedPub);
-        alert('Publicación actualizada correctamente');
-        this.location.back(); // Navigate back after successful update
+        Swal.fire('Actualizada',
+                  'Publicación actualizada correctamente',
+                  'success',
+                 ).then(() => { window.history.back(); }); // Navigate back after successful update
       },
       error => {
         console.error('Error al actualizar la publicación:', error);
@@ -88,23 +90,35 @@ export class TasarPublicacionComponent implements OnInit {
   }
 
   deletePublication(): void {
-    if (confirm('¿Está seguro de que desea rechazar esta publicación?')) {
-      this.publicationService.deletePublication(this.id).subscribe(
-        () => {
-          console.log('Publicación eliminada correctamente');
-          alert('Publicación eliminada correctamente');
-          this.location.back(); // Navigate back after deletion
-        },
-        error => {
-          console.error('Error al eliminar la publicación:', error);
-          // Handle error
-        }
-      );
+    Swal.fire({
+      title: 'Confirmar',
+      text: '¿Está seguro de que desea rechazar esta publicación?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, eliminar'
+          }).then((result) => {
+      if (result.isConfirmed) {
+        this.publicationService.deletePublication(this.id).subscribe(
+          () => {
+            Swal.fire(
+              'Eliminada',
+              'Publicación eliminada correctamente',
+              'success',
+            ).then(() => { window.history.back(); // Navigate back after deletion
+            });
+          },
+          error => {
+            console.error('Error al eliminar la publicación:', error);
+            // Handle error
+          });
     }
+    });
   }
 
   goBack(): void {
-    this.location.back();
+    window.history.back();
   }
 }
 

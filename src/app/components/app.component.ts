@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../services/user.service'
 import { Observable, of } from 'rxjs';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-root',
@@ -24,11 +25,21 @@ export class AppComponent implements OnInit {
   onLogout(): void {
     // Popup asking for confirmation
     // If confirmed, log out
-    const confirmLogout = window.confirm("¿Estás seguro de que deseas cerrar sesión?");
-    if (confirmLogout) {
-      localStorage.removeItem('token');
-      this.userService.logout();
-    };
+    Swal.fire({
+      title: "Confirmar",
+      text: "¿Estás seguro de que deseas cerrar sesión?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      cancelButtonText: "Cancelar",
+      confirmButtonText: "Confirmar"
+    }).then((result) => {
+      if (result.isConfirmed) {
+          localStorage.removeItem('token');
+          this.userService.logout();
+      }
+    });
   }
 
 }

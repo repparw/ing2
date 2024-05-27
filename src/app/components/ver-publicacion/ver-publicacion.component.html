@@ -1,45 +1,45 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
+  <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lista de Publicaciones</title>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <div class="carousel-container">
-            <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-                <div class="carousel-inner">
-                    <div class="carousel-item active c-item">
-                        <img class="d-block w-100 c-img" src="{{linkFoto}}" alt="First slide">
-                    </div>
-                    <div class="carousel-item c-item">
-                        <img class="d-block w-100 c-img" src="https://fastly.picsum.photos/id/989/600/600.jpg?hmac=y2H3p_6IUICrOB52uoOVsgWYL5lsMZaaS4mQoZ-y4oQ" alt="Second slide">
-                    </div>
-                    <div class="carousel-item c-item">
-                        <img class="d-block w-100 c-img" src="https://fastly.picsum.photos/id/506/600/600.jpg?hmac=cRpJ2iYeLN77-3VobbIvI_tc_-L9VHwDzQ9C5yBFOu8" alt="Third slide">
-                    </div>
-                </div>
-                <button class="carousel-control-prev slide-control" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                </button>
-                <button class="carousel-control-next slide-control" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                </button>
+      <div class="carousel-container">
+        <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+          <div class="carousel-inner">
+            <div class="carousel-item active c-item">
+              <img class="d-block w-100 c-img" [src]="linkFoto" alt="First slide">
             </div>
+            <div class="carousel-item c-item">
+              <img class="d-block w-100 c-img" src="https://fastly.picsum.photos/id/989/600/600.jpg?hmac=y2H3p_6IUICrOB52uoOVsgWYL5lsMZaaS4mQoZ-y4oQ" alt="Second slide">
+            </div>
+            <div class="carousel-item c-item">
+              <img class="d-block w-100 c-img" src="https://fastly.picsum.photos/id/506/600/600.jpg?hmac=cRpJ2iYeLN77-3VobbIvI_tc_-L9VHwDzQ9C5yBFOu8" alt="Third slide">
+            </div>
+          </div>
+          <button class="carousel-control-prev slide-control" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          </button>
+          <button class="carousel-control-next slide-control" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          </button>
         </div>
-        <div class="carousel-text">
-            <h2>{{data.title}}</h2>
-            <p>Categoria: {{data.category}}</p>
-            <p>Precio: ${{data.price}}</p>
-            <a (click)="navigate(username)">Dueño: {{username}}</a>  <!--Este navigate es distinto a los otros-->
-            <p>Descripcion: {{data.desc}}</p>
-            <!-- Add questions if logged in -->
-            <p>Preguntas(solo si esta logueado)</p>
-        </div>
-        <button *ngIf="canEdit" type="button" (click)="editar(productID)" class="btn btn-primary">Modificar publicacion</button>
-        <button *ngIf="canEdit" type="button" (click)="confirmDeletePublication(productID)" class="btn btn-danger">Eliminar publicacion</button>
+      </div>
+      <div class="carousel-text">
+        <h2>{{data?.title}}</h2>
+        <p>Categoria: {{data?.category}}</p>
+        <p>Precio: ${{data?.price}}</p>
+        <a *ngIf="username" (click)="navigate(username)">Dueño: {{username}}</a>
+        <p>Descripcion: {{data?.desc}}</p>
+        <p>Preguntas (solo si está logueado)</p>
+      </div>
+      <button *ngIf="canEdit" type="button" (click)="editar(productID)" class="btn btn-primary">Modificar publicacion</button>
+      <button *ngIf="canEdit" type="button" (click)="confirmDeletePublication(productID)" class="btn btn-danger">Eliminar publicacion</button>
+      <button *ngIf="!canEdit" type="button" (click)="proponerTrueque(productID)" class="btn btn-primary">Proponer Trueque</button>
     </div>
-</body>
+  </body>
 
 </html>

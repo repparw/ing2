@@ -24,7 +24,7 @@ export class PublicationService {
       'Content-Type': 'application/json',
       'Authorization': `Token ${authToken}`
     });
-    return this.http.post<TradeProposal>(`${this.baseUrl}/trade-proposals/`, proposal, { headers, withCredentials: true });
+    return this.http.post<TradeProposal>(`${this.baseUrl}proposals/`, proposal, { headers, withCredentials: true });
   }
 
   cancelTradeProposal(id: number): Observable<void> {
@@ -36,7 +36,7 @@ export class PublicationService {
       'Content-Type': 'application/json',
       'Authorization': `Token ${authToken}`
     });
-    return this.http.put<void>(`${this.baseUrl}/trade-proposals/${id}/cancel/`, {}, { headers, withCredentials: true });
+    return this.http.put<void>(`${this.baseUrl}proposals/${id}/cancel/`, {}, { headers, withCredentials: true });
   }
 
   public createPublication(pub: Pub): Observable<Pub> {
