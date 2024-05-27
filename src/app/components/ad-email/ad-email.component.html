@@ -1,24 +1,30 @@
-<!-- ad-email.component.html -->
-<div>
-    <h2>Enviar Correo Publicitario</h2>
-    <form [formGroup]="adEmailForm" (ngSubmit)="onSubmit()">
-      <label>
-        Asunto:
-        <input formControlName="subject" type="text">
-      </label>
-      <div *ngIf="adEmailForm.get('subject')?.invalid && (adEmailForm.get('subject')?.dirty || adEmailForm.get('subject')?.touched)">
-        <small *ngIf="adEmailForm.get('subject')?.errors?.['required']">El asunto es requerido.</small>
-      </div>
-  
-      <label>
-        Mensaje:
-        <textarea formControlName="message"></textarea>
-      </label>
-      <div *ngIf="adEmailForm.get('message')?.invalid && (adEmailForm.get('message')?.dirty || adEmailForm.get('message')?.touched)">
-        <small *ngIf="adEmailForm.get('message')?.errors?.['required']">El mensaje es requerido.</small>
-      </div>
-  
-      <button type="submit" [disabled]="adEmailForm.invalid">Enviar</button>
-    </form>
-  </div>
-  
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enviar Correo Publicitario</title>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="text-center">Enviar Correo Publicitario</h2>
+        <form [formGroup]="adEmailForm" (ngSubmit)="onSubmit()" class="mt-4">
+            <div class="form-group">
+                <label for="subject">Asunto:</label>
+                <input id="subject" formControlName="subject" type="text" class="form-control">
+                <small *ngIf="adEmailForm.get('subject')?.invalid && (adEmailForm.get('subject')?.dirty || adEmailForm.get('subject')?.touched)" class="text-danger">
+                    <span *ngIf="adEmailForm.get('subject')?.errors?.['required']">El asunto es requerido.</span>
+                </small>
+            </div>
+            <div class="form-group">
+                <label for="message">Mensaje:</label>
+                <textarea id="message" formControlName="message" class="form-control"></textarea>
+                <small *ngIf="adEmailForm.get('message')?.invalid && (adEmailForm.get('message')?.dirty || adEmailForm.get('message')?.touched)" class="text-danger">
+                    <span *ngIf="adEmailForm.get('message')?.errors?.['required']">El mensaje es requerido.</span>
+                </small>
+            </div>
+            <button type="submit" class="btn btn-primary" [disabled]="adEmailForm.invalid">Enviar</button>
+        </form>
+    </div>
+</body>
+</html>
