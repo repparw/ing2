@@ -1,4 +1,4 @@
-<html>
+<html lang="es">
 <div class="form-container w-25">
     <h1>Registro de Usuario</h1>
     <p>Por favor, ingrese los datos del usuario</p>
@@ -18,7 +18,7 @@
         <small class="text-danger" *ngIf="hasErrors('username', 'required')">El DNI es requerido</small>
         <div class="text-danger" *ngIf="hasErrors('username', 'minlength')">El DNI debe tener 8 caracteres</div>
         <div class="text-danger" *ngIf="hasErrors('username', 'maxlength')">El DNI debe tener 8 caracteres</div>
-        <div class="text-danger" *ngIf="hasErrors('username', 'pattern') ">El DNI debe consistir solo de numeros</div>      
+        <div class="text-danger" *ngIf="hasErrors('username', 'pattern') ">El DNI debe consistir solo de numeros</div>
       </div>
     </div>
 
@@ -33,9 +33,10 @@
 
     <div>
       <label for="date">Fecha de nacimiento</label>
-      <input type="date" formControlName="fechaNacimiento" id="date" class="form-control" formControlName="date" [value]="userForm.get('date')?.value | date: 'yyyy-MM-dd'">
+      <input type="date" formControlName="date" id="date" class="form-control" formControlName="date" [value]="userForm.get('date')?.value | date: 'yyyy-MM-dd'">
       <div>
-        <small class="text-danger" *ngIf="hasErrors('fechaNacimiento', 'required')">La fecha de nacimiento es requerida</small>
+        <small class="text-danger" *ngIf="hasErrors('date', 'required')">La fecha de nacimiento es requerida</small>
+        <small class="text-danger" *ngIf="hasErrors('date', 'legalAge')">Debe ser mayor de 18 años</small>
       </div>
     </div>
 
@@ -45,7 +46,7 @@
       <div>
         <small class="text-danger" *ngIf="hasErrors('password', 'required')">La contraseña es requerida</small>
         <div class="text-danger" *ngIf="hasErrors('password', 'minlength')">La contraseña debe tener 6 o más caracteres</div>
-        <div class="text-danger" *ngIf="hasErrors('password', 'pattern') ">La contraseña debe tener al menos 1 símbolo.</div>      
+        <div class="text-danger" *ngIf="hasErrors('password', 'pattern') ">La contraseña debe tener al menos 1 símbolo.</div>
       </div>
     </div>
 
@@ -56,12 +57,12 @@
         <small class="text-danger" *ngIf="hasErrors('suc', 'required')">El número de sucursal es requerido</small>
       </div>
     </div>
-    
+
     <div>
       <label class="form-label" for="mailing">Mailing</label>
       <input type="checkbox" id="mailing" class="form-check-input" formControlName="mailing">
     </div>
-
+    <p *ngIf=registroError class="text-danger">{{registroError}}</p>
     <button type="submit" class="btn btn-primary" [disabled]="userForm.invalid">Registrar</button>
   </form>
 </div>

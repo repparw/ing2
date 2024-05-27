@@ -21,7 +21,7 @@ throw new Error('Method not implemented.');
     name: ['', Validators.required],
     username: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(8), Validators.pattern('^([0-9])*$')]],
     email: ['', [Validators.required, Validators.pattern('.*@.*')]],
-    date:  new FormControl<Date | null> (null , [Validators.required, this.esMayorDeEdadV()]),
+    date:  new FormControl<Date | null> (null , [Validators.required, this.legalAge()]),
     password: ['', [Validators.required, Validators.minLength(6), Validators.pattern(".*[!@#$%^&*()_+}{:;'?/><,.\|~`].*")]],
     suc: [1, Validators.required],
     rating: [0.00],
@@ -44,7 +44,7 @@ throw new Error('Method not implemented.');
     }
     const fechaNacimiento = this.userForm.get('fechaNacimiento');
     if (fechaNacimiento) {
-      console.log("El usuario debe ser mayor de 18 años para registrarse.");
+      this.registroError = "El usuario debe ser mayor de 18 años para registrarse.";
       return;
   }
     this.userService.createUser(this.userForm.value as User).subscribe(
@@ -54,8 +54,7 @@ throw new Error('Method not implemented.');
         this.router.navigateByUrl('/home');
     },
       (error) => {
-        console.error('Error al crear usuario', error);
-        this.registroError = "Error al registrar el usuario. Intente otra vez";
+        this.registroError += "DNI o email ya registrados.";
       }
     )
   }
@@ -65,25 +64,29 @@ throw new Error('Method not implemented.');
     return control && control.hasError(errorType) && (control.dirty || control.touched);
   }
 
-  esMayorDeEdadV(): ValidatorFn {
+  legalAge(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
-      const value = control.value;
-
-      if (!value || isNaN(new Date(value).getTime())) {
-        return { 'invalidDate': true };
+      const today = new Date();
+      const birthDate = new Date(control.value);
+      // contemplate day of birth
+      console.log(today.getDate())
+      const age = this.getAge(birthDate);
+      if (age < 18) {
+        return { legalAge: true };
       }
-
-      const hoy = new Date();
-      const fechaNacimientoObj = new Date(value);
-      const edad = hoy.getFullYear() - fechaNacimientoObj.getFullYear();
-      const mes = hoy.getMonth() - fechaNacimientoObj.getMonth();
-
-      if (mes < 0 || (mes === 0 && hoy.getDate() < fechaNacimientoObj.getDate())) {
-        return edad < 18 ? { 'menorDeEdad': true } : null;
-      }
-
-      return edad < 18 ? { 'menorDeEdad': true } : null;
+      return null;
     };
+      }
+
+  private getAge(date: Date) {
+    const today = new Date();
+    const birthDate = new Date(date);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const month = today.getMonth() - birthDate.getMonth();
+    if (month < 0 || (month === 0 && today.getDate() <= birthDate.getDate())) {
+      age--;
+    }
+    return age;
   }
 
   sendEmail(subject:string, message:string, recipientList:string[]) {

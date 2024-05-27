@@ -14,7 +14,7 @@ html{
 }
 
 .container {
-  background-color: #DFD0B8;  
+  background-color: #DFD0B8;
   display: flex; /* Use flexbox for layout */
   align-items: center; /* Center items vertically */
 }
@@ -57,7 +57,14 @@ h4{
     margin-left: 10%;
     max-height: 450px;
     max-width: 450px;
-    
+
+}
+
+.price-guide-link {
+  margin-top: -10px;
+  font-size: 0.9em;
+  cursor: pointer;
+  color: #007bff;
 }
 
 a {
@@ -66,28 +73,29 @@ a {
     outline: none;
     text-decoration: none;
     padding: 2px 1px 0;
+    cursor: pointer;
   }
-  
+
   a:link {
     color: #265301;
   }
-  
+
   a:visited {
     color: #437a16;
   }
-  
+
   a:focus {
     border-bottom: 1px solid;
     background: #bae498;
   }
-  
+
   a:hover {
     border-bottom: 1px solid;
     background: #cdfeaa;
   }
-  
+
   a:active {
     background: #265301;
     color: #cdfeaa;
   }
-  
+

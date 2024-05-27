@@ -40,13 +40,7 @@
     </div>
   </div>
 
-  <!--- add a checkbox -->
-  <div class="mb-3">
-    <label class="form-label" for="is_paused">
-      ¿Esta pausada?
-    </label>
-    <input type="checkbox" id="is_paused" class="form-check-input" [formControlName]="'is_paused'">
-  </div>
+    <input type="hidden" id="is_paused" name="is_paused" [formControlName]="'is_paused'">
 
   <div class="mb-3">
      <label class="form-label" for="photos">

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
 
 import { PublicationService } from '../../services/publicacion.service';
@@ -21,6 +21,7 @@ export class TasarPublicacionComponent implements OnInit {
     private formBuilder: FormBuilder,
     private publicationService: PublicationService,
     private route: ActivatedRoute,
+    private router: Router,
   ) {
     this.pubForm = this.formBuilder.group({
       title: ['', Validators.required],
@@ -33,7 +34,6 @@ export class TasarPublicacionComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
     this.id = parseInt(this.route.snapshot.params['id']);
     this.getPublication(this.id);
   }
@@ -72,11 +72,10 @@ export class TasarPublicacionComponent implements OnInit {
     const updatedPub = this.pubForm.value as Partial<Pub>;
     this.publicationService.updatePublication(this.id, updatedPub).subscribe(
       (updatedPub: Pub) => {
-        console.log('Publicación actualizada:', updatedPub);
         Swal.fire('Actualizada',
                   'Publicación actualizada correctamente',
                   'success',
-                 ).then(() => { window.history.back(); }); // Navigate back after successful update
+                ).then(() => { this.router.navigate(['/tasar-publicaciones']) }); //.then(()=> { window.location.reload(); })});
       },
       error => {
         console.error('Error al actualizar la publicación:', error);
@@ -97,7 +96,7 @@ export class TasarPublicacionComponent implements OnInit {
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Sí, eliminar'
+      confirmButtonText: 'Eliminar'
           }).then((result) => {
       if (result.isConfirmed) {
         this.publicationService.deletePublication(this.id).subscribe(
@@ -106,8 +105,7 @@ export class TasarPublicacionComponent implements OnInit {
               'Eliminada',
               'Publicación eliminada correctamente',
               'success',
-            ).then(() => { window.history.back(); // Navigate back after deletion
-            });
+            ).then(() => { this.router.navigate(['/tasar-publicaciones']) });
           },
           error => {
             console.error('Error al eliminar la publicación:', error);
