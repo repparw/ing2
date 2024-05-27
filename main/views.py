@@ -300,3 +300,10 @@ def send_email(request):
         send_mail(subject, message, 'tu_correo@gmail.com', recipient_list)
         return JsonResponse({'message': 'Email sent successfully'})
     return JsonResponse({'error': 'Invalid request'}, status=400)
+
+def get_all_emails(request):
+    if request.method == 'GET':
+        # Filtrar usuarios que quieren recibir correos
+        emails = list(User.objects.filter(mailing=True).values_list('email', flat=True))
+        return JsonResponse({'emails': emails})
+    return JsonResponse({'error': 'Invalid request'}, status=400)

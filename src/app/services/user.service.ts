@@ -13,6 +13,7 @@ export class UserService {
   private userUrl = 'http://localhost:8000/users/';
   private profileUrl = 'http://localhost:8000/profiles/';
   private loginUrl = 'http://localhost:8000/api-token-auth/';
+  private getEmailsUrl = 'http://localhost:8000/get-all-emails/';
 
   private isAuthenticatedSubject: ReplaySubject<boolean> = new ReplaySubject<boolean>(1);
   public isAuthenticated$: Observable<boolean> = this.isAuthenticatedSubject.asObservable();
@@ -135,6 +136,23 @@ export class UserService {
       'Content-Type': 'application/json',
     });
     return this.http.get<User>(`${this.userUrl}${id}/`, { headers });
+  }
+
+  getAllEmails(): Observable<string[]> {
+    const authToken = localStorage.getItem('token');
+    if (!authToken) {
+      return throwError(new Error('No token found'));
+    }
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Token ${authToken}`
+    });
+
+    return this.http.get<{ emails: string[] }>(this.getEmailsUrl, { headers, withCredentials: true }).pipe(
+      map(response => response.emails),
+      catchError(this.handleError)
+    );
   }
 
   private handleError(error: HttpErrorResponse) {

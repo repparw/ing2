@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from rest_framework import routers
-from main.views import  CurrentUserView, CustomAuthToken, PubViewSet, SucursalViewSet, TradeProposalViewSet, UpdatePasswordView, UserViewSet, serve_publication_image, serve_branch_image, send_email
+from main.views import  CurrentUserView, CustomAuthToken, PubViewSet, SucursalViewSet, TradeProposalViewSet, UpdatePasswordView, UserViewSet, serve_publication_image, serve_branch_image, send_email, get_all_emails
 
 router = routers.DefaultRouter()
 router.register('publications', PubViewSet, basename='publications' )
@@ -34,5 +34,6 @@ urlpatterns = [
     path('profiles/<str:username>/', UserViewSet.as_view({'get': 'profile_by_username'}), name='profile-by-username'),
     path('publications-by/<int:user>/', PubViewSet.as_view({'get': 'get_user_publications'}), name='publications-by-user'),
     path('users/change-password/', UpdatePasswordView.as_view(), name='change_password'),
-    path('send-email/', send_email, name='send_email')
+    path('send-email/', send_email, name='send_email'),
+    path('get-all-emails/', get_all_emails, name='get_all_emails')
 ] + router.urls

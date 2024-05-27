@@ -1,0 +1,24 @@
+<!-- ad-email.component.html -->
+<div>
+    <h2>Enviar Correo Publicitario</h2>
+    <form [formGroup]="adEmailForm" (ngSubmit)="onSubmit()">
+      <label>
+        Asunto:
+        <input formControlName="subject" type="text">
+      </label>
+      <div *ngIf="adEmailForm.get('subject')?.invalid && (adEmailForm.get('subject')?.dirty || adEmailForm.get('subject')?.touched)">
+        <small *ngIf="adEmailForm.get('subject')?.errors?.['required']">El asunto es requerido.</small>
+      </div>
+  
+      <label>
+        Mensaje:
+        <textarea formControlName="message"></textarea>
+      </label>
+      <div *ngIf="adEmailForm.get('message')?.invalid && (adEmailForm.get('message')?.dirty || adEmailForm.get('message')?.touched)">
+        <small *ngIf="adEmailForm.get('message')?.errors?.['required']">El mensaje es requerido.</small>
+      </div>
+  
+      <button type="submit" [disabled]="adEmailForm.invalid">Enviar</button>
+    </form>
+  </div>
+  
