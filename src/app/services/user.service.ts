@@ -12,7 +12,7 @@ export class UserService {
 
   private baseUrl = 'http://localhost:8000/';
   private userUrl = this.baseUrl + 'users/';
-  private profileUrl = this.baseUrl + 'profile/';
+  private profileUrl = this.baseUrl + 'profiles/';
   private loginUrl = this.baseUrl + 'api-token-auth/';
   private getEmailsUrl = this.baseUrl + 'get-all-emails/';
   private resetPasswordUrl = this.baseUrl + 'reset-password/';

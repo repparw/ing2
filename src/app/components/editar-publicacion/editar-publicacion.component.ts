@@ -58,8 +58,7 @@ export class EditarPublicacionComponent implements OnInit {
   getPublication(id: number): void {
    this.publicationService.getPublication(id).subscribe((pub: Pub) => {
         if (pub.user !== this.userId) {
-          Swal.fire('Error','No está autorizado para editar esta publicación','error');
-          this.location.back();
+          Swal.fire('Error','No está autorizado para editar esta publicación','error').then(() => this.location.back());
         } else {
           this.prodForm = this.getForm(pub);
         }

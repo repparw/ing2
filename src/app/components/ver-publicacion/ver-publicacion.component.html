@@ -37,7 +37,7 @@
         Categoría {{ getCategory(data.price) }}
         </p>
         <p>
-        <a *ngIf="username" (click)="navigate(username)">Dueño: {{username}}</a>
+        <a *ngIf="username" (click)="navigate(username)">Dueño: {{owner}}</a>
         </p>
         <p>Descripcion: {{data.desc}}</p>
         <!-- TODO  <p>Preguntas (solo si está logueado)</p> -->

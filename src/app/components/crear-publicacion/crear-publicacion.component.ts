@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { PublicationService } from '../../services/publicacion.service';
+import { UserService } from '../../services/user.service';
 import { Pub } from '../../models/pub'
 import { FileSelectDirective, FileUploader } from 'ng2-file-upload';
 import { Router } from '@angular/router';
@@ -24,12 +25,18 @@ export class CrearPublicacionComponent {
       desired: [''],
       // fields not in form
       price: [0],
-      user: [1],
+      user: [0],
   });
 
-  constructor(private formBuilder: FormBuilder, private publicationService:PublicationService, private router:Router){ }
+  constructor(private formBuilder: FormBuilder,
+              private publicationService:PublicationService,
+              private userService: UserService,
+              private router:Router,
+             ){ }
 
   ngOnInit() {
+    this.userService.getCurrentUser().subscribe(user => {
+      this.prodForm.patchValue({user: user.id});});
   }
 
   hasErrors(controlName: string, errorType: string) {

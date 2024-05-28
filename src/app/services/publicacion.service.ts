@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { Pub } from '../models/pub';
 import { TradeProposal } from '../models/tradeProposal';
 
@@ -52,16 +52,22 @@ export class PublicationService {
     return this.http.put<void>(`${this.baseUrl}proposals/${id}/cancel/`, {}, { headers, withCredentials: true });
   }
 
+  public getPublicationPrice(pubId: number): Observable<number> {
+    return this.getPublication(pubId).pipe(
+      map(publication => publication.price),
+      catchError(this.handleError)
+    );
+  }
+
   public getCategory(price: number): string {
     for (let item of this.pricingGuide) {
       const [min, max] = item.range.replace(/[$,>]/g, '').split('-').map(Number);
-      if (price >= min && (max ? price <= max : true)) {
+      if (price >= min && (max ? price < max : true)) {
         return item.category;
       }
     }
     return 'N/A';
   }
-
 
   public createPublication(pub: Pub): Observable<Pub> {
     const authToken = localStorage.getItem('token');
