@@ -54,6 +54,17 @@ export class RegistroComponent implements OnInit, HttpInterceptor {
     }
   }
 
+  requestPasswordReset() {
+    this.userService.requestPasswordReset(this.loginForm.get('email')?.value || '').subscribe(
+      response => {
+        console.log('Solicitud de restablecimiento de contraseña exitosa', response);
+      },
+      error => {
+        console.error('Solicitud de restablecimiento de contraseña fallida', error);
+      });
+
+      }
+
   isAuthenticated(): boolean {
     return this.userService.isAuthenticated();
   }

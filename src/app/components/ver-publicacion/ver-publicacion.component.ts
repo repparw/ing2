@@ -21,18 +21,6 @@ export class VerPublicacionComponent implements OnInit{
   productID!: number;
   canEdit!: boolean;
 
-  pricingGuide = [
-    { range: '$1-1000', category: 'I' },
-    { range: '$1000-2500', category: 'II' },
-    { range: '$2500-5000', category: 'III' },
-    { range: '$5000-7500', category: 'IV' },
-    { range: '$7500-10000', category: 'V' },
-    { range: '$10000-20000', category: 'VI' },
-    { range: '$20000-40000', category: 'VII' },
-    { range: '$40000-70000', category: 'VIII' },
-    { range: '$70000-100000', category: 'IX' },
-    { range: '>$100000', category: 'X' }
-  ];
 
   constructor (private route: ActivatedRoute, private  publicationService: PublicationService, private userService: UserService, private router:Router ){
 
@@ -91,6 +79,9 @@ export class VerPublicacionComponent implements OnInit{
           });
   }
 
+  getCategory(price: number): string {
+    return this.publicationService.getCategory(price)
+  }
 
   deletePublication(id: number) {
     this.publicationService.deletePublication(id).subscribe((pub: Pub) => {
@@ -111,23 +102,13 @@ export class VerPublicacionComponent implements OnInit{
   }
 
   showPricingGuide(): void {
-    const guide = this.pricingGuide.map(item => `${item.category} ${item.range}`).join('<br>');
+    const guide = this.publicationService.pricingGuide.map(item => `${item.category} ${item.range}`).join('<br>');
     Swal.fire({
       title: 'Guía de Precios',
       html: guide,
       icon: 'info',
       confirmButtonText: 'Cerrar'
     });
-  }
-
-  getCategory(price: number): string {
-    for (let item of this.pricingGuide) {
-      const [min, max] = item.range.replace(/[$,>]/g, '').split('-').map(Number);
-      if (price >= min && (max ? price <= max : true)) {
-        return item.category;
-      }
-    }
-    return 'N/A';
   }
 
 }

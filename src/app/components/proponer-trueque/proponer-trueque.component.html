@@ -1,34 +1,43 @@
 <html>
-<div class="form-container mb-3 w-25">
-<form [formGroup]="tradeProposal" (ngSubmit)="onSubmit()">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proponer trueque</title>
+  </head>
+    <div class="form-container mb-3 w-25">
+      <form [formGroup]="tradeProposal" (ngSubmit)="onSubmit()">
 
-  <!-- Bind proposer -->
-  <div class="form-group">
-    <label for="proposer">Proposer</label>
-    <input type="text" class="form-control" id="proposer" [value]="proposerName" readonly/>
-  </div>
-  <input type="hidden" formControlName="proposer" />
+        <!--
+        <div class="form-group">
+          <label for="proposer">Proposer</label>
+          <input type="text" class="form-control" id="proposer" [value]="proposerName" readonly/>
+        </div>
+        --->
+        <!-- Bind proposer -->
+        <input type="hidden" formControlName="proposer" />
 
-  <!-- Bind recipient -->
-  <input type="hidden" formControlName="recipient" />
+        <!-- Bind recipient -->
+        <input type="hidden" formControlName="recipient" />
 
-  <!-- Bind publication -->
-  <div class="form-group">
-    <label for="publication">Publication</label>
-    <input type="number" class="form-control" id="publication" formControlName="publication" name="publication"/>
-  </div>
+        <!-- Bind publication -->
+        <input type="hidden" class="form-control" id="publication" formControlName="publication" name="publication"/>
 
-  <!-- Bind proposed items (if applicable, adjust accordingly) -->
-  <div class="form-group">
-    <label for="proposedItems">Proposed Items</label>
-    <select multiple class="form-select" id="proposedItems" formControlName="proposed_items" name="proposedItems">
-      <option *ngFor="let publication of userPublications" [value]="publication.id">{{ publication.title }}</option>
-    </select>
-  </div>
+        <!-- Bind proposed items (if applicable, adjust accordingly) -->
+        <div class="container flex-column">
+        <label for="proposedItems">Publicaciones a proponer</label>
+        <select multiple class="form-select" id="proposedItems" formControlName="proposed_items" name="proposedItems">
+          <option *ngFor="let publication of userPublications" [value]="publication.id">{{ publication.title }}</option>
+        </select>
+        <span class="float-end"><p *ngIf="userPublications.length === 0" class="text-danger">No posee publicaciones
+        <a routerLink="/crear-publicacion" class="btn btn-sm btn-secondary">Crear publicación</a>
+        </p></span><br>
+    </div>
 
-  <!-- cancel button -->
-  <button type="button" class="btn btn-danger" (click)="onCancel()">Cancel</button>
-  <button type="submit" class="btn btn-primary">Submit</button>
-</form>
-</div>
+            <!-- buttons -->
+            <div class="mt-3">
+              <button type="button" class="btn btn-danger" (click)="onCancel()">Cancelar</button>
+              <button type="submit" class="btn btn-primary">Enviar</button>
+            </div>
+      </form>
+    </div>
 </html>

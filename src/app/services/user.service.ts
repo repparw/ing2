@@ -10,10 +10,12 @@ import { Pub } from '../models/pub';
 })
 export class UserService {
 
-  private userUrl = 'http://localhost:8000/users/';
-  private profileUrl = 'http://localhost:8000/profiles/';
-  private loginUrl = 'http://localhost:8000/api-token-auth/';
-  private getEmailsUrl = 'http://localhost:8000/get-all-emails/';
+  private baseUrl = 'http://localhost:8000/';
+  private userUrl = this.baseUrl + 'users/';
+  private profileUrl = this.baseUrl + 'profile/';
+  private loginUrl = this.baseUrl + 'api-token-auth/';
+  private getEmailsUrl = this.baseUrl + 'get-all-emails/';
+  private resetPasswordUrl = this.baseUrl + 'reset-password/';
 
   private isAuthenticatedSubject: ReplaySubject<boolean> = new ReplaySubject<boolean>(1);
   public isAuthenticated$: Observable<boolean> = this.isAuthenticatedSubject.asObservable();
@@ -105,6 +107,16 @@ export class UserService {
     return this.http.put<User>(`${this.userUrl}change-password/`, {old_password: oldPassword, new_password: newPassword, new_password2: newPassword2 }, { headers, withCredentials: true });
       }
 
+  requestPasswordReset(email: string): Observable<any> {
+    const headers = new HttpHeaders().set('Content-Type', 'application/json');
+    return this.http.post<any>(`${this.resetPasswordUrl}`, { email }, { headers });
+    }
+
+  resetPassword(uidb64: string, token: string, password: string): Observable<any> {
+    const headers = new HttpHeaders().set('Content-Type', 'application/json');
+    return this.http.post<any>(`${this.resetPasswordUrl}${uidb64}/${token}/`, { password }, { headers });
+    }
+
   getCurrentUser(): Observable<User> {
     const authToken = localStorage.getItem('token');
     if (!authToken) {
@@ -148,7 +160,7 @@ export class UserService {
       'Authorization': `Token ${authToken}`
     });
 
-    return this.http.get<{ emails: string[] }>(this.getEmailsUrl, { headers, withCredentials: true }).pipe(
+    return this.http.get<{ emails: string[] }>(`${this.getEmailsUrl}`, { headers, withCredentials: true }).pipe(
       map(response => response.emails),
       catchError(this.handleError)
     );

@@ -17,7 +17,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from rest_framework import routers
-from main.views import  CurrentUserView, CustomAuthToken, PubViewSet, SucursalViewSet, TradeProposalViewSet, UpdatePasswordView, UserViewSet, serve_publication_image, serve_branch_image, send_email, get_all_emails
+from main.views import PubViewSet, SucursalViewSet, TradeProposalViewSet, UserViewSet
+from main.views import CurrentUserView, CustomAuthToken, UpdatePasswordView, SendResetPasswordEmailView, PasswordResetConfirmView
+from main.views import serve_publication_image, serve_branch_image, send_email, get_all_emails
 
 router = routers.DefaultRouter()
 router.register('publications', PubViewSet, basename='publications' )
@@ -35,5 +37,7 @@ urlpatterns = [
     path('publications-by/<int:user>/', PubViewSet.as_view({'get': 'get_user_publications'}), name='publications-by-user'),
     path('users/change-password/', UpdatePasswordView.as_view(), name='change_password'),
     path('send-email/', send_email, name='send_email'),
-    path('get-all-emails/', get_all_emails, name='get_all_emails')
+    path('get-all-emails/', get_all_emails, name='get_all_emails'),
+    path('reset-password/', SendResetPasswordEmailView.as_view(), name='send_reset_password_email'),
+    path('reset-password/<uidb64>/<token>/', PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
 ] + router.urls

@@ -20,16 +20,15 @@ html{
 }
 
 .carousel-container {
-    flex: 1; /* Take up remaining space */
     margin-right: 20px; /* Add space between carousel and text */
 }
 
 .carousel-text {
+    flex: 1;
     margin-left: 20px; /* Add space between carousel and text */
 }
 
 h2{
-    margin-left: 10%;
     font-family: sans-serif;
     color:#153448;
 }
@@ -58,13 +57,6 @@ h4{
     max-height: 450px;
     max-width: 450px;
 
-}
-
-.price-guide-link {
-  margin-top: -10px;
-  font-size: 0.9em;
-  cursor: pointer;
-  color: #007bff;
 }
 
 a {

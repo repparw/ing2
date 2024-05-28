@@ -7,6 +7,10 @@ from rest_framework import status
 from rest_framework.decorators import action, api_view
 from django.http import HttpResponse, Http404
 from django.contrib.auth import get_user_model
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
+from django.urls import reverse
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.views import APIView
 from rest_framework.generics import UpdateAPIView
@@ -17,8 +21,61 @@ from django.core.mail import send_mail
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
+import requests
 
 # ViewSets
+
+class SendResetPasswordEmailView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        data = request.data
+        email = data.get('email')
+
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return Response({'error': 'User with this email does not exist.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        token = default_token_generator.make_token(user)
+        uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
+
+        frontend_base_url = 'http://localhost:4200/cambiar-contra'
+        reset_link = f'{frontend_base_url}?uidb64={uidb64}&token={token}'
+
+        body = {
+            'subject': 'Password Reset',
+            'message': f'Click the link to reset your password: {reset_link}',
+            'recipient_list': [email]
+        }
+
+        # Make a POST request to the send_email endpoint
+        send_email_url = request.build_absolute_uri(reverse('send_email'))
+        response = requests.post(send_email_url, json=body)
+
+        if response.status_code != 200:
+            return Response({'error': 'Failed to send email'}, status=response.status_code)
+
+        return Response({'message': 'Password reset link sent.'}, status=status.HTTP_200_OK)
+
+class PasswordResetConfirmView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request, uidb64, token):
+        try:
+            uid = force_str(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(pk=uid)
+        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+            user = None
+
+        if user is not None and default_token_generator.check_token(user, token):
+            data = request.data
+            new_password = data.get('password')
+            user.set_password(new_password)
+            user.save()
+            return Response({'message': 'Password has been reset successfully.'}, status=status.HTTP_200_OK)
+
+        return Response({'error': 'Invalid reset link.'}, status=status.HTTP_400_BAD_REQUEST)
 
 class TradeProposalViewSet(viewsets.ModelViewSet):
     queryset = TradeProposal.objects.all()
@@ -294,21 +351,28 @@ def serve_branch_image(request, pk):
 
       return HttpResponse(suc.photos.read(), content_type=content_type)
 
+def request_reset_link(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        email = data['email']
+        user = User.objects.filter(email=email).first()
+        if user:
+            # Send password reset link to user's email
+            user.send_password_reset_email()
+            return JsonResponse({'message': 'Password reset link sent successfully'})
+        return JsonResponse({'error': 'User not found'}, status=404)
+    return JsonResponse({'error': 'Invalid request'}, status=400)
+
 @csrf_exempt
 def send_email(request):
-    if request.method == 'POST':
         data = json.loads(request.body)
         subject = data['subject']
         message = data['message']
         recipient_list = data['recipient_list']
-
         send_mail(subject, message, '1francoagostinelli2000@gmail.com', recipient_list)
         return JsonResponse({'message': 'Email sent successfully'})
-    return JsonResponse({'error': 'Invalid request'}, status=400)
 
 def get_all_emails(request):
-    if request.method == 'GET':
         # Filtrar usuarios que quieren recibir correos
         emails = list(User.objects.filter(mailing=True).values_list('email', flat=True))
         return JsonResponse({'emails': emails})
-    return JsonResponse({'error': 'Invalid request'}, status=400)

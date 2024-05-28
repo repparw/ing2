@@ -9,7 +9,6 @@
           <input  formControlName="email" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" >
           <div *ngIf="email.invalid && (email.dirty || email.touched)" class="text-danger">
             <div *ngIf="email.errors?.['required']">El email/DNI es requerido.</div>
-          <!-- <div *ngIf="email.errors?.['email']">El email debe tener un formato válido.</div> -->
           </div>
         </div>
 
@@ -20,6 +19,8 @@
             <div *ngIf="password.errors?.['required']">La contraseña es requerida.</div>
           </div>
         </div>
+
+        <a href="javascript:void(0);" (click)="requestPasswordReset()"> ¿Olvidaste tu contraseña? </a>
 
         <button type="submit" (click)="login()" class="btn btn-primary">Iniciar Sesión</button>
       </form>

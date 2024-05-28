@@ -1,7 +1,10 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
+
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'cambiar-contra',
@@ -10,10 +13,20 @@ import Swal from 'sweetalert2';
 })
 export class CambiarContraComponent implements OnInit {
 
+  uidb64: string;
+  token: string;
+
   cambiarContraForm: FormGroup;
   submitted = false;
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(private formBuilder: FormBuilder,
+              private route: ActivatedRoute,
+              private router: Router,
+              private userService: UserService,
+             ) {
+    this.uidb64 = this.route.snapshot.queryParamMap.get('uidb64')!;
+    this.token = this.route.snapshot.queryParamMap.get('token')!;
+
     this.cambiarContraForm = this.formBuilder.group({
       nuevaContrasena: ['', [Validators.required, Validators.minLength(6), Validators.pattern(".*[!@#$%^&*()_+}{:;'?/><,.\|~`].*")]],
       repetirContrasena: ['', [Validators.required, Validators.minLength(6),  Validators.pattern(".*[!@#$%^&*()_+}{:;'?/><,.\|~`].*")]]
@@ -24,10 +37,9 @@ export class CambiarContraComponent implements OnInit {
 
   }
 
-  private _router = inject(Router)
 
   navigate(ruta: string): void{
-    this._router.navigate([ruta])
+    this.router.navigate([ruta])
   }
 
   hasErrors(controlName: string, errorType: string) {
@@ -47,11 +59,16 @@ export class CambiarContraComponent implements OnInit {
       return; // Detener el envío del formulario si las contraseñas no son iguales
     }
 
-    console.log('El formulario es válido. Realizando cambio de contraseña...');
-    console.log(this.cambiarContraForm.value);
-    Swal.fire('OK!','Contraseña reestablecida correctamente','success');
-    this.navigate('login')
-
-    // Aquí puedes realizar la lógica para enviar el formulario al backend
+    this.userService.resetPassword(this.uidb64, this.token, this.cambiarContraForm.get('nuevaContrasena')?.value).subscribe(
+      response => {
+        Swal.fire('OK!', 'Contraseña reestablecida correctamente', 'success').then(() => {
+          this.navigate('login');
+                  });
+      },
+      error => {
+        console.error(error);
+        Swal.fire('Error', 'No se pudo reestablecer la contraseña', 'error');
+      }
+          );
   }
 }
