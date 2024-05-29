@@ -21,4 +21,8 @@ export class ListarSucursalesComponent implements OnInit {
   generateLink(id: number): string {
     return this.templateUrl.replace('{{id}}', id.toString());
   }
+
+  getPhotos(id: number): string {
+    return this.sucursalService.getPhotos(id);
+      }
 }

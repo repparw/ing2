@@ -1,9 +1,13 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators, ValidationErrors } from '@angular/forms';
-import { User } from '../../models/user';
-import { UserService } from '../../services/user.service';
 import { Router } from '@angular/router';
 import { __values } from 'tslib';
+
+import { User } from '../../models/user';
+import { Sucursal } from '../../models/sucursal';
+
+import { UserService } from '../../services/user.service';
+import { SucursalService } from '../../services/sucursal.service';
 import { EmailService } from '../../services/email.service';
 
 @Component({
@@ -12,27 +16,40 @@ import { EmailService } from '../../services/email.service';
   styleUrls: ['./registrar-usuario.component.css']
 })
 export class RegistrarUsuarioComponent implements OnInit {
-esMayorDeEdad(arg0: never) {
-throw new Error('Method not implemented.');
-}
 
   registroError: string = "";
+  sucursales: Sucursal[] = [];
+
   userForm= this.formBuilder.group({
     name: ['', Validators.required],
     username: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(8), Validators.pattern('^([0-9])*$')]],
     email: ['', [Validators.required, Validators.pattern('.*@.*')]],
     date:  new FormControl<Date | null> (null , [Validators.required, this.legalAge()]),
     password: ['', [Validators.required, Validators.minLength(6), Validators.pattern(".*[!@#$%^&*()_+}{:;'?/><,.\|~`].*")]],
-    suc: [1, Validators.required],
+    suc: [0, Validators.required],
     rating: [0.00],
     mailing: [false],
     is_staff: new FormControl (false)
   });
 
-  constructor(private formBuilder: FormBuilder, private router: Router, private userService: UserService, private emailService: EmailService){
+  constructor(private formBuilder: FormBuilder,
+              private router: Router,
+              private userService: UserService,
+              private emailService: EmailService,
+              private sucursalService: SucursalService,
+             ){
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.sucursalService.getSucursales().subscribe(
+      (sucursales: Sucursal[]) => {
+        this.sucursales = sucursales;
+      },
+      (error) => {
+        console.error('Error fetching sucursales', error);
+      }
+    );
+  }
 
   onSubmit() {
     //console.log(this.userForm.controls['fechaNacimiento'].value);
@@ -69,7 +86,6 @@ throw new Error('Method not implemented.');
       const today = new Date();
       const birthDate = new Date(control.value);
       // contemplate day of birth
-      console.log(today.getDate())
       const age = this.getAge(birthDate);
       if (age < 18) {
         return { legalAge: true };
@@ -92,10 +108,10 @@ throw new Error('Method not implemented.');
   sendEmail(subject:string, message:string, recipientList:string[]) {
     this.emailService.sendEmail(subject, message, recipientList).subscribe(
       response => {
-        console.log('Email sent successfully', response);
+        console.log('Email enviado exitosamente', response);
       },
       error => {
-        console.error('Error sending email', error);
+        console.error('Error enviando email', error);
       }
     );
   }

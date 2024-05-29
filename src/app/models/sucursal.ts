@@ -1,5 +1,5 @@
 export interface Sucursal {
-  id: number;
+  id?: number;
   address: string;
   photos: string;
   phone: string;

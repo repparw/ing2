@@ -52,9 +52,11 @@
 
     <div>
       <label for="suc">Sucursal</label>
-      <input type="number" id="suc" class="form-control" formControlName="suc">
+      <select id="suc" class="form-control" formControlName="suc">
+        <option *ngFor="let sucursal of sucursales" [value]="sucursal.id">{{ sucursal.address }}</option>
+      </select>
       <div>
-        <small class="text-danger" *ngIf="hasErrors('suc', 'required')">El número de sucursal es requerido</small>
+        <small class="text-danger" *ngIf="hasErrors('suc', 'required')">La sucursal es requerida</small>
       </div>
     </div>
 
