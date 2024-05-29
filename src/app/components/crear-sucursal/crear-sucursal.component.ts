@@ -20,8 +20,8 @@ export class CrearSucursalComponent implements OnInit{
   });
 
   sucForm!: FormGroup;
-  center: google.maps.LatLngLiteral = { lat: -38.4161, lng: -63.6167 };
-  zoom = 4;
+  center: google.maps.LatLngLiteral = { lat: -34.913719, lng: -57.951228 };
+  zoom = 17;
   display: any;
   selectedMarker: google.maps.LatLngLiteral | null = null;
 
