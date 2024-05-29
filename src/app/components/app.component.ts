@@ -28,7 +28,7 @@ export class AppComponent implements OnInit {
     Swal.fire({
       title: "Confirmar",
       text: "¿Estás seguro de que deseas cerrar sesión?",
-      icon: "warning",
+      icon: "question",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
