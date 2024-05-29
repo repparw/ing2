@@ -24,6 +24,9 @@ import { ListarPublicacionesTasarComponent } from './components/listar-publicaci
 import { ListarSucursalesComponent } from './components/listar-sucursales/listar-sucursales.component';
 import { ProponerTruequeComponent } from './components/proponer-trueque/proponer-trueque.component';
 import { AdEmailComponent } from './components/ad-email/ad-email.component';
+import { AdSucursalComponent } from './components/ad-sucursal/ad-sucursal.component';
+import { from } from 'rxjs';
+import { GoogleMapsModule } from '@angular/google-maps';
 
 
 @NgModule({
@@ -47,6 +50,7 @@ import { AdEmailComponent } from './components/ad-email/ad-email.component';
     ListarSucursalesComponent,
     ProponerTruequeComponent,
     AdEmailComponent,
+    AdSucursalComponent,
   ],
   imports: [
     BrowserModule,
@@ -57,7 +61,8 @@ import { AdEmailComponent } from './components/ad-email/ad-email.component';
     HttpClientXsrfModule.withOptions({
       cookieName: 'csrftoken',
       headerName: 'X-CSRFToken'
-    })
+    }),
+    GoogleMapsModule
   ],
   providers: [
     importProvidersFrom(HttpClientModule),

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Sucursal</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="form-container mb-3 w-50">
+        <h1>Crear Sucursal</h1>
+        <p>Por favor, ingrese los datos de la sucursal</p>
+        <br>
+        <label class="form-label" for="address">Dirección</label>
+        <form [formGroup]="sucForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data">
+            <div class="form-outline mb-3" data-mdb-input-init>
+                <google-map height="450px"
+                            width="100%"
+                            [center]="center"
+                            [zoom]="zoom"
+                            (mapClick)="moveMap($event)"
+                            (mapMousemove)="move($event)">
+                            <map-marker *ngIf="getSelectedMarkerPosition()" [position]="getSelectedMarkerPosition()!"></map-marker>
+                </google-map>
+                <small class="text-danger" >
+                    <span *ngIf="sucForm.get('address')?.errors?.['required']">La dirección es requerida</span>
+                    <span *ngIf="sucForm.get('address')?.errors?.['invalidAddress']">La dirección no es válida</span>
+                    <small class="text-danger" *ngIf="!direccionValida">
+                        La dirección seleccionada está fuera de los límites de Argentina. Por favor, selecciona una dirección dentro de Argentina.
+                    </small>
+                </small>
+                <div>Latitude: {{display?.lat}}</div>
+                <div>Longitude: {{display?.lng}}</div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="photos">Fotos</label>
+                <input type="file" accept="image/jpg, image/jpeg, image/png" class="form-control-file" id="photos" ng2FileSelect [uploader]="uploader" formControlName="photos">
+                <small class="text-danger" *ngIf="sucForm.get('photos')?.invalid && (sucForm.get('photos')?.dirty || sucForm.get('photos')?.touched)">
+                    <span *ngIf="sucForm.get('photos')?.errors?.['required']">Una foto es obligatoria</span>
+                </small>
+            </div>
+            <div class="form-outline mb-3" data-mdb-input-init>
+                <label class="form-label" for="phone">Teléfono</label>
+                <input type="text" id="phone" class="form-control form-control-lg" formControlName="phone">
+                <div class="mb-3">
+                    <small class="text-danger" *ngIf="sucForm.get('phone')?.invalid && (sucForm.get('phone')?.dirty || sucForm.get('phone')?.touched)">
+                        <span *ngIf="sucForm.get('phone')?.errors?.['required']">El teléfono es requerido</span>
+                        <span *ngIf="sucForm.get('phone')?.errors?.['pattern']">El teléfono debe tener 10 dígitos</span>
+                    </small>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary" [disabled]="sucForm.invalid">Crear</button>
+        </form>
+    </div>
+</body>
+</html>

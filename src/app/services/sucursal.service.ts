@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { Sucursal } from '../models/sucursal';
 
 @Injectable({
   providedIn: 'root'
@@ -16,5 +17,10 @@ export class SucursalService {
 
   public getPhotos(id: number): string {
     return `${this.apiUrl}${id}/photos/`;
+  }
+  
+  createUser(sucursal: Sucursal): Observable<Sucursal> {
+    const headers = new HttpHeaders().set('Content-Type', 'application/json');
+    return this.http.post<Sucursal>(this.apiUrl, sucursal, { headers });
   }
 }
