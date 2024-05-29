@@ -21,7 +21,7 @@ import { VerPublicacionComponent } from './components/ver-publicacion/ver-public
 import { AuthGuard } from './guards/auth.guard';
 import { EmployeeGuard } from './guards/employee.guard';
 import { AdEmailComponent } from './components/ad-email/ad-email.component';
-import { AdSucursalComponent } from './components/ad-sucursal/ad-sucursal.component';
+import { CrearSucursalComponent } from './components/crear-sucursal/crear-sucursal.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -41,7 +41,7 @@ const routes: Routes = [
   { path: 'ad-email', component: AdEmailComponent, canActivate: [EmployeeGuard]},
   { path: 'publicacion/:id/editar', component: EditarPublicacionComponent, canActivate: [AuthGuard] },
   { path: 'sucursales', component: ListarSucursalesComponent },
-  { path: 'crear-sucursal', component: AdSucursalComponent},
+  { path: 'crear-sucursal', component: CrearSucursalComponent},
   { path: '**', redirectTo: '/home', pathMatch: 'full' }
 ];
 

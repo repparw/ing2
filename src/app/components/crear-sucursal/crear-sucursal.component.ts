@@ -4,11 +4,11 @@ import { Router } from '@angular/router';
 import { FileUploader } from 'ng2-file-upload';
 
 @Component({
-  selector: 'app-ad-sucursal',
-  templateUrl: './ad-sucursal.component.html',
-  styleUrls: ['./ad-sucursal.component.css']
+  selector: 'app-crear-sucursal',
+  templateUrl: './crear-sucursal.component.html',
+  styleUrls: ['./crear-sucursal.component.css']
 })
-export class AdSucursalComponent implements OnInit{
+export class CrearSucursalComponent implements OnInit{
   
   
   authToken = localStorage.getItem('token');
@@ -20,8 +20,8 @@ export class AdSucursalComponent implements OnInit{
   });
 
   sucForm!: FormGroup;
-  center: google.maps.LatLngLiteral = { lat: -38.4161, lng: -63.6167 };
-  zoom = 4;
+  center: google.maps.LatLngLiteral = { lat: -34.913719, lng: -57.951228 };
+  zoom = 17;
   display: any;
   selectedMarker: google.maps.LatLngLiteral | null = null;
 
