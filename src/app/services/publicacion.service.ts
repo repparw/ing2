@@ -109,9 +109,16 @@ export class PublicationService {
 
   public deletePublication(id: number): Observable<Pub> {
     return this.http.delete<Pub>(this.apiUrl + id + '/', { headers: this.getHeaders() })
-      .pipe(catchError(this.handleError));
-  }
-
+      .pipe(
+        catchError((error: HttpErrorResponse) => {
+          if (error.status === 400 && error.error.detail === 'Cannot delete publication because it is part of an accepted trade proposal.') {
+            // Handle the specific error case
+            console.error("La publicación no puede ser eliminada porque es parte de una propuesta de intercambio aceptada.")
+          }
+          return throwError(error);
+        })
+      );
+}
   private handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {
       console.error('Se ha producido un error:', error.error.message);

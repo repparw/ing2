@@ -222,8 +222,11 @@ class PubViewSet(viewsets.ModelViewSet):
 
     def destroy(self, request, *args, **kwargs):
         pub = self.get_object()
+        if TradeProposal.objects.filter(publication=pub, status='accepted').exists():
+            return Response({"detail": "Cannot delete publication because it is part of an accepted trade proposal."}, status=status.HTTP_400_BAD_REQUEST)
         pub.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
 ## APIViews
 
 class UpdatePasswordView(UpdateAPIView):
