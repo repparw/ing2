@@ -183,6 +183,17 @@ class PubViewSet(viewsets.ModelViewSet):
 
         return Response({"message": "Photos updated successfully"}, status=status.HTTP_200_OK)
 
+    @action(detail=True, methods=['delete'], permission_classes=[IsAuthenticated])
+    def delete_photos(self, request, pk=None):
+      try:
+          pub = Pub.objects.get(pk=pk)
+      except Pub.DoesNotExist:
+          raise Http404('Publication not found')
+
+      pub.photos.all().delete()
+
+      return Response({"message": "Photos deleted successfully"}, status=status.HTTP_200_OK)
+
     @action(detail=False, methods=['get'], permission_classes=[AllowAny])
     def get_user_publications(self, request, user=None):
         publications = Pub.objects.filter(user=user)

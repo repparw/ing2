@@ -39,6 +39,9 @@ CSRF_TRUSTED_ORIGINS = [
     "http://localhost:4200"
     ]
 
+CSRF_COOKIE_NAME = 'csrftoken'  # Default CSRF cookie name
+CSRF_COOKIE_HTTPONLY = True  # Ensure CSRF cookie is HTTP-only for security
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',

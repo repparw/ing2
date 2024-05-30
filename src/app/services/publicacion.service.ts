@@ -13,21 +13,11 @@ export class PublicationService {
   private apiUrl = this.baseUrl + 'publications/';
   private byUserUrl = this.baseUrl + 'publications-by/';
 
-  private getCSRFToken(): string {
-    const csrfCookie = document.cookie.split('; ').find(cookie => cookie.startsWith('csrftoken='));
-    if (csrfCookie) {
-      return csrfCookie.split('=')[1];
-    }
-    return '';
-  }
-
   // Method to handle HTTP headers with CSRF token
   private getHeaders(): HttpHeaders {
-    const csrfToken = this.getCSRFToken();
     return new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': 'Token ' + localStorage.getItem('token'),
-      'X-CSRFToken': csrfToken
     });
   }
 
@@ -99,7 +89,7 @@ export class PublicationService {
   }
 
   public deletePhotos(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}${id}/photos/`, { headers: this.getHeaders() });
+    return this.http.delete<void>(`${this.apiUrl}${id}/delete_photos/`, { headers: this.getHeaders() });
   }
 
   public getAllCategories(): Observable<any> {
