@@ -14,7 +14,7 @@ from django.urls import reverse
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.views import APIView
 from rest_framework.generics import UpdateAPIView
-from .models import Pub, User, Sucursal, TradeProposal
+from .models import Pub, User, Sucursal, TradeProposal, Photo
 from .serializers import PubSerializer, UserSerializer, SucursalSerializer, TradeProposalSerializer
 from .serializers import CurrentUserSerializer, CustomAuthTokenSerializer, UpdatePasswordSerializer
 from django.core.mail import send_mail
@@ -157,117 +157,62 @@ class UserViewSet(viewsets.ModelViewSet):
           }, status=status.HTTP_201_CREATED)
 
 class PubViewSet(viewsets.ModelViewSet):
-  queryset = Pub.objects.all()
-  serializer_class = PubSerializer
+    queryset = Pub.objects.all()
+    serializer_class = PubSerializer
 
-  def get_permissions(self):
-          if self.action in ['list', 'retrieve']:
-              return [AllowAny()]
-          return [IsAuthenticatedOrReadOnly()]
+    def get_permissions(self):
+        if self.action in ['list', 'retrieve']:
+            return [AllowAny()]
+        return [IsAuthenticatedOrReadOnly()]
 
-  def get_user_publications(self, request, user=None):
-    publications = Pub.objects.filter(user=user)
-    serializer = self.get_serializer(publications, many=True)
-    return Response(serializer.data)
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        pub = serializer.save()
+        return Response({"id": pub.id, "message": "Publication created successfully"}, status=status.HTTP_201_CREATED)
 
-  def get_all_ids():
-    return Pub.objects.values_list('id', flat=True)
+    @action(detail=True, methods=['post', 'put'], permission_classes=[IsAuthenticated])
+    def upload_photos(self, request, pk=None):
+        try:
+            pub = Pub.objects.get(pk=pk)
+        except Pub.DoesNotExist:
+            raise Http404('Publication not found')
 
+        for file in request.FILES.getlist('photos'):
+            Photo.objects.create(pub=pub, image=file)
 
-  @action(methods=['put', 'patch'], detail=True, permission_classes=[IsAuthenticated])
-  def put(self, request, pk=None):
-      pub = self.get_object()
-      partial = request.method == 'PATCH'
-      serializer = self.get_serializer(pub, data=request.data, partial=partial)
-      serializer.is_valid(raise_exception=True)
-      return Response({
-        "pub": serializer.data,
-        "message": "usuario creado exitosamente",
-            }, status=status.http_201_created)
+        return Response({"message": "Photos updated successfully"}, status=status.HTTP_200_OK)
 
-  def perform_update(self, serializer):
-          serializer.save()
+    @action(detail=False, methods=['get'], permission_classes=[AllowAny])
+    def get_user_publications(self, request, user=None):
+        publications = Pub.objects.filter(user=user)
+        serializer = self.get_serializer(publications, many=True)
+        return Response(serializer.data)
 
-  def update_publication(pub_id, title, desc, user, photos, is_paused, price, category, desired):
-    """
-    This function updates an existing publication object and saves it to the database.
-    Args:
-        pub_id (int): The ID of the publication to update.
-        title (str): The new title of the publication.
-        desc (str): The new description of the publication.
-        user (User object): The new user who created the publication.
-        photos (File object): The new image file for the publication (optional).
-        is_paused (bool): Whether the publication is paused (not visible).
-        price (float): The new price of the publication (optional).
-        category (str): The new category of the publication.
-        desired (str): The new desired outcome of the publication (optional).
-    Returns:
-        Pub object: The updated publication object.
-    Raises:
-        ValueError: If the publication with the given ID does not exist.
-    """
-    # Get the publication object with the given ID
-    try:
-      pub = Pub.objects.get(id=pub_id)
-    except Pub.DoesNotExist:
-      raise ValueError(f"Publication with ID {pub_id} does not exist.")
-    # Update the publication object
-    pub.title = title
-    pub.desc = desc
-    pub.photos = photos
-    pub.is_paused = is_paused
-    pub.category = category
-    # Save the updated publication to the database
-    pub.save(update_fields=['title', 'desc', 'photos', 'is_paused', 'desired'])
+    @action(detail=False, methods=['get'], permission_classes=[AllowAny])
+    def get_all_ids(self, request):
+        ids = Pub.objects.values_list('id', flat=True)
+        return Response(list(ids))
 
-    return pub
+    @action(detail=True, methods=['put', 'patch'], permission_classes=[IsAuthenticated])
+    def update_publication(self, request, pk=None):
+        pub = self.get_object()
+        partial = request.method == 'PATCH'
+        serializer = self.get_serializer(pub, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({
+            "pub": serializer.data,
+            "message": "Publication updated successfully",
+        }, status=status.HTTP_200_OK)
 
-  def destroy(self, request, *args, **kwargs):
-    pub = self.get_object()
-    pub.delete()
-    return Response(status=status.HTTP_204_NO_CONTENT)
+    def perform_update(self, serializer):
+        serializer.save()
 
-  def create_publication(title, desc, user, photos, is_paused, price, category, desired):
-    """
-    This function creates a new publication object and saves it to the database.
-
-    Args:
-        title (str): The title of the publication.
-        desc (str): The description of the publication (up to 1000 characters).
-        user (User object): The user who created the publication.
-        photos (File object): The image file for the publication (optional).
-        is_paused (bool): Whether the publication is paused (not visible).
-        price (float): The price of the publication (optional).
-        category (str): The category of the publication.
-        desired (str): The desired outcome of the publication (optional).
-
-    Returns:
-        Pub object: The newly created publication object.
-
-    Raises:
-        ValueError: If any of the required fields (title, desc, user, category) are missing.
-    """
-
-    if not title or not desc or not user or not category:
-      raise ValueError("Missing required fields. Please provide title, description, user, and category.")
-
-    # Create the publication object
-    pub = Pub(
-        title=title,
-        desc=desc,
-        user=user,
-        photos=photos,
-        is_paused=is_paused,
-        price=price,
-        category=category,
-        desired=desired
-    )
-
-    # Save the publication to the database
-    pub.save()
-
-    return pub
-
+    def destroy(self, request, *args, **kwargs):
+        pub = self.get_object()
+        pub.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 ## APIViews
 
 class UpdatePasswordView(UpdateAPIView):
@@ -319,21 +264,37 @@ class CustomAuthToken(ObtainAuthToken):
 
 ## functions
 
-def serve_publication_image(request, pk):
+def serve_publication_image(request, pub_id, photo_id):
+    try:
+        pub = Pub.objects.get(pk=pub_id)
+    except Pub.DoesNotExist:
+        raise Http404('Publication not found')
+
+    # Get the photos associated with the publication
+    photos = Photo.objects.filter(pub=pub)
+
+    # Ensure photos exist and the requested photo_id is within range
+    if not photos.exists() or photo_id <= 0 or photo_id > photos.count():
+        raise Http404('Photo not found')
+
+    # Fetch the photo based on position (photo_id - 1 because photo_id is 1-based index)
+    photo = photos[photo_id - 1]
+
+    # Set appropriate content type (e.g., image/jpeg, image/png)
+    content_type = 'image/jpeg, image/png, image/jpg'
+
+    return HttpResponse(photo.image.read(), content_type=content_type)
+
+def return_pub_images_id(request, pub_id):
       try:
-          pub= Pub.objects.get(pk=pk)
+          pub = Pub.objects.get(pk=pub_id)
+          # Get all photos associated with the publication
+          photos = Photo.objects.filter(pub=pub)
+          # Return a list of integers representing the positions of the photos
+          photo_positions = list(range(1, photos.count() + 1))
+          return JsonResponse(photo_positions, safe=False)
       except Pub.DoesNotExist:
-          raise Http404('Publicacion no encontrada')
-
-      # Validate user permissions if applicable (e.g., only authenticated users can access)
-      if not pub.photos:
-          # Handle case where no image is uploaded
-          return HttpResponse('No hay foto disponible', status=404)
-
-      # Set appropriate content type (e.g., image/jpeg, image/png)
-      content_type = 'image/jpeg, image/png, image/jpg'
-
-      return HttpResponse(pub.photos.read(), content_type=content_type)
+          return JsonResponse({'error': 'Publication not found'}, status=404)
 
 def serve_branch_image(request, pk):
       try:
@@ -344,7 +305,7 @@ def serve_branch_image(request, pk):
       # Validate user permissions if applicable (e.g., only authenticated users can access)
       if not suc.photos:
           # Handle case where no image is uploaded
-          return HttpResponse('No hay foto disponible', status=404)
+          return Http404('No hay foto disponible')
 
       # Set appropriate content type (e.g., image/jpeg, image/png)
       content_type = 'image/jpeg, image/png, image/jpg'

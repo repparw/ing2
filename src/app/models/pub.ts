@@ -4,7 +4,7 @@ export interface Pub {
   desc: string;
   category: string;
   is_paused: boolean;
-  photos: File;
+  photos: File[];
   desired: string;
   rating: number;
   price: number;

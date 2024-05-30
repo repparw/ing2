@@ -19,7 +19,7 @@ from django.urls import path
 from rest_framework import routers
 from main.views import PubViewSet, SucursalViewSet, TradeProposalViewSet, UserViewSet
 from main.views import CurrentUserView, CustomAuthToken, UpdatePasswordView, SendResetPasswordEmailView, PasswordResetConfirmView
-from main.views import serve_publication_image, serve_branch_image, send_email, get_all_emails
+from main.views import return_pub_images_id, serve_publication_image, serve_branch_image, send_email, get_all_emails
 
 router = routers.DefaultRouter()
 router.register('publications', PubViewSet, basename='publications' )
@@ -29,7 +29,8 @@ router.register('proposals', TradeProposalViewSet, basename='proposals' )
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('publications/<int:pk>/photos/', serve_publication_image, name='publication_image'),
+    path('publications/<int:pub_id>/photos/', return_pub_images_id, name='publication_image'),
+    path('publications/<int:pub_id>/photos/<int:photo_id>/', serve_publication_image, name='serve_specific_image'),
     path('branches/<int:pk>/photos/', serve_branch_image, name='branch_image'),
     path('api-token-auth/', CustomAuthToken.as_view(), name='api_token_auth'),
     path('users/current/', CurrentUserView.as_view(), name='current_user'),

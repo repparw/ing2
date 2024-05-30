@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs';
 import { User } from '../../models/user';
 import { UserService } from '../../services/user.service';
 import { Pub } from '../../models/pub';
@@ -43,9 +44,5 @@ export class VerPerfilComponent implements OnInit {
         console.error('Error fetching publications', error);
       }
     );
-  }
-
-  public getPhotos(id: number): string {
-    return this.publicationService.getPhotos(id);
   }
 }

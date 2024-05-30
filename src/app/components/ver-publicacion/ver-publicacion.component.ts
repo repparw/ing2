@@ -17,7 +17,7 @@ export class VerPublicacionComponent implements OnInit{
   data: Pub | null = null;
   username: string | null = null;
   owner: string | null = null;
-  linkFoto!: any;
+  linkFoto!: string[];
   productID!: number;
   canEdit!: boolean;
 
@@ -32,8 +32,15 @@ export class VerPublicacionComponent implements OnInit{
     this.publicationService.getPublication(this.productID).subscribe(
       publication => {
         this.data = publication;
-        this.linkFoto = this.publicationService.getPhotos(this.productID);
         this.loadAdditionalData(publication);
+        this.publicationService.getPhotos(this.productID).subscribe(
+          data => {
+            this.linkFoto = data;
+          },
+          error => {
+            console.error('Error fetching photos:', error);
+          }
+                  );
       },
       error => {
         console.error('Error fetching publication:', error);
@@ -51,8 +58,9 @@ export class VerPublicacionComponent implements OnInit{
           console.error('Error checking owner status:', error);
         }
       );
+    };
 
-      this.userService.getUser(publication.user).subscribe(
+    this.userService.getUser(publication.user).subscribe(
         user => {
           this.username = user.username;
           this.owner = user.name;
@@ -62,7 +70,7 @@ export class VerPublicacionComponent implements OnInit{
         }
       );
     }
-  }
+
   confirmDeletePublication(productID: number): void {
     Swal.fire({
       title: 'Confirmar',

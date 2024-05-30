@@ -1,42 +1,56 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { FileUploader } from 'ng2-file-upload';
+import Swal from 'sweetalert2';
+
 import { PublicationService } from '../../services/publicacion.service';
 import { UserService } from '../../services/user.service';
-import { Pub } from '../../models/pub'
-import { FileSelectDirective, FileUploader } from 'ng2-file-upload';
-import { Router } from '@angular/router';
+import { Pub } from '../../models/pub';
+
 
 @Component({
   selector: 'app-crear-publicacion',
   templateUrl: './crear-publicacion.component.html',
   styleUrls: ['./crear-publicacion.component.css']
 })
-
 export class CrearPublicacionComponent {
-  authToken = localStorage.getItem('token');
-  public uploader: FileUploader = new FileUploader({ url: 'http://localhost:8000/publications/', itemAlias: 'photos' , headers: [{name: 'Authorization', value: `Token ${this.authToken}`}]})
+  public uploader: FileUploader;
+  private apiUrl = 'http://localhost:8000/publications/';
 
   prodForm = this.formBuilder.group({
-      title: ['', Validators.required],
-      desc: ['', Validators.required],
-      category: ['', Validators.required],
-      is_paused: [false],
-      photos: new FormControl<File | null>(null, Validators.required),
-      desired: [''],
-      // fields not in form
-      price: [0],
-      user: [0],
+    title: ['', Validators.required],
+    desc: ['', Validators.required],
+    category: ['', Validators.required],
+    is_paused: [false],
+    photos: new FormControl<File[] | null>(null, Validators.required),
+    desired: [''],
+    // not in form
+    price: [0],
+    user: [0],
+    rating: [0],
   });
 
-  constructor(private formBuilder: FormBuilder,
-              private publicationService:PublicationService,
-              private userService: UserService,
-              private router:Router,
-             ){ }
+
+  constructor(
+    private formBuilder: FormBuilder,
+    private publicationService: PublicationService,
+    private userService: UserService,
+    private router: Router
+  ) {
+    this.uploader = new FileUploader({
+      url: this.apiUrl,
+      itemAlias: 'photos',
+      authTokenHeader: 'Authorization',
+      authToken: `Token ${localStorage.getItem('token')}`,
+      queueLimit: 3,
+    });
+  }
 
   ngOnInit() {
     this.userService.getCurrentUser().subscribe(user => {
-      this.prodForm.patchValue({user: user.id});});
+      this.prodForm.patchValue({ user: user.id });
+    });
   }
 
   hasErrors(controlName: string, errorType: string) {
@@ -45,24 +59,42 @@ export class CrearPublicacionComponent {
   }
 
   onSubmit() {
+    if (this.prodForm.invalid) {
+      this.prodForm.markAllAsTouched();
+      return;
+    }
 
-  if (this.prodForm.invalid) {
-    this.prodForm.markAllAsTouched();
-    return; // Detener el envío del formulario si hay errores de validación
-  }
-  this.uploader.onBuildItemForm = (fileItem: any, form: any) => {
-    form.append('title', this.prodForm.get('title')?.value);
-    form.append('desc', this.prodForm.get('desc')?.value);
-    form.append('category', this.prodForm.get('category')?.value);
-    form.append('is_paused', this.prodForm.get('is_paused')?.value);
-    form.append('desired', this.prodForm.get('desired')?.value);
-    form.append('price', this.prodForm.get('price')?.value);
-    form.append('user', this.prodForm.get('user')?.value);
-  }
-  console.log('Agregando formulario a la base de datos');
-  this.uploader.uploadAll();
-  console.log('Formulario agregado a la base de datos', this.prodForm.value);
-  this.router.navigate(['/home']);
+    if (this.uploader.queue.length > 3) {
+      // Check if more than 3 files are selected
+      Swal.fire('Error', 'No se pueden seleccionar más de 3 fotos', 'error');
+      return;
+    }
+
+    this.publicationService.createPublication(this.prodForm.value as Pub).subscribe(
+      response => {
+        const pubId = response.id!;
+        const uploadUrl = `${this.apiUrl}${pubId}/upload_photos/`;
+        this.uploader.setOptions({ url: uploadUrl });
+
+
+        if (this.uploader.queue.length > 0) {
+          this.uploader.uploadAll();
+
+          this.uploader.onCompleteAll = () => {
+            console.log('Photos uploaded successfully');
+            Swal.fire('Publicación creada', 'La publicación ha sido creada exitosamente', 'success').then(() => {
+            this.router.navigate(['/home']);});
+          };
+
+          this.uploader.onErrorItem = (item, response, status, headers) => {
+            console.error('Error uploading photos:', response);
+          };
+        } else {
+          this.router.navigate(['/home']);
+        }
+      },
+      error => console.error('Error creating publication:', error)
+    );
   }
 
 }

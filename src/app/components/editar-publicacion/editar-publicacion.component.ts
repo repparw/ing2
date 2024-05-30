@@ -7,7 +7,7 @@ import { UserService } from '../../services/user.service';
 import { Location } from '@angular/common';
 import { Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
-import { FileSelectDirective, FileUploader } from 'ng2-file-upload';
+import { FileSelectDirective, FileUploader, FileItem } from 'ng2-file-upload';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -23,6 +23,7 @@ export class EditarPublicacionComponent implements OnInit {
 
   prodForm: FormGroup;
 
+  apiUrl = 'http://localhost:8000/publications/';
 
   constructor(
     private formBuilder: FormBuilder,
@@ -36,6 +37,7 @@ export class EditarPublicacionComponent implements OnInit {
       desc: new FormControl('', Validators.required),
       category: new FormControl(''),
       is_paused: new FormControl(false),
+      photos: new FormControl<File[] | null>(null, Validators.required),
       desired: new FormControl(''),
       rating: new FormControl(0),
       price: new FormControl(0),
@@ -51,15 +53,29 @@ export class EditarPublicacionComponent implements OnInit {
         this.userId = user.id;
         this.getPublication(this.id);
       });
-    this.uploader = new FileUploader({ url: 'http://localhost:8000/publications/'+this.id+'/', itemAlias: 'photos', headers: [{name: 'Authorization', value: `Token ${authToken}`}], method: 'PUT' })
     this.prodForm.get('cat')?.disable()
+    this.initializeUploader();
+  }
+
+  initializeUploader() {
+    const authToken = localStorage.getItem('token');
+    this.uploader = new FileUploader({
+      url: `${this.apiUrl}${this.id}/upload_photos/`,
+      itemAlias: 'photos',
+      authTokenHeader: 'Authorization',
+      authToken: `Token ${localStorage.getItem('token')}`,
+      method: 'PUT',
+      queueLimit: 3 // Maximum 3 files allowed
+    });
+
+    this.uploader.onAfterAddingFile = (fileItem: FileItem) => {
+      this.prodForm.patchValue({ photos: this.uploader.queue.map(item => item.file) });
+    };
   }
 
   getPublication(id: number): void {
    this.publicationService.getPublication(id).subscribe((pub: Pub) => {
-        if (pub.user !== this.userId) {
-          Swal.fire('Error','No está autorizado para editar esta publicación','error').then(() => this.location.back());
-        } else {
+        if (pub.user !== this.userId) { Swal.fire('Error','No está autorizado para editar esta publicación','error').then(() => this.location.back()); } else {
           this.prodForm = this.getForm(pub);
         }
         })
@@ -87,56 +103,35 @@ export class EditarPublicacionComponent implements OnInit {
     this.location.back();
       }
 
-  handleFileUpload(pubId: number, data: any[]) {
-    // Check if there are any files selected in the uploader
-  if (this.uploader.queue.length === 0) {
-    // No files selected, send update request directly
-    return;
-  }
-
-  // If files are selected, iterate through them and upload
-  this.uploader.queue.forEach((fileItem) => {
-    // Access file information from fileItem
-    const selectedFile = fileItem.file;
-
-    // Modify onBuildItemForm to append product update data (excluding file)
-    this.uploader.onBuildItemForm = (item: any, form: any) => {
-      form.append('file', selectedFile); // Append the selected file
-    };
-
-    // Upload the file with updated product data
-    this.uploader.uploadItem(fileItem);
-  });
-  }
-
   onSubmit() {
-  if (this.prodForm.invalid) {
-    this.prodForm.markAllAsTouched();
-    return; // Detener el envío del formulario si hay errores de validación
-  }
-
-  if (this.uploader.queue.length > 0) {
-    this.uploader.onBuildItemForm = (fileItem: any, form: any) => {
-      form.append('title', this.prodForm.get('title')?.value);
-      form.append('desc', this.prodForm.get('desc')?.value);
-      form.append('category', this.prodForm.get('category')?.value);
-      form.append('is_paused', this.prodForm.get('is_paused')?.value);
-      form.append('desired', this.prodForm.get('desired')?.value);
-      form.append('price', this.prodForm.get('price')?.value);
-      form.append('user', this.prodForm.get('user')?.value);
+    if (this.prodForm.invalid) {
+      this.prodForm.markAllAsTouched();
+      return;
     }
-    console.log('Agregando formulario a la base de datos');
-    this.uploader.uploadAll();
-    console.log('Formulario agregado a la base de datos', this.prodForm.value);
-  }
-  else
-    console.log('Actualizando formulario sin cambiar foto en la base de datos');
+
     const pub = this.prodForm.value as Partial<Pub>;
     this.publicationService.updatePublication(this.id, pub).subscribe(
       (pub: Pub) => {
-      console.log('Publicación actualizada:', pub);
-      Swal.fire('Actualizada', 'Publicación actualizada correctamente', 'success');
-      });
-  }
+        if (this.uploader.queue.length > 0) {
+          this.publicationService.deletePhotos(this.id).subscribe(() => {
 
+            this.uploader.uploadAll();
+
+            this.uploader.onCompleteAll = () => {
+              console.log('Photos uploaded successfully');
+              Swal.fire('Publicación creada', 'La publicación ha sido creada exitosamente', 'success').then(() => {
+              this.goBack();
+              });
+
+            this.uploader.onErrorItem = (item, response, status, headers) => {
+              console.error('Error subiendo fotos:', response);
+              };
+            }
+          });
+        };
+      },
+    error => {
+      Swal.fire('Error', 'No se ha podido actualizar la publicación', 'error');
+  });
+  }
 }

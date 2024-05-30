@@ -13,6 +13,24 @@ export class PublicationService {
   private apiUrl = this.baseUrl + 'publications/';
   private byUserUrl = this.baseUrl + 'publications-by/';
 
+  private getCSRFToken(): string {
+    const csrfCookie = document.cookie.split('; ').find(cookie => cookie.startsWith('csrftoken='));
+    if (csrfCookie) {
+      return csrfCookie.split('=')[1];
+    }
+    return '';
+  }
+
+  // Method to handle HTTP headers with CSRF token
+  private getHeaders(): HttpHeaders {
+    const csrfToken = this.getCSRFToken();
+    return new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': 'Token ' + localStorage.getItem('token'),
+      'X-CSRFToken': csrfToken
+    });
+  }
+
   pricingGuide = [
     { range: '$1-1000', category: 'I' },
     { range: '$1000-2500', category: 'II' },
@@ -29,27 +47,11 @@ export class PublicationService {
   constructor(private http: HttpClient) { }
 
   public createTradeProposal(proposal: TradeProposal): Observable<TradeProposal> {
-    const authToken = localStorage.getItem('token');
-    if (!authToken) {
-      throw new Error('No token found');
-    }
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Token ${authToken}`
-    });
-    return this.http.post<TradeProposal>(`${this.baseUrl}proposals/`, proposal, { headers, withCredentials: true });
+    return this.http.post<TradeProposal>(`${this.baseUrl}proposals/`, proposal, { headers: this.getHeaders() });
   }
 
   public cancelTradeProposal(id: number): Observable<void> {
-    const authToken = localStorage.getItem('token');
-    if (!authToken) {
-      throw new Error('No token found');
-    }
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Token ${authToken}`
-    });
-    return this.http.put<void>(`${this.baseUrl}proposals/${id}/cancel/`, {}, { headers, withCredentials: true });
+    return this.http.put<void>(`${this.baseUrl}proposals/${id}/cancel/`, {}, { headers: this.getHeaders() });
   }
 
   public getPublicationPrice(pubId: number): Observable<number> {
@@ -70,15 +72,7 @@ export class PublicationService {
   }
 
   public createPublication(pub: Pub): Observable<Pub> {
-    const authToken = localStorage.getItem('token');
-    if (!authToken) {
-      throw new Error('No token found');
-    }
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Token ${authToken}`
-    });
-    return this.http.post<Pub>(this.apiUrl, pub, { headers, withCredentials: true })
+    return this.http.post<Pub>(this.apiUrl, pub, { headers: this.getHeaders() })
       .pipe(catchError(this.handleError));
   }
 
@@ -88,15 +82,24 @@ export class PublicationService {
   }
 
   public getPublicationsById(id: number): Observable<Pub[]> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
-    return this.http.get<Pub[]>(this.byUserUrl + id + '/', { headers, withCredentials: true })
+    return this.http.get<Pub[]>(this.byUserUrl + id + '/', { headers: this.getHeaders() })
       .pipe(catchError(this.handleError));
       }
 
-  public getPhotos(id: number): string {
-    return `${this.apiUrl}${id}/photos/`;
+  public getPhotos(id: number): Observable<string[]> {
+    return this.http.get<number[]>(`${this.apiUrl}${id}/photos/`).pipe(
+      map(photoIds => {
+        return photoIds.map(photoId => this.getPhoto(id, photoId));
+      })
+    );
+  }
+
+  public getPhoto(pubId: number, photoId: number): string {
+    return `${this.apiUrl}${pubId}/photos/${photoId}/`
+  }
+
+  public deletePhotos(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}${id}/photos/`, { headers: this.getHeaders() });
   }
 
   public getAllCategories(): Observable<any> {
@@ -110,28 +113,12 @@ export class PublicationService {
   }
 
   public updatePublication(id: number, pub: Partial<Pub>): Observable<Pub> {
-    const authToken = localStorage.getItem('token');
-    if (!authToken) {
-      throw new Error('No token found');
-    }
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Token ${authToken}`
-    });
-    return this.http.patch<Pub>(this.apiUrl + id + '/', pub, { headers, withCredentials: true })
+    return this.http.patch<Pub>(this.apiUrl + id + '/', pub, { headers: this.getHeaders() })
       .pipe(catchError(this.handleError));
   }
 
   public deletePublication(id: number): Observable<Pub> {
-    const authToken = localStorage.getItem('token');
-    if (!authToken) {
-      throw new Error('No token found');
-    }
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Token ${authToken}`
-    });
-    return this.http.delete<Pub>(this.apiUrl + id + '/', { headers, withCredentials: true })
+    return this.http.delete<Pub>(this.apiUrl + id + '/', { headers: this.getHeaders() })
       .pipe(catchError(this.handleError));
   }
 

@@ -15,7 +15,6 @@ class Pub(models.Model):
   desc = models.CharField(max_length=1000)
   user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
   is_paused = models.BooleanField()
-  photos = models.ImageField(upload_to='photos/pub')
   price = models.FloatField()
   category = models.CharField(max_length=100)
   desired = models.CharField(max_length=100, blank=True)
@@ -33,6 +32,6 @@ class Sucursal(models.Model):
   photos = models.ImageField(upload_to='photos/suc')
   phone = models.CharField(max_length=20)
 
-class Image(models.Model):
-  #pub = models.ForeignKey('Pub', on_delete=models.CASCADE)
-  photos = models.ImageField(upload_to='photos/pub')
+class Photo(models.Model):
+  pub = models.ForeignKey(Pub, related_name='photos', on_delete=models.CASCADE)
+  image = models.ImageField(upload_to='photos/pub')

@@ -18,7 +18,7 @@ export class ListarPublicacionesComponent implements OnInit {
   ngOnInit(): void { }
 
   getPhotos(id: number): string {
-    return this.publicationService.getPhotos(id);
+    return this.publicationService.getPhoto(id, 1);
   }
 
   generateLink(id: number): string {
