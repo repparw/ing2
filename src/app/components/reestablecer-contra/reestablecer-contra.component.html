@@ -1,0 +1,29 @@
+<html>
+<div class="form-container">
+  <div class="row justify-content-center">
+    <div class="col-lg-6">
+      <form [formGroup]="reestablecerForm">
+
+        <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Recupera tu cuenta</h5>
+              <p class="card-text">Introduce tu correo electrónico para buscar tu cuenta.</p>
+              <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label" >Email</label>
+                <input  formControlName="email" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" >
+                <div *ngIf="email.invalid && (email.dirty || email.touched)" class="text-danger">
+                  <div *ngIf="email.errors?.['required']">El email es requerido.</div>
+                  <div class="text-danger" *ngIf="hasErrors('email', 'pattern')">El email debe ser válido (.*&#64;.*)</div>
+                </div>
+              </div>
+
+              <button type="button" (click)="navigate('login')" class="btn btn-secondary" style="margin: 5px;">Cancelar</button>
+              <button type="submit" (click)="requestPasswordReset()" class="btn btn-primary" [disabled]="reestablecerForm.invalid">Enviar</button>
+            </div>
+          </div>
+      </form>
+    </div>
+  </div>
+</div>
+</html>
+

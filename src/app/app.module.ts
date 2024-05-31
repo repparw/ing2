@@ -28,6 +28,7 @@ import { AdEmailComponent } from './components/ad-email/ad-email.component';
 import { from } from 'rxjs';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { CrearSucursalComponent } from './components/crear-sucursal/crear-sucursal.component';
+import { ReestablecerContraComponent } from './components/reestablecer-contra/reestablecer-contra.component';
 
 
 @NgModule({
@@ -52,6 +53,7 @@ import { CrearSucursalComponent } from './components/crear-sucursal/crear-sucurs
     ProponerTruequeComponent,
     AdEmailComponent,
     CrearSucursalComponent,
+    ReestablecerContraComponent,
   ],
   imports: [
     BrowserModule,

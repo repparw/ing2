@@ -19,6 +19,7 @@ export class RegistroComponent implements OnInit, HttpInterceptor {
   });
 
   userService = inject(UserService);
+  private _router = inject(Router)
 
   constructor(private formBuilder:FormBuilder, private router:Router){}
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -71,5 +72,9 @@ export class RegistroComponent implements OnInit, HttpInterceptor {
 
   hasErrors(controlName: string, errortype: string){
     return this.loginForm.get(controlName)?.hasError(errortype) && this.loginForm.get(controlName)?.touched
+  }
+
+  navigate(ruta: string): void{
+    this._router.navigate([ruta])
   }
 }

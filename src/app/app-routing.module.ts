@@ -22,6 +22,7 @@ import { AuthGuard } from './guards/auth.guard';
 import { EmployeeGuard } from './guards/employee.guard';
 import { AdEmailComponent } from './components/ad-email/ad-email.component';
 import { CrearSucursalComponent } from './components/crear-sucursal/crear-sucursal.component';
+import { ReestablecerContraComponent } from './components/reestablecer-contra/reestablecer-contra.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -32,6 +33,7 @@ const routes: Routes = [
   { path: 'ver-mi-perfil', component: VerMiPerfilComponent, canActivate: [AuthGuard] },
   { path: 'modificar-perfil', component: ModificarPerfilComponent, canActivate: [AuthGuard] },
   { path: 'crear-publicacion', component: CrearPublicacionComponent, canActivate: [AuthGuard] },
+  { path: 'reestablecer-contra', component: ReestablecerContraComponent },
   { path: 'cambiar-contra', component: CambiarContraComponent },
   { path: 'cambiar-contra-perfil', component: CambiarContraPerfilComponent, canActivate: [AuthGuard] },
   { path: 'publicacion/:id', component: VerPublicacionComponent },
@@ -44,6 +46,8 @@ const routes: Routes = [
   { path: 'crear-sucursal', component: CrearSucursalComponent},
   { path: '**', redirectTo: '/home', pathMatch: 'full' }
 ];
+
+
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
