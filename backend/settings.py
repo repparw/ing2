@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
-
+import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 CORS_ALLOW_CREDENTIALS=True
@@ -154,3 +154,5 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = '1francoagostinelli2000@gmail.com'
 EMAIL_HOST_PASSWORD = 'rrpy lrxi kokd uldi'
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+CODIGOS_JSON_PATH = os.path.join(BASE_DIR, 'src', 'assets', 'codigos', 'codigos.JSON')

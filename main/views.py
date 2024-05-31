@@ -22,6 +22,8 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 import requests
+import os
+from django.conf import settings
 
 # ViewSets
 
@@ -348,10 +350,45 @@ def send_email(request):
         subject = data['subject']
         message = data['message']
         recipient_list = data['recipient_list']
-        send_mail(subject, message, '1francoagostinelli2000@gmail.com', recipient_list)
+        send_mail(subject, message, '1francoagostinelli2000@gmail.com', recipient_list) 
         return JsonResponse({'message': 'Email sent successfully'})
 
 def get_all_emails(request):
         # Filtrar usuarios que quieren recibir correos
         emails = list(User.objects.filter(mailing=True).values_list('email', flat=True))
         return JsonResponse({'emails': emails})
+
+
+@csrf_exempt
+def save_discount_codes(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            code = data.get('code')
+            description = data.get('description')
+            new_entry = {"code": code, "description": description}
+
+            # Ruta del archivo JSON
+            file_path = settings.CODIGOS_JSON_PATH
+
+            # Leer los datos existentes del archivo JSON si existe
+            if os.path.exists(file_path):
+                with open(file_path, 'r') as file:
+                    try:
+                        existing_data = json.load(file)
+                    except json.JSONDecodeError:
+                        existing_data = []
+            else:
+                existing_data = []
+
+            # Agregar los nuevos datos a los datos existentes
+            existing_data.append(new_entry)
+
+            # Escribir los datos actualizados en el archivo JSON
+            with open(file_path, 'w') as file:
+                json.dump(existing_data, file, indent=4)
+
+            return JsonResponse({'message': 'Datos guardados correctamente'}, status=201)
+        except Exception as e:
+            return JsonResponse({'error': f'Error al guardar los datos: {str(e)}'}, status=500)
+    return JsonResponse({'error': 'Se requiere una solicitud POST'}, status=400)

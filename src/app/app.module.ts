@@ -1,6 +1,6 @@
 import { NgModule, importProvidersFrom } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './components/app.component';
@@ -29,6 +29,7 @@ import { from } from 'rxjs';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { CrearSucursalComponent } from './components/crear-sucursal/crear-sucursal.component';
 import { ReestablecerContraComponent } from './components/reestablecer-contra/reestablecer-contra.component';
+import { EnviarDescuentoComponent } from './components/enviar-descuento/enviar-descuento.component';
 import { ListarOfertasRecibidasComponent } from './components/listar-ofertas-recibidas/listar-ofertas-recibidas.component';
 
 
@@ -55,6 +56,7 @@ import { ListarOfertasRecibidasComponent } from './components/listar-ofertas-rec
     AdEmailComponent,
     CrearSucursalComponent,
     ReestablecerContraComponent,
+    EnviarDescuentoComponent,
     ListarOfertasRecibidasComponent,
   ],
   imports: [
@@ -67,7 +69,8 @@ import { ListarOfertasRecibidasComponent } from './components/listar-ofertas-rec
       cookieName: 'csrftoken',
       headerName: 'X-CSRFToken'
     }),
-    GoogleMapsModule
+    GoogleMapsModule,
+    FormsModule
   ],
   providers: [
     importProvidersFrom(HttpClientModule),

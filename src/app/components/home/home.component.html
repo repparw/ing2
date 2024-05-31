@@ -6,6 +6,21 @@
     <title>Lista de Publicaciones</title>
 </head>
 <body>
+<div class="container mt-4">
+    <div class="mb-3">
+        <input type="text" class="form-control" placeholder="Buscar..." [(ngModel)]="searchTerm" (input)="onSearchTermChange()" />
+    </div>
+    <div class="d-flex justify-content-between mb-3">
+        <button class="btn btn-primary" (click)="setSort('price')">
+            Ordenar por precio
+            <span *ngIf="sortField === 'price'">{{ sortOrder === 'asc' ? '▲' : '▼' }}</span>
+        </button>
+        <button class="btn btn-primary" (click)="setSort('title')">
+            Ordenar por título
+            <span *ngIf="sortField === 'title'">{{ sortOrder === 'asc' ? '▲' : '▼' }}</span>
+        </button>
+    </div>
     <app-listar-publicaciones [data]="filteredData"></app-listar-publicaciones>
+</div>
 </body>
 </html>
