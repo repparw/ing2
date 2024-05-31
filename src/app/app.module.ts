@@ -1,6 +1,6 @@
 import { NgModule, importProvidersFrom } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './components/app.component';
@@ -65,7 +65,8 @@ import { ReestablecerContraComponent } from './components/reestablecer-contra/re
       cookieName: 'csrftoken',
       headerName: 'X-CSRFToken'
     }),
-    GoogleMapsModule
+    GoogleMapsModule,
+    FormsModule
   ],
   providers: [
     importProvidersFrom(HttpClientModule),
