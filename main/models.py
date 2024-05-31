@@ -24,6 +24,7 @@ class TradeProposal(models.Model):
     recipient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='proposals_received')
     publication = models.ForeignKey(Pub, on_delete=models.CASCADE)
     proposed_items = models.ManyToManyField(Pub, related_name='trade_proposals')
+    suc = models.ForeignKey('Sucursal', on_delete=models.SET_NULL, null=True)
     status = models.CharField(max_length=20, choices=[('pending', 'Pending'), ('accepted', 'Accepted'), ('rejected', 'Rejected')], default='pending')
     created_at = models.DateTimeField(auto_now_add=True)
 
