@@ -10,16 +10,11 @@
       <div class="carousel-container">
         <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
           <div class="carousel-inner">
-            <div class="carousel-item active c-item">
-              <img class="d-block w-100 c-img" [src]="linkFoto[0]" alt="First slide">
-            </div>
-            <div class="carousel-item c-item">
-              <img class="d-block w-100 c-img" [src]="linkFoto[1]" alt="Second slide">
-            </div>
-            <div class="carousel-item c-item">
-              <img class="d-block w-100 c-img" [src]="linkFoto[2]" alt="Third slide">
+            <div class="carousel-item c-item" *ngFor="let foto of linkFoto; let i = index" [class.active]="i === 0">
+              <img class="d-block w-100 c-img" [src]="foto" [alt]="'Slide ' + (i + 1)">
             </div>
           </div>
+          
           <button class="carousel-control-prev slide-control" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
           </button>
