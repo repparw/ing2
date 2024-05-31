@@ -1,0 +1,28 @@
+<div class="container mt-4">
+  <form [formGroup]="discountForm" (submit)="sendDiscount()">
+    <div class="form-group">
+      <label for="description">Descripción del descuento:</label>
+      <input type="text" id="description" formControlName="description" class="form-control" placeholder="Descripción del descuento">
+      <div *ngIf="discountForm.get('description')?.invalid && discountForm.get('description')?.touched" class="text-danger">
+        La descripción del descuento es requerida.
+      </div>
+    </div>
+    
+    <div class="form-group" style="max-height: 200px; overflow-y: auto;">
+      <label>Seleccionar destinatarios:</label><br>
+      <div *ngFor="let email of emails">
+        <input type="checkbox" [value]="email" (change)="handleCheckboxChange($event)" /> {{ email }}
+      </div>
+    </div>
+    
+    
+    <div class="form-group">
+      <label>Seleccionar descuento:</label>
+      <select class="form-control" >
+        <option *ngFor="let option of discountOptions" [value]="option">{{ option }}%</option>
+      </select>
+    </div>
+    
+    <button type="submit" class="btn btn-primary">Enviar Descuento</button>
+  </form>
+</div>

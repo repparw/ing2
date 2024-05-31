@@ -23,6 +23,7 @@ import { EmployeeGuard } from './guards/employee.guard';
 import { AdEmailComponent } from './components/ad-email/ad-email.component';
 import { CrearSucursalComponent } from './components/crear-sucursal/crear-sucursal.component';
 import { ReestablecerContraComponent } from './components/reestablecer-contra/reestablecer-contra.component';
+import { EnviarDescuentoComponent } from './components/enviar-descuento/enviar-descuento.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -41,6 +42,7 @@ const routes: Routes = [
   { path: 'publicacion/:id/proponer', component: ProponerTruequeComponent, canActivate: [AuthGuard] },
   { path: 'publicacion/:id/tasar', component: TasarPublicacionComponent, canActivate: [EmployeeGuard] },
   { path: 'ad-email', component: AdEmailComponent, canActivate: [EmployeeGuard]},
+  { path: 'enviar-descuento', component: EnviarDescuentoComponent, canActivate: [EmployeeGuard]},
   { path: 'publicacion/:id/editar', component: EditarPublicacionComponent, canActivate: [AuthGuard] },
   { path: 'sucursales', component: ListarSucursalesComponent },
   { path: 'crear-sucursal', component: CrearSucursalComponent},
