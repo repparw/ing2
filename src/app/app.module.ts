@@ -29,6 +29,7 @@ import { from } from 'rxjs';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { CrearSucursalComponent } from './components/crear-sucursal/crear-sucursal.component';
 import { ReestablecerContraComponent } from './components/reestablecer-contra/reestablecer-contra.component';
+import { ListarOfertasRecibidasComponent } from './components/listar-ofertas-recibidas/listar-ofertas-recibidas.component';
 
 
 @NgModule({
@@ -54,6 +55,7 @@ import { ReestablecerContraComponent } from './components/reestablecer-contra/re
     AdEmailComponent,
     CrearSucursalComponent,
     ReestablecerContraComponent,
+    ListarOfertasRecibidasComponent,
   ],
   imports: [
     BrowserModule,

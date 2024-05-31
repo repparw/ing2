@@ -16,8 +16,6 @@
                   <div class="text-danger" *ngIf="hasErrors('email', 'pattern')">El email debe ser válido (.*&#64;.*)</div>
                 </div>
               </div>
-
-              <button type="button" (click)="navigate('login')" class="btn btn-secondary" style="margin: 5px;">Cancelar</button>
               <button type="submit" (click)="requestPasswordReset()" class="btn btn-primary" [disabled]="reestablecerForm.invalid">Enviar</button>
             </div>
           </div>

@@ -8,6 +8,7 @@ import { EditarPublicacionComponent } from './components/editar-publicacion/edit
 import { HomeComponent } from './components/home/home.component';
 import { ListarPublicacionesTasarComponent } from './components/listar-publicaciones-tasar/listar-publicaciones-tasar.component';
 import { ListarSucursalesComponent } from './components/listar-sucursales/listar-sucursales.component';
+import { ListarOfertasRecibidasComponent } from './components/listar-ofertas-recibidas/listar-ofertas-recibidas.component';
 import { ModificarPerfilComponent } from './components/modificar-perfil/modificar-perfil.component';
 import { ProponerTruequeComponent } from './components/proponer-trueque/proponer-trueque.component';
 import { RegistrarUsuarioComponent } from './components/registrar-usuario/registrar-usuario.component';
@@ -43,6 +44,7 @@ const routes: Routes = [
   { path: 'ad-email', component: AdEmailComponent, canActivate: [EmployeeGuard]},
   { path: 'publicacion/:id/editar', component: EditarPublicacionComponent, canActivate: [AuthGuard] },
   { path: 'sucursales', component: ListarSucursalesComponent },
+  { path: 'ofertas', component: ListarOfertasRecibidasComponent},
   { path: 'crear-sucursal', component: CrearSucursalComponent},
   { path: '**', redirectTo: '/home', pathMatch: 'full' }
 ];
