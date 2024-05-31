@@ -19,7 +19,7 @@ from django.urls import path
 from rest_framework import routers
 from main.views import PubViewSet, SucursalViewSet, TradeProposalViewSet, UserViewSet
 from main.views import CurrentUserView, CustomAuthToken, UpdatePasswordView, SendResetPasswordEmailView, PasswordResetConfirmView
-from main.views import return_pub_images_id, serve_publication_image, serve_branch_image, send_email, get_all_emails, save_discount_codes
+from main.views import return_pub_images_id, serve_publication_image, serve_branch_image, send_email, get_all_emails, save_discount_codes, verificar_codigo, borrar_codigo
 
 router = routers.DefaultRouter()
 router.register('publications', PubViewSet, basename='publications' )
@@ -42,4 +42,6 @@ urlpatterns = [
     path('save-discount-codes/', save_discount_codes, name='save_discount_codes'),
     path('reset-password/', SendResetPasswordEmailView.as_view(), name='send_reset_password_email'),
     path('reset-password/<uidb64>/<token>/', PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    path('verificar-codigo/', verificar_codigo, name='verificar_codigo'),
+    path('borrar-codigo/<str:codigo>/', borrar_codigo, name='borrar_codigo'),
 ] + router.urls

@@ -31,6 +31,7 @@ import { CrearSucursalComponent } from './components/crear-sucursal/crear-sucurs
 import { ReestablecerContraComponent } from './components/reestablecer-contra/reestablecer-contra.component';
 import { EnviarDescuentoComponent } from './components/enviar-descuento/enviar-descuento.component';
 import { ListarOfertasRecibidasComponent } from './components/listar-ofertas-recibidas/listar-ofertas-recibidas.component';
+import { VerificarCodigoComponent } from './components/verificar-codigo/verificar-codigo.component';
 
 
 @NgModule({
@@ -58,6 +59,7 @@ import { ListarOfertasRecibidasComponent } from './components/listar-ofertas-rec
     ReestablecerContraComponent,
     EnviarDescuentoComponent,
     ListarOfertasRecibidasComponent,
+    VerificarCodigoComponent,
   ],
   imports: [
     BrowserModule,
