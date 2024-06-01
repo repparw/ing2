@@ -7,9 +7,7 @@ import { UserService } from '../../services/user.service';
 import { Location } from '@angular/common';
 import { Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
-import { FileSelectDirective, FileUploader, FileItem } from 'ng2-file-upload';
-import Swal from 'sweetalert2';
-
+import { FileSelectDirective, FileUploader, FileItem } from 'ng2-file-upload'; import Swal from 'sweetalert2';
 @Component({
   selector: 'app-editar-publicacion',
   templateUrl: './editar-publicacion.component.html',
@@ -20,6 +18,7 @@ export class EditarPublicacionComponent implements OnInit {
   id!: number;
   public uploader!: FileUploader;
   userId!: number;
+  selectedFiles: File[] = [];
 
   prodForm: FormGroup;
 
@@ -71,6 +70,12 @@ export class EditarPublicacionComponent implements OnInit {
     this.uploader.onAfterAddingFile = (fileItem: FileItem) => {
       this.prodForm.patchValue({ photos: this.uploader.queue.map(item => item.file) });
     };
+  }
+
+  onFileSelected(event: any) {
+    this.selectedFiles = event.target.files;
+    this.uploader.clearQueue();
+    this.uploader.addToQueue(this.selectedFiles);
   }
 
   getPublication(id: number): void {

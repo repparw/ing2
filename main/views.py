@@ -224,11 +224,8 @@ class PubViewSet(viewsets.ModelViewSet):
 
     def destroy(self, request, *args, **kwargs):
         pub = self.get_object()
-        # Check if publication is part of an accepted trade proposal
-        if TradeProposal.objects.filter(
-                Q(publication=pub, status='accepted') |
-                Q(proposed_items=pub, status='accepted')
-            ).exists():
+        # Check if publication is part of an accepted trade proposal, in publications or proposed items
+        if TradeProposal.objects.filter(status='accepted', publication=pub).exists() or pub.trade_proposals.filter(status='accepted').exists():
             return Response({"detail": "Cannot delete publication because it is part of an accepted trade proposal."}, status=status.HTTP_400_BAD_REQUEST)
         pub.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -350,7 +347,7 @@ def send_email(request):
         subject = data['subject']
         message = data['message']
         recipient_list = data['recipient_list']
-        send_mail(subject, message, '1francoagostinelli2000@gmail.com', recipient_list) 
+        send_mail(subject, message, '1francoagostinelli2000@gmail.com', recipient_list)
         return JsonResponse({'message': 'Email sent successfully'})
 
 def get_all_emails(request):

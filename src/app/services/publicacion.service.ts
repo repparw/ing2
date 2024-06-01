@@ -88,6 +88,16 @@ export class PublicationService {
     return `${this.apiUrl}${pubId}/photos/${photoId}/`
   }
 
+  public uploadPhotos(id: number, photos: File[]): Observable<void> {
+
+    let formData = new FormData();
+    for (let photo of photos) {
+      formData.append('photos', photo);
+    }
+
+    return this.http.post<void>(`${this.apiUrl}${id}/upload_photos/`, formData, { headers: this.getHeaders() });
+  }
+
   public deletePhotos(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}${id}/delete_photos/`, { headers: this.getHeaders() });
   }

@@ -46,7 +46,7 @@
      <label class="form-label" for="photos">
        Fotos
      </label>
-     <input type="file" accept="image/jpg, image/jpeg, image/png" class="form-control" id="photos" ng2FileSelect [uploader]="uploader" [formControlName]="'photos'" multiple>
+     <input type="file" accept="image/jpg, image/jpeg, image/png" class="form-control" id="photos" (change)="onFileSelected($event)" [formControlName]="'photos'" multiple>
     <small class="text-danger" *ngIf="hasErrors('photos', 'required')" >Una foto es obligatoria</small>
   </div>
 

@@ -83,6 +83,9 @@ export class VerPublicacionComponent implements OnInit{
           }).then((result) => {
       if (result.isConfirmed) {
         this.deletePublication(productID);
+        Swal.fire('Publicación eliminada', 'La publicación ha sido eliminada exitosamente', 'success').then(() => {
+          this.router.navigate(['/home']);
+        });
       }
           });
   }

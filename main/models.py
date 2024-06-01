@@ -20,13 +20,14 @@ class Pub(models.Model):
   desired = models.CharField(max_length=100, blank=True)
 
 class TradeProposal(models.Model):
-    proposer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='proposals_made')
-    recipient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='proposals_received')
-    publication = models.ForeignKey(Pub, on_delete=models.CASCADE)
-    proposed_items = models.ManyToManyField(Pub, related_name='trade_proposals')
-    suc = models.ForeignKey('Sucursal', on_delete=models.SET_NULL, null=True)
-    status = models.CharField(max_length=20, choices=[('pending', 'Pending'), ('accepted', 'Accepted'), ('rejected', 'Rejected')], default='pending')
-    created_at = models.DateTimeField(auto_now_add=True)
+  proposer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='proposals_made')
+  recipient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='proposals_received')
+  publication = models.ForeignKey(Pub, on_delete=models.CASCADE)
+  proposed_items = models.ManyToManyField(Pub, related_name='trade_proposals')
+  suc = models.ForeignKey('Sucursal', on_delete=models.SET_NULL, null=True)
+  status = models.CharField(max_length=20, choices=[('pending', 'Pending'), ('accepted', 'Accepted'), ('rejected', 'Rejected')], default='pending')
+  created_at = models.DateTimeField(auto_now_add=True)
+  date = models.DateField(blank=True, default='')
 
 class Sucursal(models.Model):
   address = models.CharField(max_length=100)

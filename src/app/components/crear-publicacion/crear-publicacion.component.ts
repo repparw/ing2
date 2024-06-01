@@ -17,6 +17,7 @@ import { Pub } from '../../models/pub';
 export class CrearPublicacionComponent {
   public uploader: FileUploader;
   private apiUrl = 'http://localhost:8000/publications/';
+  selectedFiles: File[] = [];
 
   prodForm = this.formBuilder.group({
     title: ['', Validators.required],
@@ -43,7 +44,6 @@ export class CrearPublicacionComponent {
       itemAlias: 'photos',
       authTokenHeader: 'Authorization',
       authToken: `Token ${localStorage.getItem('token')}`,
-      queueLimit: 3,
     });
   }
 
@@ -52,6 +52,13 @@ export class CrearPublicacionComponent {
       this.prodForm.patchValue({ user: user.id });
     });
   }
+
+  onFileSelected(event: any) {
+    this.selectedFiles = event.target.files;
+    this.uploader.clearQueue();
+    this.uploader.addToQueue(this.selectedFiles);
+  }
+
 
   hasErrors(controlName: string, errorType: string) {
     const control = this.prodForm.get(controlName);
