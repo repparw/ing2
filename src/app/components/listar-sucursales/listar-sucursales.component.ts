@@ -9,6 +9,7 @@ import { SucursalService } from '../../services/sucursal.service';
 export class ListarSucursalesComponent implements OnInit {
   data: any[] = [];
   templateUrl: string = 'http://localhost:4200/sucursal/{{id}}';
+  selectedSucursal: any = null;
 
   constructor(private sucursalService: SucursalService) { }
 
@@ -25,4 +26,9 @@ export class ListarSucursalesComponent implements OnInit {
   getPhotos(id: number): string {
     return this.sucursalService.getPhotos(id);
       }
+
+  selectSucursal(sucursal: any): void {
+    this.selectedSucursal = sucursal;
+  }
+    
 }
