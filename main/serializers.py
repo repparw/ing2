@@ -7,13 +7,6 @@ class PubSerializer(serializers.ModelSerializer):
         model = Pub
         fields = '__all__'
 
-class TradeProposalSerializer(serializers.ModelSerializer):
-    proposed_items = serializers.PrimaryKeyRelatedField(queryset=Pub.objects.all(), many=True)
-
-    class Meta:
-        model = TradeProposal
-        fields = ['id', 'proposer', 'recipient', 'publication', 'proposed_items', 'status', 'created_at']
-
 class UpdatePasswordSerializer(serializers.Serializer):
   Model = User
   old_password = serializers.CharField(required=True)
@@ -49,6 +42,16 @@ class UserSerializer(serializers.ModelSerializer):
       instance.mailing = validated_data.get('mailing', instance.mailing)
       instance.save()
       return instance
+    
+
+class TradeProposalSerializer(serializers.ModelSerializer):
+    proposer = UserSerializer()
+    recipient = UserSerializer()
+    proposed_items = serializers.PrimaryKeyRelatedField(queryset=Pub.objects.all(), many=True)
+
+    class Meta:
+        model = TradeProposal
+        fields = ['id', 'proposer', 'recipient', 'publication', 'proposed_items', 'status', 'created_at']
 
 class SucursalSerializer(serializers.ModelSerializer):
     class Meta:

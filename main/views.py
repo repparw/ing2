@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404
-from rest_framework import viewsets
+from rest_framework import viewsets, permissions
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
@@ -82,6 +82,7 @@ class PasswordResetConfirmView(APIView):
 class TradeProposalViewSet(viewsets.ModelViewSet):
     queryset = TradeProposal.objects.all()
     serializer_class = TradeProposalSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def perform_create(self, serializer):
         serializer.save()

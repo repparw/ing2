@@ -18,6 +18,7 @@ import { TasarPublicacionComponent } from './components/tasar-publicacion/tasar-
 import { VerMiPerfilComponent } from './components/ver-mi-perfil/ver-mi-perfil.component';
 import { VerPerfilComponent } from './components/ver-perfil/ver-perfil.component';
 import { VerPublicacionComponent } from './components/ver-publicacion/ver-publicacion.component';
+import { ResponderTruequeComponent } from './components/responder-trueque/responder-trueque.component';
 
 import { AuthGuard } from './guards/auth.guard';
 import { EmployeeGuard } from './guards/employee.guard';
@@ -48,7 +49,8 @@ const routes: Routes = [
   { path: 'verificar-codigo', component: VerificarCodigoComponent, canActivate: [EmployeeGuard]},
   { path: 'publicacion/:id/editar', component: EditarPublicacionComponent, canActivate: [AuthGuard] },
   { path: 'sucursales', component: ListarSucursalesComponent },
-  { path: 'ofertas', component: ListarOfertasRecibidasComponent},
+  { path: 'trueques-recibidos', component: ListarOfertasRecibidasComponent},
+  { path: 'trueque/:id', component: ResponderTruequeComponent},
   { path: 'crear-sucursal', component: CrearSucursalComponent},
   { path: '**', redirectTo: '/home', pathMatch: 'full' }
 ];

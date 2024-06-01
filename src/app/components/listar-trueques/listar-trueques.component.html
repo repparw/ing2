@@ -1,0 +1,23 @@
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Trueques</title>
+</head>
+<body>
+<div class="container">
+    <ul>
+        <li *ngFor="let trueque of data" class="fila justified-content-center">
+            <div class="info">
+                <p>Oferta de trueque recibida!</p>
+                <a class="proposer" (click)="navigate(trueque.proposer.username)">Oferta hecha por: {{ trueque.proposer.name }}</a>
+                <span class="rating">Valoración del usuario: {{ trueque.proposer.rating }}</span>
+                <!--Esto es solo para probar. Después borrar-->                    
+                <span class="recipient">Recibida por: {{ trueque.recipient.name }}</span>
+                <button type="button" class="btn btn-outline-primary" (click)="navigateTrade(trueque.id)">Responder Trueque</button>
+            </div>
+        </li>
+    </ul>
+</div>
+</body>
+</html>

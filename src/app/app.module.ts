@@ -31,6 +31,8 @@ import { CrearSucursalComponent } from './components/crear-sucursal/crear-sucurs
 import { ReestablecerContraComponent } from './components/reestablecer-contra/reestablecer-contra.component';
 import { EnviarDescuentoComponent } from './components/enviar-descuento/enviar-descuento.component';
 import { ListarOfertasRecibidasComponent } from './components/listar-ofertas-recibidas/listar-ofertas-recibidas.component';
+import { ListarTruequesComponent } from './components/listar-trueques/listar-trueques.component';
+import { ResponderTruequeComponent } from './components/responder-trueque/responder-trueque.component';
 import { VerificarCodigoComponent } from './components/verificar-codigo/verificar-codigo.component';
 
 
@@ -59,6 +61,8 @@ import { VerificarCodigoComponent } from './components/verificar-codigo/verifica
     ReestablecerContraComponent,
     EnviarDescuentoComponent,
     ListarOfertasRecibidasComponent,
+    ListarTruequesComponent,
+    ResponderTruequeComponent,
     VerificarCodigoComponent,
   ],
   imports: [
