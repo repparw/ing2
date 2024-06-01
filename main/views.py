@@ -393,3 +393,67 @@ def save_discount_codes(request):
         except Exception as e:
             return JsonResponse({'error': f'Error al guardar los datos: {str(e)}'}, status=500)
     return JsonResponse({'error': 'Se requiere una solicitud POST'}, status=400)
+@csrf_exempt
+def verificar_codigo(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            codigo = data.get('codigo')
+
+            # Ruta del archivo JSON
+            file_path = settings.CODIGOS_JSON_PATH
+
+            # Leer los datos existentes del archivo JSON si existe
+            if os.path.exists(file_path):
+                with open(file_path, 'r') as file:
+                    try:
+                        existing_data = json.load(file)
+                    except json.JSONDecodeError:
+                        existing_data = []
+            else:
+                existing_data = []
+
+            # Buscar el código en los datos existentes
+            descripcion = None
+            for entry in existing_data:
+                if entry.get('code') == codigo:
+                    descripcion = entry.get('description')
+                    break
+
+            if descripcion:
+                return JsonResponse({'descripcion': descripcion}, status=200)
+            else:
+                return JsonResponse({'error': 'Código de descuento no encontrado'}, status=404)
+        except Exception as e:
+            return JsonResponse({'error': f'Error al verificar el código de descuento: {str(e)}'}, status=500)
+    return JsonResponse({'error': 'Se requiere una solicitud POST'}, status=400)
+
+
+@csrf_exempt
+def borrar_codigo(request, codigo):
+    if request.method == 'DELETE':
+        try:
+            # Ruta del archivo JSON
+            file_path = settings.CODIGOS_JSON_PATH
+
+            # Leer los datos existentes del archivo JSON si existe
+            if os.path.exists(file_path):
+                with open(file_path, 'r') as file:
+                    try:
+                        existing_data = json.load(file)
+                    except json.JSONDecodeError:
+                        existing_data = []
+            else:
+                existing_data = []
+
+            # Eliminar la entrada correspondiente al código especificado
+            updated_data = [entry for entry in existing_data if entry.get('code') != codigo]
+
+            # Escribir los datos actualizados en el archivo JSON
+            with open(file_path, 'w') as file:
+                json.dump(updated_data, file, indent=4)
+
+            return JsonResponse({'message': 'Código de descuento eliminado correctamente'}, status=200)
+        except Exception as e:
+            return JsonResponse({'error': f'Error al borrar el código de descuento: {str(e)}'}, status=500)
+    return JsonResponse({'error': 'Se requiere una solicitud DELETE'}, status=400)

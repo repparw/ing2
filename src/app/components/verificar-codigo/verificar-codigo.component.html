@@ -1,0 +1,13 @@
+<div class="container mt-4">
+    <form (ngSubmit)="verificarCodigo()" [formGroup]="codigoForm">
+      <div class="form-group">
+        <label for="codigo">Código de descuento:</label>
+        <input type="text" id="codigo" formControlName="codigo" class="form-control" placeholder="Ingrese el código de descuento">
+        <div *ngIf="codigoForm.get('codigo')?.invalid && codigoForm.get('codigo')?.touched" class="text-danger">
+          El código de descuento es requerido.
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary">Verificar Código</button>
+    </form>
+  </div>
+  
