@@ -64,7 +64,6 @@ export class EditarPublicacionComponent implements OnInit {
       authTokenHeader: 'Authorization',
       authToken: `Token ${localStorage.getItem('token')}`,
       method: 'PUT',
-      queueLimit: 3 // Maximum 3 files allowed
     });
 
     this.uploader.onAfterAddingFile = (fileItem: FileItem) => {
@@ -80,7 +79,7 @@ export class EditarPublicacionComponent implements OnInit {
 
   getPublication(id: number): void {
    this.publicationService.getPublication(id).subscribe((pub: Pub) => {
-        if (pub.user !== this.userId) { Swal.fire('Error','No está autorizado para editar esta publicación','error').then(() => this.location.back()); } else {
+        if (pub.user !== this.userId) { Swal.fire('Error','No está autorizado para editar esta publicación','error').then(() => this.goBack()); } else {
           this.prodForm = this.getForm(pub);
         }
         })
@@ -104,8 +103,8 @@ export class EditarPublicacionComponent implements OnInit {
     return control && control.hasError(errorType) && (control.dirty || control.touched);
   }
 
-  goBack() {
-    this.location.back();
+  goBack(): void {
+    window.history.back();
       }
 
   onSubmit() {
@@ -117,13 +116,22 @@ export class EditarPublicacionComponent implements OnInit {
     const pub = this.prodForm.value as Partial<Pub>;
     this.publicationService.updatePublication(this.id, pub).subscribe(
       (pub: Pub) => {
-        if (this.uploader.queue.length > 0) {
+        if (this.uploader.queue.length > 3) {
+          Swal.fire('Error', 'No se pueden subir más de 3 fotos', 'error');
+          return;
+        }
+        else if (this.uploader.queue.length === 0) {
+          Swal.fire('Publicación creada', 'La publicación ha sido creada exitosamente', 'success').then(() => {
+            this.goBack();
+          });
+        }
+        else {
           this.publicationService.deletePhotos(this.id).subscribe(() => {
 
             this.uploader.uploadAll();
 
             this.uploader.onCompleteAll = () => {
-              console.log('Photos uploaded successfully');
+              console.log('Fotos subidas exitosamente');
               Swal.fire('Publicación creada', 'La publicación ha sido creada exitosamente', 'success').then(() => {
               this.goBack();
               });
@@ -133,7 +141,8 @@ export class EditarPublicacionComponent implements OnInit {
               };
             }
           });
-        };
+        }
+
       },
     error => {
       Swal.fire('Error', 'No se ha podido actualizar la publicación', 'error');
