@@ -15,7 +15,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from rest_framework import routers
 from main.views import PubViewSet, SucursalViewSet, TradeProposalViewSet, UserViewSet
 from main.views import CurrentUserView, CustomAuthToken, UpdatePasswordView, SendResetPasswordEmailView, PasswordResetConfirmView
@@ -42,4 +42,5 @@ urlpatterns = [
     path('save-discount-codes/', save_discount_codes, name='save_discount_codes'),
     path('reset-password/', SendResetPasswordEmailView.as_view(), name='send_reset_password_email'),
     path('reset-password/<uidb64>/<token>/', PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+     path('', include(router.urls)),
 ] + router.urls
