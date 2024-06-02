@@ -27,7 +27,7 @@ class TradeProposal(models.Model):
   suc = models.ForeignKey('Sucursal', on_delete=models.SET_NULL, null=True)
   status = models.CharField(max_length=20, choices=[('pending', 'Pending'), ('accepted', 'Accepted'), ('rejected', 'Rejected')], default='pending')
   created_at = models.DateTimeField(auto_now_add=True)
-  date = models.DateField(blank=True, default='')
+  date = models.DateField(null=True, blank=True, default='')
 
 class Sucursal(models.Model):
   address = models.CharField(max_length=100)

@@ -6,4 +6,5 @@ export interface TradeProposal {
   proposed_items: number[];
   status: string;
   created_at?: Date;
+  date?: Date;
 }
