@@ -37,3 +37,9 @@ class Sucursal(models.Model):
 class Photo(models.Model):
   pub = models.ForeignKey(Pub, related_name='photos', on_delete=models.CASCADE)
   image = models.ImageField(upload_to='photos/pub')
+
+class Venta(models.Model):
+    product = models.CharField(max_length=100)
+    price = models.FloatField()
+    quantity = models.IntegerField()
+    trade = models.ForeignKey(TradeProposal, on_delete=models.CASCADE, related_name='sales')

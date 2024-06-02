@@ -1,6 +1,6 @@
 from django.contrib.auth import authenticate
 from rest_framework import serializers
-from .models import Pub, User, Sucursal, TradeProposal
+from .models import Pub, User, Sucursal, TradeProposal, Venta
 
 class PubSerializer(serializers.ModelSerializer):
     class Meta:
@@ -85,3 +85,8 @@ class CustomAuthTokenSerializer(serializers.Serializer):
             raise serializers.ValidationError('Must include "username" and "password".')
 
         return attrs
+
+class VentaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Venta
+        fields = '__all__'

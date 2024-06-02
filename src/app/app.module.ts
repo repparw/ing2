@@ -34,6 +34,7 @@ import { ListarOfertasRecibidasComponent } from './components/listar-ofertas-rec
 import { ListarTruequesComponent } from './components/listar-trueques/listar-trueques.component';
 import { ResponderTruequeComponent } from './components/responder-trueque/responder-trueque.component';
 import { VerificarCodigoComponent } from './components/verificar-codigo/verificar-codigo.component';
+import { CargarVentaComponent } from './components/cargar-venta/cargar-venta.component';
 
 
 @NgModule({
@@ -64,6 +65,7 @@ import { VerificarCodigoComponent } from './components/verificar-codigo/verifica
     ListarTruequesComponent,
     ResponderTruequeComponent,
     VerificarCodigoComponent,
+    CargarVentaComponent,
   ],
   imports: [
     BrowserModule,
