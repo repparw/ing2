@@ -4,26 +4,26 @@
     <p>Por favor, ingrese los datos de la venta</p>
     <form [formGroup]="ventaForm" (ngSubmit)="cargarVenta()">
         <div>
-            <label for="producto">Código de Producto</label>
-            <input  id="producto" class="form-control" formControlName="producto">
+            <label for="product">Código de Producto</label>
+            <input  id="product" class="form-control" formControlName="product">
             <div>
-                <small class="text-danger" *ngIf="hasErrors('producto', 'required')">El producto es requerido</small>
+                <small class="text-danger" *ngIf="hasErrors('product', 'required')">El producto es requerido</small>
             </div>
         </div>
 
         <div>
-            <label for="cantidad">Cantidad de Unidades</label>
-            <input  id="cantidad" class="form-control" formControlName="cantidad">
+            <label for="quantity">Cantidad de Unidades</label>
+            <input  id="quantity" class="form-control" formControlName="quantity">
             <div>
-                <small class="text-danger" *ngIf="hasErrors('cantidad', 'required')">La cantidad es requerida</small>
+                <small class="text-danger" *ngIf="hasErrors('quantity', 'required')">La cantidad es requerida</small>
             </div>
         </div>
 
         <div>
-            <label for="monto">Monto</label>
-            <input id="monto" class="form-control" formControlName="monto">
+            <label for="price">Monto</label>
+            <input id="price" class="form-control" formControlName="price">
             <div>
-                <small class="text-danger" *ngIf="hasErrors('monto', 'required')">El monto es requerido</small>
+                <small class="text-danger" *ngIf="hasErrors('price', 'required')">El monto es requerido</small>
             </div>
         </div>
 
