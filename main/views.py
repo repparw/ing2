@@ -14,8 +14,8 @@ from django.urls import reverse
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.views import APIView
 from rest_framework.generics import UpdateAPIView
-from .models import Pub, User, Sucursal, TradeProposal, Photo
-from .serializers import PubSerializer, UserSerializer, SucursalSerializer, TradeProposalSerializer
+from .models import Pub, User, Sucursal, TradeProposal, Photo, Venta
+from .serializers import PubSerializer, UserSerializer, SucursalSerializer, TradeProposalSerializer, VentaSerializer
 from .serializers import CurrentUserSerializer, CustomAuthTokenSerializer, UpdatePasswordSerializer
 from django.core.mail import send_mail
 from django.http import JsonResponse
@@ -454,3 +454,14 @@ def borrar_codigo(request, codigo):
         except Exception as e:
             return JsonResponse({'error': f'Error al borrar el código de descuento: {str(e)}'}, status=500)
     return JsonResponse({'error': 'Se requiere una solicitud DELETE'}, status=400)
+
+
+class VentaViewSet(viewsets.ModelViewSet):
+    queryset = Venta.objects.all()
+    serializer_class = VentaSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        venta = serializer.save()
+        return Response({"id": venta.id, "message": "Venta created successfully"}, status=status.HTTP_201_CREATED)

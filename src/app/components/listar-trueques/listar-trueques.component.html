@@ -17,6 +17,8 @@
                 <button type="button" class="btn btn-outline-primary" (click)="navigateTrade(trueque.id)">Responder Trueque</button>
             </div>
         </li>
+        <!-- if list is empty, show message-->
+        <p *ngIf="data.length === 0" class="text-center text-danger">No hay propuestas de trueque recibidas para mostrar</p>
     </ul>
 </div>
 </body>

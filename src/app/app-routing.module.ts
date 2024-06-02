@@ -27,6 +27,7 @@ import { CrearSucursalComponent } from './components/crear-sucursal/crear-sucurs
 import { ReestablecerContraComponent } from './components/reestablecer-contra/reestablecer-contra.component';
 import { EnviarDescuentoComponent } from './components/enviar-descuento/enviar-descuento.component';
 import { VerificarCodigoComponent } from './components/verificar-codigo/verificar-codigo.component';
+import { CargarVentaComponent } from './components/cargar-venta/cargar-venta.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -52,6 +53,7 @@ const routes: Routes = [
   { path: 'trueques-recibidos', component: ListarOfertasRecibidasComponent},
   { path: 'trueque/:id', component: ResponderTruequeComponent},
   { path: 'crear-sucursal', component: CrearSucursalComponent},
+  { path: 'trueque/:id/cargar-venta', component: CargarVentaComponent},
   { path: '**', redirectTo: '/home', pathMatch: 'full' }
 ];
 

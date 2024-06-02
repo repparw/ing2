@@ -1,16 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, Validators,FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { FileUploader } from 'ng2-file-upload';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-crear-sucursal',
   templateUrl: './crear-sucursal.component.html',
   styleUrls: ['./crear-sucursal.component.css']
 })
-export class CrearSucursalComponent implements OnInit{
-  
-  
+export class CrearSucursalComponent implements OnInit {
+
   authToken = localStorage.getItem('token');
   
   public uploader: FileUploader = new FileUploader({
@@ -47,12 +47,20 @@ export class CrearSucursalComponent implements OnInit{
       form.append('subject', this.sucForm.get('subject')?.value);
     };
 
+    this.uploader.onCompleteAll = () => {
+      Swal.fire({
+        icon: 'success',
+        title: 'Sucursal creada',
+        text: 'La sucursal se ha creado correctamente.',
+      }).then(() => {
+        this.router.navigate(['/home']);
+      });
+    };
+
     console.log('Agregando formulario a la base de datos');
     this.uploader.uploadAll();
     console.log('Formulario agregado a la base de datos', this.sucForm.value);
-    this.router.navigate(['/home']);
   }
-
 
   hasErrors(controlName: string, errorType: string) {
     const control = this.sucForm.get(controlName);
@@ -61,28 +69,26 @@ export class CrearSucursalComponent implements OnInit{
 
   direccionValida: boolean = true;
   moveMap(event: google.maps.MapMouseEvent) {
-        if (event.latLng != null) {
-          const lat = event.latLng.lat();
-          const lng = event.latLng.lng();
-          if (
-            lat < -55.0 || lat > -21.0 || 
-            lng < -73.0 || lng > -53.0   
-        ) {
-            this.direccionValida = false;
-            return;
-        }
-          this.selectedMarker = event.latLng.toJSON();
-          this.center = this.selectedMarker;
-          this.updateAddressFromCoords(this.selectedMarker);
-          this.direccionValida = true;
-        }
+    if (event.latLng != null) {
+      const lat = event.latLng.lat();
+      const lng = event.latLng.lng();
+      if (
+        lat < -55.0 || lat > -21.0 || 
+        lng < -73.0 || lng > -53.0   
+      ) {
+        this.direccionValida = false;
+        return;
+      }
+      this.selectedMarker = event.latLng.toJSON();
+      this.center = this.selectedMarker;
+      this.updateAddressFromCoords(this.selectedMarker);
+      this.direccionValida = true;
+    }
   }
 
   move(event: google.maps.MapMouseEvent) {
     if (event.latLng != null) this.display = event.latLng.toJSON();
   }
-
-  
 
   updateAddressFromCoords(coords: google.maps.LatLngLiteral) {
     const geocoder = new google.maps.Geocoder();
@@ -95,8 +101,7 @@ export class CrearSucursalComponent implements OnInit{
       }
     });
   }
-  
-  
+
   getSelectedMarkerPosition(): google.maps.LatLngLiteral | null {
     return this.selectedMarker;
   }
