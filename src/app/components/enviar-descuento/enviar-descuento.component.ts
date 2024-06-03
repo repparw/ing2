@@ -12,14 +12,15 @@ import Swal from 'sweetalert2';
 })
 export class EnviarDescuentoComponent implements OnInit {
   discountOptions: number[] = [10, 15, 20, 25];
-  selectedDiscount: number = 10;
   discountForm: FormGroup;
   emails: string[] = [];
   selectedEmails: string[] = [];
 
   constructor(private fb: FormBuilder, private emailService: EmailService, private userService: UserService, private codeService: CodigoDescuentoService) { 
     this.discountForm = this.fb.group({
-      descripticode: String, description: String, selectedDiscount: String});
+      description: ['', Validators.required],
+      selectedDiscount: [10, Validators.required]
+    });
   }
 
   ngOnInit(): void {
@@ -39,43 +40,40 @@ export class EnviarDescuentoComponent implements OnInit {
         allowOutsideClick: false,
         didOpen: () => {
           Swal.showLoading();
-        }})
+        }
+      });
   
-        setTimeout(() => {
-          this.selectedEmails.forEach(email => {
-            const discountCode = this.codeService.generateDiscountCode();
-            const description = this.discountForm.get('description')?.value;
-            const message = `¡Aprovecha nuestro descuento del ${this.selectedDiscount}% en nuestra ferreteria\nCódigo de descuento: ${discountCode}\nDescripción: ${description}`;
-      
-            this.emailService.sendEmail('Descuento imperdible', message, [email]).subscribe(() => {
-              this.codeService.saveDiscountCode(discountCode, description, this.selectedDiscount.toString()).subscribe(() => {
-                console.log(`Código de descuento guardado correctamente para ${email}.`);
-              }, error => {
-                console.error(`Error al guardar el código de descuento para ${email}:`, error);
-              });
+      setTimeout(() => {
+        const selectedDiscount = this.discountForm.get('selectedDiscount')?.value;
+        const description = this.discountForm.get('description')?.value;
+
+        this.selectedEmails.forEach(email => {
+          const discountCode = this.codeService.generateDiscountCode();
+          const message = `¡Aprovecha nuestro descuento del ${selectedDiscount}% en nuestra ferretería\nCódigo de descuento: ${discountCode}\nDescripción: ${description}`;
+    
+          this.emailService.sendEmail('Descuento imperdible', message, [email]).subscribe(() => {
+            this.codeService.saveDiscountCode(discountCode, description, selectedDiscount.toString()).subscribe(() => {
+              console.log(`Código de descuento guardado correctamente para ${email}.`);
             }, error => {
-              console.error(`Error al enviar el correo electrónico a ${email}:`, error);
+              console.error(`Error al guardar el código de descuento para ${email}:`, error);
             });
+          }, error => {
+            console.error(`Error al enviar el correo electrónico a ${email}:`, error);
           });
-      
-          Swal.close();
-          
-          Swal.fire({
-            title: 'Correos enviados',
-            text: 'Los correos electrónicos se han enviado correctamente.',
-            icon: 'success'
-          });
-        }, 5000); // Espera 5 segundos antes de mostrar el mensaje de confirmación
-      }
-  
-      
-  
-      // Realizar cualquier otra acción después de enviar los correos electrónicos
-    else {
+        });
+    
+        Swal.close();
+        
+        Swal.fire({
+          title: 'Correos enviados',
+          text: 'Los correos electrónicos se han enviado correctamente.',
+          icon: 'success'
+        });
+      }, 5000); // Espera 5 segundos antes de mostrar el mensaje de confirmación
+    } else {
       console.log('El formulario no es válido o no se han seleccionado destinatarios. Revisa los campos.');
     }
   }
-  
 
   handleCheckboxChange(event: Event): void {
     const value = (event.target as HTMLInputElement)?.value;
