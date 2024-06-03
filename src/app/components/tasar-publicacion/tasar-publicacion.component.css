@@ -1,0 +1,21 @@
+head {
+  background-color: #DFD0B8;
+}
+
+body {
+  background-color: #DFD0B8;
+}
+
+.carousel img {
+    width: 100%;
+    height: auto;
+}
+
+.form-container {
+    max-width: 100%;
+}
+
+.error {
+    color: red;
+    margin-top: 5px;
+}

@@ -16,6 +16,7 @@ export class TasarPublicacionComponent implements OnInit {
   id!: number;
   pubForm: FormGroup;
   publication: Pub | undefined;
+  linkFoto: string[] = [];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -42,7 +43,19 @@ export class TasarPublicacionComponent implements OnInit {
     this.publicationService.getPublication(id).subscribe((pub: Pub) => {
       this.publication = pub;
       this.populateForm(pub);
+      this.loadPhotos(id);
     });
+  }
+
+  loadPhotos(id: number): void {
+    this.publicationService.getPhotos(id).subscribe(
+      (data: string[]) => {
+        this.linkFoto = data;
+      },
+      error => {
+        console.error('Error fetching photos:', error);
+      }
+    );
   }
 
   populateForm(pub: Pub): void {
