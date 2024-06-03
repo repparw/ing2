@@ -47,7 +47,8 @@ class UserSerializer(serializers.ModelSerializer):
 class TradeProposalSerializer(serializers.ModelSerializer):
     proposer = UserSerializer()
     recipient = UserSerializer()
-    proposed_items = serializers.PrimaryKeyRelatedField(queryset=Pub.objects.all(), many=True)
+    publication = PubSerializer()
+    proposed_items = PubSerializer(many=True)
 
     class Meta:
         model = TradeProposal

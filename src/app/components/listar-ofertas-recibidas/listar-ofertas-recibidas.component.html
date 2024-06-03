@@ -5,7 +5,25 @@
     <title>Lista de Trueques</title>
 </head>
 <body>
-    <app-listar-trueques [data]="filteredData" [templateUrl]="templateUrl"></app-listar-trueques>
+    <div class="container">
+        <button *ngIf="showList[0] == false" type="button" class="btn btn-success" (click)="toggleList(0)">Mostrar propuestas de trueque recibidas</button>
+        <button *ngIf="showList[0] == true" type="button" class="btn btn-danger" (click)="toggleList(0)">Ocultar propuestas de trueque recibidas</button>
+        <app-listar-trueques *ngIf="showList[0]" [data]="filteredDataProposal" [mensajeFallido]="mensajeFallidoPropuesta"></app-listar-trueques>
+    
+        <br>
+        <br>
+
+        <button *ngIf="showList[1] == false" type="button" class="btn btn-success" (click)="toggleList(1)">Mostrar trueques con fecha pendiente</button>
+        <button *ngIf="showList[1] == true" type="button" class="btn btn-danger" (click)="toggleList(1)">Ocultar trueques con fecha pendiente</button>
+        <app-listar-trueques *ngIf="showList[1]" [data]="filteredDataTradeToConfirm" [mensajeFallido]="mensajeFallidoSinFecha"></app-listar-trueques>
+    
+        <br>
+        <br>
+
+        <button *ngIf="showList[2] == false" type="button" class="btn btn-success" (click)="toggleList(2)">Mostrar trueques confirmados</button>
+        <button *ngIf="showList[2] == true" type="button" class="btn btn-danger" (click)="toggleList(2)">Ocultar trueques confirmados</button>
+        <app-listar-trueques *ngIf="showList[2]" [data]="filteredDataConfirm" [mensajeFallido]="mensajeFallidoConfirmado"></app-listar-trueques>
+    </div>
 </body>
 </html>
 

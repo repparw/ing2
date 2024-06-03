@@ -7,18 +7,30 @@
 <body>
 <div class="container">
     <ul>
-        <li *ngFor="let trueque of data" class="fila justified-content-center">
+        <li *ngFor="let trueque of data;  let i = index" class="fila justified-content-center">
             <div class="info">
-                <p>Oferta de trueque recibida!</p>
+                <h2>¡Oferta de trueque recibida!</h2>
+                <h6>Publicacion: {{ trueque.publication.title }}</h6>
+                <img [src]="getPhotos(trueque.publication.id)" class="image-thumbnail" width="100" height="100" alt="{{ trueque.publication.title }}" (click)="navigatePubli(trueque.publication.id)">
                 <a class="proposer" (click)="navigate(trueque.proposer.username)">Oferta hecha por: {{ trueque.proposer.name }}</a>
                 <span class="rating">Valoración del usuario: {{ trueque.proposer.rating }}</span>
-                <!--Esto es solo para probar. Después borrar-->                    
-                <span class="recipient">Recibida por: {{ trueque.recipient.name }}</span>
+                <div *ngIf="trueque.status != 'pending'">                  
+                    <a class="recipient" (click)="navigate(trueque.recipient.username)">Recibida por: {{ trueque.recipient.name }}</a>
+                    <span class="rating">Valoración del usuario: {{ trueque.recipient.rating }}</span>
+                </div>
+                <div *ngIf="trueque.status == 'pending'">
+                    <span class="creation-date">Fecha de propuesta: {{ trueque.created_at | date:'dd/MM/yyyy'}}</span>
+                </div>
+                <div class="proposed-item-list">
+                    <button *ngIf="show[i] == false" type="button" class="btn btn-success" (click)="toggleShow(i)">Mostrar Objetos ofrecidos</button>
+                    <button *ngIf="show[i] == true" type="button" class="btn btn-danger" (click)="toggleShow(i)">Ocultar Objetos ofrecidos</button>
+                    <app-listar-publicaciones *ngIf="show[i] == true" [data]="trueque.proposed_items"></app-listar-publicaciones>
+                </div>
                 <button type="button" class="btn btn-outline-primary" (click)="navigateTrade(trueque.id)">Responder Trueque</button>
             </div>
         </li>
         <!-- if list is empty, show message-->
-        <p *ngIf="data.length === 0" class="text-center text-danger">No hay propuestas de trueque recibidas para mostrar</p>
+        <p *ngIf="data.length === 0" class="text-center text-danger">No hay {{ mensajeFallido }} para mostrar</p>
     </ul>
 </div>
 </body>
