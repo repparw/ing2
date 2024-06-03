@@ -4,6 +4,7 @@ export interface TradeProposal {
   recipient: number;
   publication: number;
   proposed_items: number[];
+  suc: number;
   status: string;
   created_at?: Date;
   date?: Date;

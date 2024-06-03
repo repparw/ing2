@@ -3,6 +3,7 @@ import { TradeService } from 'src/app/services/trade.service';
 import { UserService } from '../../services/user.service'
 import { Router } from '@angular/router';
 import { PublicationService } from 'src/app/services/publicacion.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-listar-trueques',
@@ -12,7 +13,10 @@ import { PublicationService } from 'src/app/services/publicacion.service';
 export class ListarTruequesComponent implements OnInit {
     @Input() data: any[] = [];
     @Input() mensajeFallido?: string;
-    show: boolean[] = [];    
+    @Input() titulo?: string;
+    @Input() empleado?: boolean;
+    show: boolean[] = []; 
+    fecha2?: Date;   
 
     constructor (private tradeService: TradeService, private router:Router, private userService: UserService, private publicationService: PublicationService){
     }
@@ -49,5 +53,47 @@ export class ListarTruequesComponent implements OnInit {
 
     navigateTrade(id: number) {
       this.router.navigate([`trueque/${id}`])
+    }
+
+    navigateFecha(id: number){
+      this.router.navigate([`agregar-fecha/${id}`])
+    }
+
+    cancel(id: number){
+      Swal.fire({
+        title: "¿Estás seguro de que deseas cancelar el trueque?",
+        text: "Se borrará para siempre.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        cancelButtonText: "Cancelar",
+        confirmButtonText: "Confirmar"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire({
+            title: "¡Cancelado!",
+            text: "El trueque ha sido cancelado.",
+            icon: "success"
+          });
+          /* Borrar trueque de la base de datos. Refresh */
+        }
+      });
+    }
+
+    fechaMas24(fecha: Date): Date{
+      let fecha2 = new Date(fecha)
+      console.log(fecha2.toString());
+      fecha2.setDate(fecha2.getDate()+1);
+      console.log(fecha2.toString());
+      return fecha2;
+    }
+
+    pasoElTiempo(fecha: Date): boolean{
+      let fechaDeHoy = new Date()
+      if ((fecha.getTime() - fechaDeHoy.getTime()) > 0){
+        return false
+      }
+      return true;
     }
   }

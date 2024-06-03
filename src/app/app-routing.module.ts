@@ -19,6 +19,7 @@ import { VerMiPerfilComponent } from './components/ver-mi-perfil/ver-mi-perfil.c
 import { VerPerfilComponent } from './components/ver-perfil/ver-perfil.component';
 import { VerPublicacionComponent } from './components/ver-publicacion/ver-publicacion.component';
 import { ResponderTruequeComponent } from './components/responder-trueque/responder-trueque.component';
+import { AgregarFechaComponent } from './components/agregar-fecha/agregar-fecha.component';
 
 import { AuthGuard } from './guards/auth.guard';
 import { EmployeeGuard } from './guards/employee.guard';
@@ -52,6 +53,7 @@ const routes: Routes = [
   { path: 'sucursales', component: ListarSucursalesComponent },
   { path: 'trueques-recibidos', component: ListarOfertasRecibidasComponent},
   { path: 'trueque/:id', component: ResponderTruequeComponent},
+  { path: 'agregar-fecha/:id', component: AgregarFechaComponent},
   { path: 'crear-sucursal', component: CrearSucursalComponent},
   { path: 'trueque/:id/cargar-venta', component: CargarVentaComponent},
   { path: '**', redirectTo: '/home', pathMatch: 'full' }

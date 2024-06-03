@@ -35,6 +35,7 @@ import { ListarTruequesComponent } from './components/listar-trueques/listar-tru
 import { ResponderTruequeComponent } from './components/responder-trueque/responder-trueque.component';
 import { VerificarCodigoComponent } from './components/verificar-codigo/verificar-codigo.component';
 import { CargarVentaComponent } from './components/cargar-venta/cargar-venta.component';
+import { AgregarFechaComponent } from './components/agregar-fecha/agregar-fecha.component';
 
 
 @NgModule({
@@ -66,6 +67,7 @@ import { CargarVentaComponent } from './components/cargar-venta/cargar-venta.com
     ResponderTruequeComponent,
     VerificarCodigoComponent,
     CargarVentaComponent,
+    AgregarFechaComponent,
   ],
   imports: [
     BrowserModule,

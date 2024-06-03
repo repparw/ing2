@@ -13,13 +13,20 @@ export class ListarOfertasRecibidasComponent implements OnInit{
     filteredDataProposal: any[] = [];
     filteredDataTradeToConfirm: any[] = [];
     filteredDataConfirm: any[] = [];
+
     mensajeFallidoPropuesta: string = 'propuestas de trueque recibidas'
     mensajeFallidoSinFecha: string = 'trueques con fecha pendiente'
     mensajeFallidoConfirmado: string = 'trueques confirmados'
+
+    tituloPropuesta: string = '¡Oferta de trueque recibida!'
+    tituloSinFecha: string = 'Confirmar fecha para realizar este trueque:'
+    tituloConfirmado: string = '¡Trueque confirmado!'
+    
     currentUserDni!: string; 
     currentUserId!: number; 
     templateUrl: string = 'http://localhost:4200/trueque/{{id}}';
     showList: boolean[] = [false, false, false];
+
 
 
     constructor (private tradeService: TradeService, private router:Router, private userService: UserService){
@@ -48,13 +55,13 @@ export class ListarOfertasRecibidasComponent implements OnInit{
     /* REVISAR QUE ANDE!!!!!! */
     filterTradeToConfirm(): void {
       this.filteredDataTradeToConfirm = this.data.filter(proposal => 
-        proposal.recipient.id === this.currentUserId && proposal.status === 'accept' && proposal.date === null
+        proposal.recipient.id === this.currentUserId && proposal.status === 'accepted' && proposal.date === null
       );
     }
 
     filterConfirm(): void {
       this.filteredDataConfirm = this.data.filter(proposal => 
-        proposal.recipient.id === this.currentUserId && proposal.status === 'accept' && proposal.date != null
+        proposal.recipient.id === this.currentUserId && proposal.status === 'accepted' && proposal.date != null
       );
     }
 

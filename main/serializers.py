@@ -44,20 +44,21 @@ class UserSerializer(serializers.ModelSerializer):
       return instance
     
 
+class SucursalSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Sucursal
+        fields = '__all__'
+
 class TradeProposalSerializer(serializers.ModelSerializer):
     proposer = UserSerializer()
     recipient = UserSerializer()
     publication = PubSerializer()
     proposed_items = PubSerializer(many=True)
+    suc = SucursalSerializer()
 
     class Meta:
         model = TradeProposal
-        fields = ['id', 'proposer', 'recipient', 'publication', 'proposed_items', 'status', 'created_at']
-
-class SucursalSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Sucursal
-        fields = '__all__'
+        fields = ['id', 'proposer', 'recipient', 'publication', 'proposed_items', 'suc', 'status', 'created_at']
 
 class CustomAuthTokenSerializer(serializers.Serializer):
     username = serializers.CharField()
