@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { forkJoin, Observable, of } from 'rxjs';
-import { switchMap, take } from 'rxjs/operators';
+import { switchMap, take, tap, map } from 'rxjs/operators';
 import Swal from 'sweetalert2';
 
 import { PublicationService } from '../../services/publicacion.service';
@@ -41,23 +41,36 @@ export class ProponerTruequeComponent implements OnInit {
 
   ngOnInit() {
     const pubId = parseInt(this.route.snapshot.params['id']); // Extract publication ID from route
-    this.getCurrentUserAndPublications(); // Fetch current user and their publications
-    this.getRecipient(pubId); // Fetch recipient ID based on publication ID
-    this.tradeProposal.patchValue({ publication: pubId }); // Set publication ID in form
-    if ( this.tradeProposal.value.proposer === this.tradeProposal.value.recipient ) {
-      Swal.fire('Error', 'No puedes proponerte un trueque a ti mismo', 'error').then(() => this.location.back());
-    }
-    this.getPublicationPrice(pubId); // Fetch publication price
+
+    // Fetch current user and their publications, then fetch recipient
+    this.getCurrentUserAndPublications().pipe(
+      switchMap(() => this.getRecipient(pubId)),
+      switchMap(() => {
+        // Once both proposer and recipient are set, check if they are the same
+        if (this.tradeProposal.value.proposer === this.tradeProposal.value.recipient) {
+          return Swal.fire('Error', 'No puedes proponerte un trueque a ti mismo', 'error').then(() => {
+            this.location.back();
+            return of(null);
+          });
+        } else {
+          // Set publication ID in form and fetch publication price
+          this.tradeProposal.patchValue({ publication: pubId });
+          return this.getPublicationPrice(pubId);
+        }
+      })
+    ).subscribe();
   }
 
   // Fetch recipient (user) ID based on publication ID
-  getRecipient(pubId: number) {
-    this.publicationService.getPublication(pubId).pipe(
-      take(1), // Take only first emission
-      switchMap(publication => of(publication.user)) // Map to user ID
-    ).subscribe(userId => {
-      this.tradeProposal.patchValue({ recipient: userId }); // Update recipient ID in form
-    });
+  getRecipient(pubId: number): Observable<void> {
+    return this.publicationService.getPublication(pubId).pipe(
+      take(1),
+      tap(publication => {
+        const userId = publication.user;
+        this.tradeProposal.patchValue({ recipient: userId });
+      }),
+      map(() => void 0) // Use map to map the observable to void
+    );
   }
 
   // Submit form data (called on form submission)
@@ -73,10 +86,13 @@ export class ProponerTruequeComponent implements OnInit {
   }
 
   // Fetch publication price based on ID
-  getPublicationPrice(pubId: number) {
-    this.publicationService.getPublicationPrice(pubId).subscribe(price => {
-      this.recipientPubPrice = price; // Update recipient publication price
-    });
+  getPublicationPrice(pubId: number): Observable<void> {
+    return this.publicationService.getPublicationPrice(pubId).pipe(
+      tap(price => {
+        this.recipientPubPrice = price;
+      }),
+      map(() => void 0) // Use map to map the observable to void
+    );
   }
 
   // Validate trade proposal
@@ -113,20 +129,22 @@ export class ProponerTruequeComponent implements OnInit {
   }
 
   // Fetch current user and their publications
-  getCurrentUserAndPublications(): void {
-    this.userService.getCurrentUser().pipe(
+  getCurrentUserAndPublications(): Observable<void> {
+    return this.userService.getCurrentUser().pipe(
       switchMap(user => {
         if (user) {
-          this.tradeProposal.patchValue({ proposer: user.id }); // Update proposer ID in form
-          this.proposerName = user.name; // Set proposer name
-          return this.publicationService.getPublicationsById(user.id); // Fetch user publications
+          this.tradeProposal.patchValue({ proposer: user.id });
+          this.proposerName = user.name;
+          return this.publicationService.getPublicationsById(user.id);
         } else {
-          return of([]); // Return empty array if user is not found
+          return of([]);
         }
-      })
-    ).subscribe(publications => {
-      this.userPublications = publications; // Set user publications
-    });
+      }),
+      tap(publications => {
+        this.userPublications = publications;
+      }),
+      map(() => void 0) // Use map to map the observable to void
+    );
   }
 
   // Get category based on price

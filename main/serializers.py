@@ -42,7 +42,7 @@ class UserSerializer(serializers.ModelSerializer):
       instance.mailing = validated_data.get('mailing', instance.mailing)
       instance.save()
       return instance
-    
+
 
 class SucursalSerializer(serializers.ModelSerializer):
     class Meta:
