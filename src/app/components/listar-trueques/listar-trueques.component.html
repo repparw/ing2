@@ -21,7 +21,7 @@
                 <div *ngIf="trueque.status == 'pending'">
                     <span class="creation-date">Fecha de propuesta: {{ trueque.created_at | date:'dd/MM/yyyy'}}</span>
                 </div>
-                <div *ngIf="trueque.status == 'accepted' && trueque.date != null">   
+                <div *ngIf="trueque.status == 'confirmed'">   
                     <span class="Sucursal">Sucursal: {{ trueque.suc.addres }}</span>
                     <span class="Sucursal">Fecha del trueque: {{ trueque.date }}</span>
                 </div>
@@ -32,10 +32,9 @@
                     <app-listar-publicaciones *ngIf="show[i] == true" [data]="trueque.proposed_items"></app-listar-publicaciones>
                 </div>
                 <button *ngIf="trueque.status == 'pending'"   type="button" class="btn btn-outline-primary" (click)="navigateTrade(trueque.id)">Responder Trueque</button>
-                <!-- cambiar el navigate -->
-                <button *ngIf="trueque.status == 'accepted' && trueque.date == null"   type="button" class="btn btn-outline-primary" (click)="navigateFecha(trueque.id)">Proponer fecha</button>
+                <button *ngIf="trueque.status == 'accepted' && userID != this.trueque.proposer.id"    type="button" class="btn btn-outline-primary" (click)="navigateFecha(trueque.id)">Proponer fecha</button>
                 <!-- Hacer lógica del cancelar -->
-                <div *ngIf="trueque.status == 'accepted' && trueque.date != null && empleado == false && ! pasoElTiempo(fechaMas24(trueque.created_at))" >
+                <div *ngIf="trueque.status == 'confirmed' && empleado == false && ! pasoElTiempo(fechaMas24(trueque.created_at))" >
                     <button type="button" class="btn btn-outline-danger"  (click)="cancel(trueque.id)">Cancelar Trueque</button>
                     <span>Tiempo hasta: {{ fechaMas24(trueque.created_at) | date:'dd/MM/yyyy HH:mm:ss'}}</span>
                 </div>

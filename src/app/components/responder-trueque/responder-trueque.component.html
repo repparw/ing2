@@ -1,2 +1,24 @@
-<p>responder-trueque works!</p>
-<span>ID DEL TRUEQUE: {{ tradeID }}</span>
+<h1>Responder al trueque</h1>
+<div class="row">
+    <div class="col-sm-6 mb-3 mb-sm-0">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Usuario: {{ trueque?.proposer.name }}</h5>
+          <p class="card-text">Valoracion: {{ trueque?.proposer.rating }}</p>
+          <h5 class="card-title">Objetos del otro usuario:</h5>                    
+          <app-listar-publicaciones [data]="trueque?.proposed_items"></app-listar-publicaciones>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Tu publicación:</h5>
+          <app-listar-publicaciones [data]="publicacion"></app-listar-publicaciones>
+        </div>
+      </div>
+    </div>
+</div>
+
+<button (click)="aceptar()" type="button" class="btn btn-success">Aceptar</button>
+<button (click)="rechazar()" type="button" class="btn btn-danger">Rechazar</button>

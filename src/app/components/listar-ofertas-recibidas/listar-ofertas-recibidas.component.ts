@@ -24,7 +24,6 @@ export class ListarOfertasRecibidasComponent implements OnInit{
     
     currentUserDni!: string; 
     currentUserId!: number; 
-    templateUrl: string = 'http://localhost:4200/trueque/{{id}}';
     showList: boolean[] = [false, false, false];
 
 
@@ -55,13 +54,13 @@ export class ListarOfertasRecibidasComponent implements OnInit{
     /* REVISAR QUE ANDE!!!!!! */
     filterTradeToConfirm(): void {
       this.filteredDataTradeToConfirm = this.data.filter(proposal => 
-        proposal.recipient.id === this.currentUserId && proposal.status === 'accepted' && proposal.date === null
+        (proposal.recipient.id === this.currentUserId || proposal.proposer.id === this.currentUserId) && proposal.status === 'accepted'
       );
     }
 
     filterConfirm(): void {
       this.filteredDataConfirm = this.data.filter(proposal => 
-        proposal.recipient.id === this.currentUserId && proposal.status === 'accepted' && proposal.date != null
+        (proposal.recipient.id === this.currentUserId || proposal.proposer.id === this.currentUserId) && proposal.status === 'confirmed' 
       );
     }
 

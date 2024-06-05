@@ -14,6 +14,7 @@ export class ListarTruequesComponent implements OnInit {
     @Input() data: any[] = [];
     @Input() mensajeFallido?: string;
     @Input() titulo?: string;
+    @Input() userID?: number;
     @Input() empleado?: boolean;
     show: boolean[] = []; 
     fecha2?: Date;   
