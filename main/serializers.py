@@ -50,15 +50,20 @@ class SucursalSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class TradeProposalSerializer(serializers.ModelSerializer):
-    proposer = UserSerializer()
-    recipient = UserSerializer()
-    publication = PubSerializer()
-    proposed_items = PubSerializer(many=True)
-    suc = SucursalSerializer()
+    proposer = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), write_only=True)
+    proposer_details = UserSerializer(source='proposer', read_only=True)
+    recipient = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), write_only=True)
+    recipient_details = UserSerializer(source='recipient', read_only=True)
+    publication = serializers.PrimaryKeyRelatedField(queryset=Pub.objects.all(), write_only=True)
+    publication_details = PubSerializer(source='publication', read_only=True)
+    proposed_items = serializers.PrimaryKeyRelatedField(queryset=Pub.objects.all(), many=True, write_only=True)
+    proposed_items_details = PubSerializer(source='proposed_items', many=True, read_only=True)
+    suc = serializers.PrimaryKeyRelatedField(queryset=Sucursal.objects.all(), required=False, allow_null=True, write_only=True)
+    suc_details = SucursalSerializer(source='suc', read_only=True)
 
     class Meta:
         model = TradeProposal
-        fields = '__all__'
+        fields = ['id', 'proposer', 'proposer_details', 'recipient', 'recipient_details', 'publication', 'publication_details', 'proposed_items', 'proposed_items_details', 'suc', 'suc_details', 'status', 'code', 'created_at', 'date']
 
 class CustomAuthTokenSerializer(serializers.Serializer):
     username = serializers.CharField()
