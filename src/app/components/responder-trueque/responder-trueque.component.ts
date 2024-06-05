@@ -39,12 +39,16 @@ export class ResponderTruequeComponent implements OnInit{
   }
 
   aceptar(){
+    //Genero codigo. lo mando por mail y actualizo.
+    let codigo = this.generateRandomCode();
+
     //Envío de mails
-    this.enviarMails();
+    this.enviarMails(codigo);
 
     //Pasar el estado a aceptado
     const updatedTrade: TradeProposal = this.trueque;
     updatedTrade.status = 'accepted';
+    updatedTrade.code = codigo; 
     this.tradeService.updateTrade(this.trueque.id, updatedTrade).subscribe(
       data => {
         console.log('Trade proposal updated successfully', data);
@@ -53,8 +57,6 @@ export class ResponderTruequeComponent implements OnInit{
         console.error('Error updating trade proposal', error);
       }
     );
-
-    //GENERAR CODIGO DE VERIFICACIÓN
 
     //Popup y redirect al home:
     Swal.fire({
@@ -122,26 +124,30 @@ export class ResponderTruequeComponent implements OnInit{
             }
           );
           
-          this.tradeService.deleteTradeProposal(this.trueque.id).subscribe(
-            () => {
-              console.log('Trade proposal deleted successfully.');
+          //Paso el estado a rechazado
+          const updatedTrade: TradeProposal = this.trueque;
+          updatedTrade.status = 'rejected';
+          this.tradeService.updateTrade(this.trueque.id, updatedTrade).subscribe(
+            data => {
+              console.log('Trade proposal updated successfully', data);
             },
             error => {
-              console.error('Error deleting trade proposal:', error);
+              console.error('Error updating trade proposal', error);
             }
           );
+
           this.navigate();
         }
       }
     });
   }
 
-  enviarMails():void{
+  enviarMails(codigo: string):void{
     let recipientName: string = this.trueque.recipient.name;
     this.mensajeProposer = 'Su propuesta de trueque por el objeto "' + this.trueque.publication.title + '" del usuario ' + recipientName + 
                             ' ha sido aceptada. \n \n Ahora aparecerá en "Mis trueques" como "Trueque con fecha pendiente". \n \n Coordine con ' + recipientName + 
                             ' la fecha y la sucursal donde realizarán el trueque, que luego ' + recipientName + ' deberá cargar. \n \n El email de ' + recipientName 
-                            + ' es: ' + this.trueque.recipient.email;
+                            + ' es: ' + this.trueque.recipient.email + '\n \n El código del trueque que deberá llevar a la sucursal es: ' + codigo;
     this.emailService.sendEmail(this.asuntoProposer, this.mensajeProposer, [this.trueque.proposer.email]).subscribe(
       response => {
         console.log('Email sent successfully', response);
@@ -154,7 +160,7 @@ export class ResponderTruequeComponent implements OnInit{
     this.mensajeRecipient =  'Usted ha aceptado la propuesta de trueque del usuario ' + proposerName + ' por la publicación "' + this.trueque.publication.title + 
     '". \n \n Ahora aparecerá en "Mis trueques" como "Trueque con fecha pendiente". \n \n Coordine con ' + proposerName + 
     ' la fecha y la sucursal donde realizarán el trueque, que luego usted deberá cargar en la sección previamente mencionada. \n \n El email de ' + proposerName 
-    + ' es: ' + this.trueque.proposer.email;                   
+    + ' es: ' + this.trueque.proposer.email + '\n \n El código del trueque que deberá llevar a la sucursal es: ' + codigo;                   
     this.emailService.sendEmail(this.asuntoRecipient, this.mensajeRecipient, [this.trueque.recipient.email]).subscribe(
       response => {
         console.log('Email sent successfully', response);
@@ -163,6 +169,16 @@ export class ResponderTruequeComponent implements OnInit{
         console.error('Error sending email', error);
       }
     );
+  }
+
+  generateRandomCode(length: number = 6): string {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    const charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
   }
 
   navigate(): void{
