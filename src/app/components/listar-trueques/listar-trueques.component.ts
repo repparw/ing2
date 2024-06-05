@@ -62,6 +62,10 @@ export class ListarTruequesComponent implements OnInit, OnChanges {
       this.router.navigate([`agregar-fecha/${id}`])
     }
 
+    navigateConcretar(id: number){
+      this.router.navigate([`concretar-trueque/${id}`])
+    }
+
     cancel(id: number){
       Swal.fire({
         title: "¿Estás seguro de que deseas cancelar el trueque?",

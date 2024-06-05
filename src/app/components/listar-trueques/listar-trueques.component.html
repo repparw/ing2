@@ -40,7 +40,7 @@
                     <span>Tiempo hasta: {{ limitDate | date:'dd/MM/yyyy HH:mm:ss'}}</span>
                 </div>
                 <!-- Hacer redirect del empleado -->
-                <button *ngIf="empleado == true"   type="button" class="btn btn-outline-primary" (click)="navigateTrade(trueque.id)">Confirmar trueque como realizado</button>
+                <button *ngIf="empleado == true"   type="button" class="btn btn-outline-primary" (click)="navigateConcretar(trueque.id)">Confirmar trueque como realizado</button>
             </div>
         </li>
         <!-- if list is empty, show message-->
