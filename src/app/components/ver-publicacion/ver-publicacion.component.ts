@@ -1,8 +1,6 @@
-import { Component, Inject, Injectable, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Pub } from '../../models/pub';
-import { Observable, pluck, take, map, switchMap } from 'rxjs';
-import { forkJoin } from 'rxjs';
-import { PublicationService } from '../../services/publicacion.service';
+import { PublicationService } from '../../services/publication.service';
 import { ActivatedRoute } from '@angular/router';
 import { UserService } from '../../services/user.service'
 import { Router } from '@angular/router';

@@ -6,7 +6,7 @@ import { forkJoin, Observable, of } from 'rxjs';
 import { switchMap, take, tap, map } from 'rxjs/operators';
 import Swal from 'sweetalert2';
 
-import { PublicationService } from '../../services/publicacion.service';
+import { PublicationService } from '../../services/publication.service';
 import { UserService } from '../../services/user.service';
 import { TradeProposal } from '../../models/tradeProposal';
 import { Pub } from '../../models/pub';
@@ -141,7 +141,8 @@ export class ProponerTruequeComponent implements OnInit {
         }
       }),
       tap(publications => {
-        this.userPublications = publications;
+        // filter only price <> 0
+        this.userPublications = publications.filter(pub => pub.price > 0);
       }),
       map(() => void 0) // Use map to map the observable to void
     );

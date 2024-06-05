@@ -1,8 +1,7 @@
 import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { TradeService } from 'src/app/services/trade.service';
-import { UserService } from '../../services/user.service'
 import { Router } from '@angular/router';
-import { PublicationService } from 'src/app/services/publicacion.service';
+import { PublicationService } from 'src/app/services/publication.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -10,7 +9,7 @@ import Swal from 'sweetalert2';
   templateUrl: './listar-trueques.component.html',
   styleUrls: ['./listar-trueques.component.css']
 })
-export class ListarTruequesComponent implements OnInit {
+export class ListarTruequesComponent implements OnInit, OnChanges {
     @Input() data: any[] = [];
     @Input() mensajeFallido?: string;
     @Input() titulo?: string;
@@ -20,8 +19,10 @@ export class ListarTruequesComponent implements OnInit {
     fecha2?: Date;
 
     // TODO trade and user service not used?
-    constructor (private tradeService: TradeService, private router:Router, private userService: UserService, private publicationService: PublicationService){
-    }
+    constructor (private tradeService: TradeService,
+                 private publicationService: PublicationService,
+                 private router:Router,
+                ){}
 
     ngOnInit(): void {
       // Initialize the show array to false for each data item
@@ -77,8 +78,12 @@ export class ListarTruequesComponent implements OnInit {
             text: "El trueque ha sido cancelado.",
             icon: "success"
           });
-          /* Borrar trueque de la base de datos. Refresh */
-        }
+          this.tradeService.getTradeProposal(id).subscribe(
+            trade => {
+              trade.status = "cancelled";
+              this.tradeService.updateTrade(id, trade).subscribe();
+      });
+      }
       });
     }
 

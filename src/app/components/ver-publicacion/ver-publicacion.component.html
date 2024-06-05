@@ -14,7 +14,7 @@
               <img class="d-block w-100 c-img" [src]="foto" [alt]="'Slide ' + (i + 1)">
             </div>
           </div>
-          
+
           <button class="carousel-control-prev slide-control" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
           </button>
@@ -40,7 +40,7 @@
         <div class="col mb-3 float-end text-end text-justify">
           <button *ngIf="canEdit" type="button" (click)="editar(productID)" class="btn btn-primary">Modificar publicacion</button><br>
           <button *ngIf="canEdit" type="button" (click)="confirmDeletePublication(productID)" class="btn btn-danger">Eliminar publicacion</button>
-          <button *ngIf="!canEdit" type="button" (click)="proponerTrueque(productID)" class="btn btn-primary">Proponer Trueque</button>
+          <button *ngIf="!canEdit && !data?.is_paused" type="button" (click)="proponerTrueque(productID)" class="btn btn-primary">Proponer Trueque</button>
         </div>
     </div>
   </body>

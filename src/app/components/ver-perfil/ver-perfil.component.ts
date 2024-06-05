@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { User } from '../../models/user';
 import { UserService } from '../../services/user.service';
 import { Pub } from '../../models/pub';
-import { PublicationService } from '../../services/publicacion.service';
+import { PublicationService } from '../../services/publication.service';
 
 @Component({
   selector: 'app-ver-perfil',
