@@ -14,18 +14,18 @@
         </div>
         --->
         <!-- Bind proposer -->
-        <input type="hidden" formControlName="proposer" />
+        <input type="hidden" formControlName="proposer_id" />
 
         <!-- Bind recipient -->
-        <input type="hidden" formControlName="recipient" />
+        <input type="hidden" formControlName="recipient_id" />
 
         <!-- Bind publication -->
-        <input type="hidden" class="form-control" id="publication" formControlName="publication" name="publication"/>
+        <input type="hidden" class="form-control" id="publication_id" formControlName="publication_id" name="publication_id"/>
 
         <!-- Bind proposed items (if applicable, adjust accordingly) -->
         <div class="container flex-column">
         <label for="proposedItems">Publicaciones a proponer</label>
-        <select multiple class="form-select" id="proposedItems" formControlName="proposed_items" name="proposedItems">
+        <select multiple class="form-select" id="proposedItems_id" formControlName="proposed_items_id" name="proposedItems_id">
           <option *ngFor="let publication of userPublications" [value]="publication.id">{{ publication.title }} categoria {{ this.getCategory(publication.price) }}</option>
         </select>
         <span class="float-end"><p *ngIf="userPublications.length === 0" class="text-danger">No posee publicaciones

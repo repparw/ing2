@@ -34,10 +34,10 @@ export class ProponerTruequeComponent implements OnInit {
   ) {
     // Initialize form group with necessary controls
     this.tradeProposal = this.formBuilder.group({
-      proposer: [0, Validators.required],
-      recipient: [0, Validators.required],
-      publication: [0, Validators.required],
-      proposed_items: [[], Validators.required],
+      proposer_id: [0, Validators.required],
+      recipient_id: [0, Validators.required],
+      publication_id: [0, Validators.required],
+      proposed_items_id: [[], Validators.required],
       status: ['pending', Validators.required],
     });
   }
@@ -50,14 +50,14 @@ export class ProponerTruequeComponent implements OnInit {
       switchMap(() => this.getRecipient(pubId)),
       switchMap(() => {
         // Once both proposer and recipient are set, check if they are the same
-        if (this.tradeProposal.value.proposer === this.tradeProposal.value.recipient) {
+        if (this.tradeProposal.value.proposer_id === this.tradeProposal.value.recipient_id) {
           return Swal.fire('Error', 'No puedes proponerte un trueque a ti mismo', 'error').then(() => {
             this.location.back();
             return of(null);
           });
         } else {
           // Set publication ID in form and fetch publication price
-          this.tradeProposal.patchValue({ publication: pubId });
+          this.tradeProposal.patchValue({ publication_id: pubId });
           return this.getPublicationPrice(pubId);
         }
       })
@@ -70,7 +70,7 @@ export class ProponerTruequeComponent implements OnInit {
       take(1),
       tap(publication => {
         const userId = publication.user;
-        this.tradeProposal.patchValue({ recipient: userId });
+        this.tradeProposal.patchValue({ recipient_id: userId });
       }),
       map(() => void 0) // Use map to map the observable to void
     );
@@ -100,7 +100,7 @@ export class ProponerTruequeComponent implements OnInit {
 
   // Validate trade proposal
   validateTrade() {
-    const proposedItems = this.tradeProposal.value.proposed_items;
+    const proposedItems = this.tradeProposal.value.proposed_items_id;
     const priceObservables: Observable<number>[] = proposedItems.map((itemId: number) =>
       this.publicationService.getPublicationPrice(itemId)
     );
@@ -136,7 +136,7 @@ export class ProponerTruequeComponent implements OnInit {
     return this.userService.getCurrentUser().pipe(
       switchMap(user => {
         if (user) {
-          this.tradeProposal.patchValue({ proposer: user.id });
+          this.tradeProposal.patchValue({ proposer_id: user.id });
           this.proposerName = user.name;
           return this.publicationService.getPublicationsById(user.id);
         } else {

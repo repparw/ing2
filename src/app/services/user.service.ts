@@ -24,7 +24,7 @@ export class UserService {
   public isEmployee$: Observable<boolean> = this.isEmployeeSubject.asObservable();
 
   private isAdminSubject: ReplaySubject<boolean> = new ReplaySubject<boolean>(1);
-  public isAdmin$: Observable<boolean> = this.isEmployeeSubject.asObservable();
+  public isAdmin$: Observable<boolean> = this.isAdminSubject.asObservable();
 
   constructor(private http: HttpClient) {
     this.updateAuthStatus(); // Initialize authentication status
@@ -42,15 +42,20 @@ export class UserService {
           const isAdmin = !!user && user.is_superuser === true;
           this.isEmployeeSubject.next(isEmployee);
           this.isAdminSubject.next(isAdmin);
+          console.log('IsAdmin', isAdmin);
+          console.log('IsAdmin$', this.isAdmin$);
+          console.log('IsAdminSubject', this.isAdminSubject);
         }),
         catchError((error: any) => {
           console.error('Error fetching current user:', error);
           this.isEmployeeSubject.next(false);
+          this.isAdminSubject.next(false);
           return throwError(error);
         })
       ).subscribe();
     } else {
       this.isEmployeeSubject.next(false);
+      this.isAdminSubject.next(false);
     }
   }
 

@@ -84,11 +84,11 @@ class TradeProposalViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def create(self, request, *args, **kwargs):
-        proposer_id = request.data.get('proposer')
-        recipient_id = request.data.get('recipient')
-        publication_id = request.data.get('publication')
-        proposed_item_ids = request.data.get('proposed_items', [])
-        suc_id = request.data.get('suc')
+        proposer_id = request.data.get('proposer_id')
+        recipient_id = request.data.get('recipient_id')
+        publication_id = request.data.get('publication_id')
+        proposed_item_ids = request.data.get('proposed_items_id', [])
+        suc_id = request.data.get('suc_id')
 
         try:
             proposer = User.objects.get(pk=proposer_id)
@@ -123,11 +123,11 @@ class TradeProposalViewSet(viewsets.ModelViewSet):
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
 
-        proposer_id = request.data.get('proposer')
-        recipient_id = request.data.get('recipient')
-        publication_id = request.data.get('publication')
-        proposed_item_ids = request.data.get('proposed_items', [])
-        suc_id = request.data.get('suc')
+        proposer_id = request.data.get('proposer_id')
+        recipient_id = request.data.get('recipient_id')
+        publication_id = request.data.get('publication_id')
+        proposed_item_ids = request.data.get('proposed_items_id', [])
+        suc_id = request.data.get('suc_id')
 
         try:
             proposer = User.objects.get(pk=proposer_id)
@@ -160,6 +160,7 @@ class TradeProposalViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'], url_path='by-sucursal')
     def get_by_sucursal(self, request):
+        # TODO FIX?
         sucursal_id = request.query_params.get('sucursal')
         if sucursal_id is not None:
             try:

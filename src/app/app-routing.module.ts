@@ -50,14 +50,14 @@ const routes: Routes = [
   { path: 'publicacion/:id/proponer', component: ProponerTruequeComponent, canActivate: [AuthGuard] },
   { path: 'publicacion/:id/tasar', component: TasarPublicacionComponent, canActivate: [EmployeeGuard] },
   { path: 'ad-email', component: AdEmailComponent, canActivate: [EmployeeGuard]},
-  { path: 'enviar-descuento', component: EnviarDescuentoComponent, canActivate: [EmployeeGuard]},
-  { path: 'verificar-codigo', component: VerificarCodigoComponent, canActivate: [EmployeeGuard]},
+  { path: 'enviar-descuento', component: EnviarDescuentoComponent, canActivate: [EmployeeGuard] },
+  { path: 'verificar-codigo', component: VerificarCodigoComponent, canActivate: [EmployeeGuard] },
   { path: 'publicacion/:id/editar', component: EditarPublicacionComponent, canActivate: [AuthGuard] },
   { path: 'sucursales', component: ListarSucursalesComponent },
   { path: 'trueques-recibidos', component: ListarOfertasRecibidasComponent},
   { path: 'trueque/:id', component: ResponderTruequeComponent},
   { path: 'agregar-fecha/:id', component: AgregarFechaComponent},
-  { path: 'crear-sucursal', component: CrearSucursalComponent}, // canActivate: [AdminGuard] TODO
+  { path: 'crear-sucursal', component: CrearSucursalComponent, canActivate: [AdminGuard] },
   { path: 'trueque/:id/cargar-venta', component: CargarVentaComponent},
   { path: 'trueques-empleado', component: ListarTruequesEmpleadoComponent},
   { path: '**', redirectTo: '/home', pathMatch: 'full' }

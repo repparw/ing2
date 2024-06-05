@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../services/user.service'
 import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -12,10 +13,15 @@ export class AppComponent implements OnInit {
   title = 'Fedeteria';
   isEmployee$: Observable<boolean>;
   isAuthenticated$: Observable<boolean>;
+  isAdmin$: Observable<boolean>;
 
-  constructor (private userService: UserService){
+  constructor (
+    private userService: UserService,
+    private router: Router,
+              ){
     this.isAuthenticated$ = this.userService.isAuthenticated$;
     this.isEmployee$ = this.userService.isEmployee$;
+    this.isAdmin$ = this.userService.isAdmin$;
   }
 
   ngOnInit(): void {
@@ -39,6 +45,6 @@ export class AppComponent implements OnInit {
           localStorage.removeItem('token');
           this.userService.logout();
       }
-    });
+    }).then(() => { this.router.navigate(['/']) });
   }
 }
