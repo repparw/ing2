@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Pub } from '../../models/pub'
 import { User } from '../../models/user'
-import { PublicationService } from '../../services/publicacion.service';
+import { PublicationService } from '../../services/publication.service';
 import { UserService } from '../../services/user.service';
 import { Location } from '@angular/common';
 import { Observable } from 'rxjs';

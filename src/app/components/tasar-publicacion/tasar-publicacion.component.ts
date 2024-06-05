@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
 
-import { PublicationService } from '../../services/publicacion.service';
+import { PublicationService } from '../../services/publication.service';
 import { Pub } from '../../models/pub';
 
 @Component({

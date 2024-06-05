@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
-from main.views import PubViewSet, SucursalViewSet, TradeProposalViewSet, UserViewSet, VentaViewSet
+from main.views import PubViewSet, SucursalViewSet, TradeProposalViewSet, UserViewSet, SalesViewSet
 from main.views import CurrentUserView, CustomAuthToken, UpdatePasswordView, SendResetPasswordEmailView, PasswordResetConfirmView
 from main.views import return_pub_images_id, serve_publication_image, serve_branch_image, send_email, get_all_emails, save_discount_codes, verificar_codigo, borrar_codigo, update_trade_proposal
 
@@ -26,7 +26,7 @@ router.register('publications', PubViewSet, basename='publications' )
 router.register('users', UserViewSet, basename='users' )
 router.register('branches', SucursalViewSet, basename='branches' )
 router.register('proposals', TradeProposalViewSet, basename='proposals' )
-router.register('ventas', VentaViewSet, basename='ventas') 
+router.register('ventas', SalesViewSet, basename='ventas')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -45,6 +45,6 @@ urlpatterns = [
     path('reset-password/<uidb64>/<token>/', PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('verificar-codigo/', verificar_codigo, name='verificar_codigo'),
     path('borrar-codigo/<str:codigo>/', borrar_codigo, name='borrar_codigo'),
-    path('tradeproposals/<int:pk>/', update_trade_proposal, name='update_trade_proposal'),    
+    path('tradeproposals/<int:pk>/', update_trade_proposal, name='update_trade_proposal'),
     path('', include(router.urls)),
 ] + router.urls

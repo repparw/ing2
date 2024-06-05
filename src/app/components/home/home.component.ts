@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { PublicationService } from '../../services/publicacion.service';
+import { PublicationService } from '../../services/publication.service';
 
 @Component({
   selector: 'app-home',

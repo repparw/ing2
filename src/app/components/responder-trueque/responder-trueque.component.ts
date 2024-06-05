@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TradeProposal } from 'src/app/models/tradeProposal';
 import { EmailService } from 'src/app/services/email.service';
-import { PublicationService } from 'src/app/services/publicacion.service';
+import { PublicationService } from 'src/app/services/publication.service';
 import { TradeService } from 'src/app/services/trade.service';
 import Swal from 'sweetalert2';
 
@@ -21,7 +21,7 @@ export class ResponderTruequeComponent implements OnInit{
   mensajeRecipient?: string;
   motivoRechazo: string = 'a';
   asuntoRechazo: string = 'Su trueque ha sido rechazado';
-  
+
   constructor(private router:Router, private route: ActivatedRoute, private tradeService: TradeService, private emailService: EmailService){}
 
   ngOnInit(): void {
@@ -35,7 +35,7 @@ export class ResponderTruequeComponent implements OnInit{
         console.error('Error fetching trade proposal', error);
       }
     );
-      
+
   }
 
   aceptar(){
@@ -113,7 +113,7 @@ export class ResponderTruequeComponent implements OnInit{
 
           //Mando mail:
 
-          let mensajeRechazo = 'Su propuesta de trueque por la publicación ' + this.trueque.publication.title + 
+          let mensajeRechazo = 'Su propuesta de trueque por la publicación ' + this.trueque.publication.title +
                                ' del usuario ' + this.trueque.recipient.name + ' ha sido rechazada. \n \n Motivo: ' + this.motivoRechazo;
           this.emailService.sendEmail(this.asuntoRechazo, mensajeRechazo, [this.trueque.proposer.email]).subscribe(
             response => {
@@ -123,7 +123,7 @@ export class ResponderTruequeComponent implements OnInit{
               console.error('Error sending email', error);
             }
           );
-          
+
           //Paso el estado a rechazado
           const updatedTrade: TradeProposal = this.trueque;
           updatedTrade.status = 'rejected';
@@ -144,9 +144,9 @@ export class ResponderTruequeComponent implements OnInit{
 
   enviarMails(codigo: string):void{
     let recipientName: string = this.trueque.recipient.name;
-    this.mensajeProposer = 'Su propuesta de trueque por el objeto "' + this.trueque.publication.title + '" del usuario ' + recipientName + 
-                            ' ha sido aceptada. \n \n Ahora aparecerá en "Mis trueques" como "Trueque con fecha pendiente". \n \n Coordine con ' + recipientName + 
-                            ' la fecha y la sucursal donde realizarán el trueque, que luego ' + recipientName + ' deberá cargar. \n \n El email de ' + recipientName 
+    this.mensajeProposer = 'Su propuesta de trueque por el objeto "' + this.trueque.publication.title + '" del usuario ' + recipientName +
+                            ' ha sido aceptada. \n \n Ahora aparecerá en "Mis trueques" como "Trueque con fecha pendiente". \n \n Coordine con ' + recipientName +
+                            ' la fecha y la sucursal donde realizarán el trueque, que luego ' + recipientName + ' deberá cargar. \n \n El email de ' + recipientName
                             + ' es: ' + this.trueque.recipient.email + '\n \n El código del trueque que deberá llevar a la sucursal es: ' + codigo;
     this.emailService.sendEmail(this.asuntoProposer, this.mensajeProposer, [this.trueque.proposer.email]).subscribe(
       response => {
@@ -156,11 +156,11 @@ export class ResponderTruequeComponent implements OnInit{
         console.error('Error sending email', error);
       }
     );
-    let proposerName: string = this.trueque.proposer.name;  
-    this.mensajeRecipient =  'Usted ha aceptado la propuesta de trueque del usuario ' + proposerName + ' por la publicación "' + this.trueque.publication.title + 
-    '". \n \n Ahora aparecerá en "Mis trueques" como "Trueque con fecha pendiente". \n \n Coordine con ' + proposerName + 
-    ' la fecha y la sucursal donde realizarán el trueque, que luego usted deberá cargar en la sección previamente mencionada. \n \n El email de ' + proposerName 
-    + ' es: ' + this.trueque.proposer.email + '\n \n El código del trueque que deberá llevar a la sucursal es: ' + codigo;                   
+    let proposerName: string = this.trueque.proposer.name;
+    this.mensajeRecipient =  'Usted ha aceptado la propuesta de trueque del usuario ' + proposerName + ' por la publicación "' + this.trueque.publication.title +
+    '". \n \n Ahora aparecerá en "Mis trueques" como "Trueque con fecha pendiente". \n \n Coordine con ' + proposerName +
+    ' la fecha y la sucursal donde realizarán el trueque, que luego usted deberá cargar en la sección previamente mencionada. \n \n El email de ' + proposerName
+    + ' es: ' + this.trueque.proposer.email + '\n \n El código del trueque que deberá llevar a la sucursal es: ' + codigo;
     this.emailService.sendEmail(this.asuntoRecipient, this.mensajeRecipient, [this.trueque.recipient.email]).subscribe(
       response => {
         console.log('Email sent successfully', response);

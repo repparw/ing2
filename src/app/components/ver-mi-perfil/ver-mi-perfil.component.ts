@@ -1,7 +1,7 @@
 import { Component, OnInit, inject} from '@angular/core';
 import { Router } from '@angular/router';
 import { UserService } from '../../services/user.service';
-import { PublicationService } from '../../services/publicacion.service';
+import { PublicationService } from '../../services/publication.service';
 import { Pub } from '../../models/pub';
 
 @Component({

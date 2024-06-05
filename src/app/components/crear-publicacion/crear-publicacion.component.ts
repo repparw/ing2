@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { FileUploader } from 'ng2-file-upload';
 import Swal from 'sweetalert2';
 
-import { PublicationService } from '../../services/publicacion.service';
+import { PublicationService } from '../../services/publication.service';
 import { UserService } from '../../services/user.service';
 import { Pub } from '../../models/pub';
 

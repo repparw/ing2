@@ -26,7 +26,7 @@
         <div class="container flex-column">
         <label for="proposedItems">Publicaciones a proponer</label>
         <select multiple class="form-select" id="proposedItems" formControlName="proposed_items" name="proposedItems">
-          <option *ngFor="let publication of userPublications" [value]="publication.id">{{ publication.title }}</option>
+          <option *ngFor="let publication of userPublications" [value]="publication.id">{{ publication.title }} categoria {{ this.getCategory(publication.price) }}</option>
         </select>
         <span class="float-end"><p *ngIf="userPublications.length === 0" class="text-danger">No posee publicaciones
         <a routerLink="/crear-publicacion" class="btn btn-sm btn-secondary">Crear publicación</a>
