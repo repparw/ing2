@@ -1,9 +1,8 @@
 from django.shortcuts import get_object_or_404
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
-from rest_framework import status
 from rest_framework.decorators import action, api_view
 from django.http import HttpResponse, Http404
 from django.contrib.auth import get_user_model
@@ -100,9 +99,12 @@ class TradeProposalViewSet(viewsets.ModelViewSet):
 
     def update(self, request, *args, **kwargs):
         proposal = self.get_object()
-        status = request.data.get('status')
+        status_value = request.data.get('status')
+        code = request.data.get('code')
+        date = request.data.get('date')
+        suc = request.data.get('suc')
         # TODO WARNING handle more statuses
-        if status in [
+        if status_value in [
             'pending',
             'rejected',
             'confirmed',
@@ -110,8 +112,13 @@ class TradeProposalViewSet(viewsets.ModelViewSet):
             'concreted',
             'accepted',
             'not_finished',
-]:
-            proposal.status = status
+        ]:
+            proposal.status = status_value
+            if code is not None:
+              proposal.code = code
+            if date and suc is not None:
+              proposal.date = date
+              proposal.suc = suc
             proposal.save()
             return Response(status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -466,20 +473,6 @@ def verificar_codigo(request):
         except Exception as e:
             return JsonResponse({'error': f'Error al verificar el código de descuento: {str(e)}'}, status=500)
     return JsonResponse({'error': 'Se requiere una solicitud POST'}, status=400)
-
-@api_view(['PUT'])
-def update_trade_proposal(request, pk):
-    try:
-        trade_proposal = TradeProposal.objects.get(pk=pk)
-    except TradeProposal.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
-    if request.method == 'PUT':
-        serializer = TradeProposalSerializer(trade_proposal, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @csrf_exempt
