@@ -19,7 +19,7 @@ from django.urls import path, include
 from rest_framework import routers
 from main.views import PubViewSet, SucursalViewSet, TradeProposalViewSet, UserViewSet, VentaViewSet
 from main.views import CurrentUserView, CustomAuthToken, UpdatePasswordView, SendResetPasswordEmailView, PasswordResetConfirmView
-from main.views import return_pub_images_id, serve_publication_image, serve_branch_image, send_email, get_all_emails, save_discount_codes, verificar_codigo, borrar_codigo
+from main.views import return_pub_images_id, serve_publication_image, serve_branch_image, send_email, get_all_emails, save_discount_codes, verificar_codigo, borrar_codigo, update_trade_proposal
 
 router = routers.DefaultRouter()
 router.register('publications', PubViewSet, basename='publications' )
@@ -45,5 +45,6 @@ urlpatterns = [
     path('reset-password/<uidb64>/<token>/', PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('verificar-codigo/', verificar_codigo, name='verificar_codigo'),
     path('borrar-codigo/<str:codigo>/', borrar_codigo, name='borrar_codigo'),
-     path('', include(router.urls)),
+    path('tradeproposals/<int:pk>/', update_trade_proposal, name='update_trade_proposal'),    
+    path('', include(router.urls)),
 ] + router.urls

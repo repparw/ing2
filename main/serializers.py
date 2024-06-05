@@ -58,7 +58,7 @@ class TradeProposalSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TradeProposal
-        fields = ['id', 'proposer', 'recipient', 'publication', 'proposed_items', 'suc', 'status', 'created_at']
+        fields = ['id', 'proposer', 'recipient', 'publication', 'proposed_items', 'suc', 'status', 'created_at', 'date']
 
 class CustomAuthTokenSerializer(serializers.Serializer):
     username = serializers.CharField()

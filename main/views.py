@@ -96,6 +96,28 @@ class TradeProposalViewSet(viewsets.ModelViewSet):
             proposal.save()
             return Response(status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)
+    
+    @action(detail=False, methods=['get'], url_path='by-sucursal')
+    def get_by_sucursal(self, request):
+        sucursal = request.query_params.get('sucursal')
+        if sucursal is not None:
+            trade_proposals = self.queryset.filter(suc=sucursal)
+            serializer = self.get_serializer(trade_proposals, many=True)
+            return Response(serializer.data)
+        else:
+            return Response({"error": "Sucursal not provided"}, status=status.HTTP_400_BAD_REQUEST)
+        
+    @api_view(['GET'])
+    def get_trade_proposal_by_id(request, id):
+        try:
+            trade_proposal = TradeProposal.objects.get(id=id)
+        except TradeProposal.DoesNotExist:
+            return Response(status=404)
+        
+        serializer = TradeProposalSerializer(trade_proposal)
+        return Response(serializer.data)
+    
+
 
 class SucursalViewSet(viewsets.ModelViewSet):
   queryset = Sucursal.objects.all()
@@ -425,6 +447,20 @@ def verificar_codigo(request):
         except Exception as e:
             return JsonResponse({'error': f'Error al verificar el código de descuento: {str(e)}'}, status=500)
     return JsonResponse({'error': 'Se requiere una solicitud POST'}, status=400)
+
+@api_view(['PUT'])
+def update_trade_proposal(request, pk):
+    try:
+        trade_proposal = TradeProposal.objects.get(pk=pk)
+    except TradeProposal.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'PUT':
+        serializer = TradeProposalSerializer(trade_proposal, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @csrf_exempt
