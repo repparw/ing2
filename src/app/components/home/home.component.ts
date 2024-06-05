@@ -13,6 +13,9 @@ export class HomeComponent implements OnInit {
   sortField: string = '';
   sortOrder: 'asc' | 'desc' = 'asc';
   searchTerm: string = ''; // Nueva propiedad para el término de búsqueda
+  categories: string[] = ['Serruchos', 'Destornillador', 'Powertools'];
+  selectedCategory: string = '';
+  noResultsFound: boolean = false;
 
   constructor(public publicationService: PublicationService) { }
 
@@ -33,8 +36,10 @@ export class HomeComponent implements OnInit {
   applyFilter(): void {
     this.filteredData = this.data
       .filter(item => item.price != 0 && item.is_paused === false)
-      .filter(item => this.searchTerm === '' || item.title.toLowerCase().includes(this.searchTerm.toLowerCase())); // Filtrado por término de búsqueda
+      .filter(item => this.searchTerm === '' || item.title.toLowerCase().includes(this.searchTerm.toLowerCase()))
+      .filter(item => this.selectedCategory === '' || item.category === this.selectedCategory);
     this.sortData();
+    this.noResultsFound = this.filteredData.length === 0;
   }
 
   sortData(): void {
@@ -67,4 +72,13 @@ export class HomeComponent implements OnInit {
   onSearchTermChange(): void {
     this.applyFilter();
   }
+
+  selectCategory(event: Event): void {
+    const selectedValue = (event.target as HTMLSelectElement).value;
+    this.selectedCategory = selectedValue;
+    this.applyFilter();
+  }
+
+
+
 }

@@ -1,14 +1,17 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista de Publicaciones</title>
-</head>
-<body>
 <div class="container mt-4">
     <div class="mb-3">
-        <input type="text" class="form-control" placeholder="Buscar..." [(ngModel)]="searchTerm" (input)="onSearchTermChange()" />
+        <input type="text" class="form-control" placeholder="Buscar..." [(ngModel)]="searchTerm"
+            (input)="onSearchTermChange()" />
+    </div>
+    <div>
+        <select class="form-select" (change)="selectCategory($event)">
+            <option value="" selected>Filtrar por producto</option>
+            <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
+        </select>
+    </div>
+    <!-- Agrega el mensaje de advertencia aquí -->
+    <div *ngIf="noResultsFound" class="alert alert-warning" role="alert">
+        No hay publicaciones que cumplan con la categoría "{{ selectedCategory }}"
     </div>
     <div class="d-flex justify-content-between mb-3">
         <button class="btn btn-primary" (click)="setSort('price')">
@@ -22,5 +25,3 @@
     </div>
     <app-listar-publicaciones [data]="filteredData"></app-listar-publicaciones>
 </div>
-</body>
-</html>
