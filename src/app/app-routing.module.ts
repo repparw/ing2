@@ -32,6 +32,7 @@ import { ReestablecerContraComponent } from './components/reestablecer-contra/re
 import { EnviarDescuentoComponent } from './components/enviar-descuento/enviar-descuento.component';
 import { VerificarCodigoComponent } from './components/verificar-codigo/verificar-codigo.component';
 import { CargarVentaComponent } from './components/cargar-venta/cargar-venta.component';
+import { ConcretarTruequeComponent } from './components/concretar-trueque/concretar-trueque.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -60,6 +61,7 @@ const routes: Routes = [
   { path: 'crear-sucursal', component: CrearSucursalComponent, canActivate: [AdminGuard] },
   { path: 'trueque/:id/cargar-venta', component: CargarVentaComponent},
   { path: 'trueques-empleado', component: ListarTruequesEmpleadoComponent},
+  { path: 'concretar-trueque/:id', component: ConcretarTruequeComponent},
   { path: '**', redirectTo: '/home', pathMatch: 'full' }
 ];
 
