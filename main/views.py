@@ -96,7 +96,7 @@ class TradeProposalViewSet(viewsets.ModelViewSet):
             proposal.save()
             return Response(status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)
-    
+
     @action(detail=False, methods=['get'], url_path='by-sucursal')
     def get_by_sucursal(self, request):
         sucursal = request.query_params.get('sucursal')
@@ -106,17 +106,17 @@ class TradeProposalViewSet(viewsets.ModelViewSet):
             return Response(serializer.data)
         else:
             return Response({"error": "Sucursal not provided"}, status=status.HTTP_400_BAD_REQUEST)
-        
+
     @api_view(['GET'])
     def get_trade_proposal_by_id(request, id):
         try:
             trade_proposal = TradeProposal.objects.get(id=id)
         except TradeProposal.DoesNotExist:
             return Response(status=404)
-        
+
         serializer = TradeProposalSerializer(trade_proposal)
         return Response(serializer.data)
-    
+
 
 
 class SucursalViewSet(viewsets.ModelViewSet):

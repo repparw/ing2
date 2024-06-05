@@ -27,9 +27,9 @@ class TradeProposal(models.Model):
   suc = models.ForeignKey('Sucursal', on_delete=models.SET_NULL, null=True)
   # TODO add status finished and not realized
   status = models.CharField(max_length=20, choices=[('pending', 'Pending'), ('accepted', 'Accepted'), ('rejected', 'Rejected'), ('confirmed', 'Confirmed'), ('concreted', 'Concreted'), ('no_finished', 'no_finished')], default='pending')
+  code = models.CharField(max_length=100, blank=True, default='')
   created_at = models.DateTimeField(auto_now_add=True)
   date = models.DateField(null=True, blank=True)
-
 
 class Sucursal(models.Model):
   address = models.CharField(max_length=100)

@@ -9,4 +9,5 @@ export interface User {
   rating?:number,
   suc: number;
   is_staff?: boolean;
+  is_superuser?: boolean;
 }
