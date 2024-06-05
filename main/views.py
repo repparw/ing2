@@ -90,7 +90,7 @@ class TradeProposalViewSet(viewsets.ModelViewSet):
     def update(self, request, *args, **kwargs):
         proposal = self.get_object()
         status = request.data.get('status')
-        # TODO handle more statuses
+        # TODO WARNING handle more statuses
         if status in ['accepted', 'rejected']:
             proposal.status = status
             proposal.save()

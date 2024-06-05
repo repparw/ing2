@@ -24,7 +24,6 @@ export class ListarTruequesComponent implements OnInit {
 
     ngOnInit(): void {
       // Initialize the show array to false for each data item
-      console.log(this.data.length)
       this.show = new Array(this.data.length).fill(false);
     }
 
