@@ -14,18 +14,18 @@
                 <img [src]="getPhotos(trueque.publication.id)" class="image-thumbnail" width="100" height="100" alt="{{ trueque.publication.title }}" (click)="navigatePubli(trueque.publication.id)">
                 <a class="proposer" (click)="navigate(trueque.proposer.username)">Oferta hecha por: {{ trueque.proposer.name }}</a>
                 <span class="rating">Valoración del usuario: {{ trueque.proposer.rating }}</span>
-                <div *ngIf="trueque.status != 'pending'">                  
+                <div *ngIf="trueque.status != 'pending'">
                     <a class="recipient" (click)="navigate(trueque.recipient.username)">Recibida por: {{ trueque.recipient.name }}</a>
                     <span class="rating">Valoración del usuario: {{ trueque.recipient.rating }}</span>
                 </div>
                 <div *ngIf="trueque.status == 'pending'">
                     <span class="creation-date">Fecha de propuesta: {{ trueque.created_at | date:'dd/MM/yyyy'}}</span>
                 </div>
-                <div *ngIf="trueque.status == 'confirmed'">   
+                <div *ngIf="trueque.status == 'confirmed'">
                     <span class="Sucursal">Sucursal: {{ trueque.suc.addres }}</span>
                     <span class="Sucursal">Fecha del trueque: {{ trueque.date }}</span>
                 </div>
-              
+
                 <div class="proposed-item-list">
                     <button *ngIf="show[i] == false" type="button" class="btn btn-success" (click)="toggleShow(i)">Mostrar Objetos ofrecidos</button>
                     <button *ngIf="show[i] == true" type="button" class="btn btn-danger" (click)="toggleShow(i)">Ocultar Objetos ofrecidos</button>
@@ -34,9 +34,9 @@
                 <button *ngIf="trueque.status == 'pending'"   type="button" class="btn btn-outline-primary" (click)="navigateTrade(trueque.id)">Responder Trueque</button>
                 <button *ngIf="trueque.status == 'accepted' && userID != this.trueque.proposer.id"    type="button" class="btn btn-outline-primary" (click)="navigateFecha(trueque.id)">Proponer fecha</button>
                 <!-- Hacer lógica del cancelar -->
-                <div *ngIf="trueque.status == 'confirmed' && empleado == false && ! pasoElTiempo(fechaMas24(trueque.created_at))" >
+                <div *ngIf="trueque.status == 'confirmed' && empleado == false && validateDate(trueque.date)" >
                     <button type="button" class="btn btn-outline-danger"  (click)="cancel(trueque.id)">Cancelar Trueque</button>
-                    <span>Tiempo hasta: {{ fechaMas24(trueque.created_at) | date:'dd/MM/yyyy HH:mm:ss'}}</span>
+                    <span>Tiempo hasta: {{ limitDate | date:'dd/MM/yyyy HH:mm:ss'}}</span>
                 </div>
                 <!-- Hacer redirect del empleado -->
                 <button *ngIf="empleado == true"   type="button" class="btn btn-outline-primary" (click)="navigateTrade(trueque.id)">Confirmar trueque como realizado</button>

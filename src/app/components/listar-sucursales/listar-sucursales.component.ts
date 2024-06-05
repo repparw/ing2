@@ -30,5 +30,5 @@ export class ListarSucursalesComponent implements OnInit {
   selectSucursal(sucursal: any): void {
     this.selectedSucursal = sucursal;
   }
-    
+
 }

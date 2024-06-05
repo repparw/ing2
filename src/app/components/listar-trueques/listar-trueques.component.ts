@@ -17,6 +17,7 @@ export class ListarTruequesComponent implements OnInit, OnChanges {
     @Input() empleado?: boolean;
     show: boolean[] = [];
     fecha2?: Date;
+    limitDate?: Date;
 
     // TODO trade and user service not used?
     constructor (private tradeService: TradeService,
@@ -87,20 +88,14 @@ export class ListarTruequesComponent implements OnInit, OnChanges {
       });
     }
 
-    // TODO permitir cancelar hasta 24h antes
-    fechaMas24(fecha: Date): Date{
-      let fecha2 = new Date(fecha)
-      console.log(fecha2.toString());
-      fecha2.setDate(fecha2.getDate()+1);
-      console.log(fecha2.toString());
-      return fecha2;
+    // validate Date is more than 24 hours away from var date
+    validateDate(date: Date): boolean {
+      // save limitDate with value date - 24 hours
+      this.limitDate = (new Date(date.setDate(date.getDate() - 1)));
+      const currentDate = new Date();
+      const date2 = new Date(date);
+      const diff = date2.getTime() - currentDate.getTime();
+      return diff > 86400000;
     }
 
-    pasoElTiempo(fecha: Date): boolean{
-      let fechaDeHoy = new Date()
-      if ((fecha.getTime() - fechaDeHoy.getTime()) > 0){
-        return false
-      }
-      return true;
-    }
   }
