@@ -83,67 +83,102 @@ class TradeProposalViewSet(viewsets.ModelViewSet):
     serializer_class = TradeProposalSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-    def perform_create(self, serializer):
-        proposer = User.objects.get(pk=serializer.validated_data['proposer']['id'])
-        recipient = User.objects.get(pk=serializer.validated_data['recipient']['id'])
-        publication = Pub.objects.get(pk=serializer.validated_data['publication']['id'])
-        proposed_items = Pub.objects.filter(pk__in=[item['id'] for item in serializer.validated_data['proposed_items']])
-        suc = Sucursal.objects.get(pk=serializer.validated_data['suc']['id']) if serializer.validated_data.get('suc') else None
-        serializer.save(
-            proposer=proposer,
-            recipient=recipient,
-            publication=publication,
-            suc=suc,
-            proposed_items=proposed_items,
+    def create(self, request, *args, **kwargs):
+        proposer_id = request.data.get('proposer')
+        recipient_id = request.data.get('recipient')
+        publication_id = request.data.get('publication')
+        proposed_item_ids = request.data.get('proposed_items', [])
+        suc_id = request.data.get('suc')
+
+        try:
+            proposer = User.objects.get(pk=proposer_id)
+            recipient = User.objects.get(pk=recipient_id)
+            publication = Pub.objects.get(pk=publication_id)
+            proposed_items = Pub.objects.filter(pk__in=proposed_item_ids)
+            suc = Sucursal.objects.get(pk=suc_id) if suc_id else None
+
+            trade_proposal = TradeProposal.objects.create(
+                proposer=proposer,
+                recipient=recipient,
+                publication=publication,
+                suc=suc,
+                status=request.data.get('status'),
+                code=request.data.get('code', ''),
+                created_at=request.data.get('created_at'),
+                date=request.data.get('date')
             )
 
+            trade_proposal.proposed_items.set(proposed_items)
+            trade_proposal.save()
+
+            return Response(status=status.HTTP_201_CREATED)
+
+        except User.DoesNotExist:
+            return Response({'error': 'Invalid proposer or recipient'}, status=status.HTTP_400_BAD_REQUEST)
+        except Pub.DoesNotExist:
+            return Response({'error': 'Invalid publication or proposed items'}, status=status.HTTP_400_BAD_REQUEST)
+        except Sucursal.DoesNotExist:
+            return Response({'error': 'Invalid sucursal'}, status=status.HTTP_400_BAD_REQUEST)
+
     def update(self, request, *args, **kwargs):
-        proposal = self.get_object()
-        status_value = request.data.get('status')
-        code = request.data.get('code')
-        date = request.data.get('date')
-        suc = request.data.get('suc')
-        # TODO WARNING handle more statuses
-        if status_value in [
-            'pending',
-            'rejected',
-            'confirmed',
-            'cancelled',
-            'concreted',
-            'accepted',
-            'not_finished',
-        ]:
-            proposal.status = status_value
-            if code is not None:
-              proposal.code = code
-            if date and suc is not None:
-              proposal.date = date
-              proposal.suc = suc
-            proposal.save()
-            return Response(status=status.HTTP_200_OK)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        instance = self.get_object()
+
+        proposer_id = request.data.get('proposer')
+        recipient_id = request.data.get('recipient')
+        publication_id = request.data.get('publication')
+        proposed_item_ids = request.data.get('proposed_items', [])
+        suc_id = request.data.get('suc')
+
+        try:
+            proposer = User.objects.get(pk=proposer_id)
+            recipient = User.objects.get(pk=recipient_id)
+            publication = Pub.objects.get(pk=publication_id)
+            proposed_items = Pub.objects.filter(pk__in=proposed_item_ids)
+            suc = Sucursal.objects.get(pk=suc_id) if suc_id else None
+
+            instance.proposer = proposer
+            instance.recipient = recipient
+            instance.publication = publication
+            instance.suc = suc
+            instance.status = request.data.get('status', instance.status)
+            instance.code = request.data.get('code', instance.code)
+            instance.created_at = request.data.get('created_at', instance.created_at)
+            instance.date = request.data.get('date', instance.date)
+
+            instance.proposed_items.set(proposed_items)
+            instance.save()
+
+            serializer = self.get_serializer(instance)
+            return Response(serializer.data)
+
+        except User.DoesNotExist:
+            return Response({'error': 'Invalid proposer or recipient'}, status=status.HTTP_400_BAD_REQUEST)
+        except Pub.DoesNotExist:
+            return Response({'error': 'Invalid publication or proposed items'}, status=status.HTTP_400_BAD_REQUEST)
+        except Sucursal.DoesNotExist:
+            return Response({'error': 'Invalid sucursal'}, status=status.HTTP_400_BAD_REQUEST)
 
     @action(detail=False, methods=['get'], url_path='by-sucursal')
     def get_by_sucursal(self, request):
         sucursal_id = request.query_params.get('sucursal')
         if sucursal_id is not None:
-            trade_proposals = self.queryset.filter(suc_id=sucursal_id)
-            serializer = self.get_serializer(trade_proposals, many=True)
-            return Response(serializer.data)
+            try:
+                trade_proposals = self.queryset.filter(suc_id=sucursal_id)
+                serializer = self.get_serializer(trade_proposals, many=True)
+                return Response(serializer.data)
+            except ValueError:
+                return Response({"error": "Invalid sucursal ID"}, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response({"error": "Sucursal not provided"}, status=status.HTTP_400_BAD_REQUEST)
 
-    @api_view(['GET'])
-    def get_trade_proposal_by_id(request, id):
+    @action(detail=True, methods=['get'], url_path='get-trade-proposal')
+    def get_trade_proposal_by_id(self, request, pk=None):
         try:
-            trade_proposal = TradeProposal.objects.get(id=id)
+            trade_proposal = self.get_object()
+            serializer = self.get_serializer(trade_proposal)
+            return Response(serializer.data)
         except TradeProposal.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
-
-        serializer = TradeProposalSerializer(trade_proposal)
-        return Response(serializer.data)
-
-
 
 class SucursalViewSet(viewsets.ModelViewSet):
   queryset = Sucursal.objects.all()

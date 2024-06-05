@@ -20,6 +20,10 @@ export class TradeService {
       });
     }
 
+  public createTradeProposal(proposal: TradeProposal): Observable<TradeProposal> {
+    return this.http.post<TradeProposal>(`${this.apiUrl}`, proposal, { headers: this.getHeaders() });
+  }
+
   getTradeProposals(token: string): Observable<any[]> {
     const headers = new HttpHeaders().set('Authorization', `Token ${token}`);
     return this.http.get<any[]>(this.apiUrl, { headers: this.getHeaders() } );
@@ -38,7 +42,7 @@ export class TradeService {
   }
 
   public updateTrade(id: number, trade: TradeProposal): Observable<TradeProposal> {
-    return this.http.put<TradeProposal>(`${this.apiUrl}${id}/`, trade, { headers: this.getHeaders() })
+    return this.http.put<TradeProposal>(`${this.apiUrl}${id}/`, trade, { headers: this.getHeaders() });
   }
 
 }

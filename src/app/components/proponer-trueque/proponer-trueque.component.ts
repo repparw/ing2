@@ -8,6 +8,8 @@ import Swal from 'sweetalert2';
 
 import { PublicationService } from '../../services/publication.service';
 import { UserService } from '../../services/user.service';
+import { TradeService } from '../../services/trade.service';
+
 import { TradeProposal } from '../../models/tradeProposal';
 import { Pub } from '../../models/pub';
 
@@ -24,6 +26,7 @@ export class ProponerTruequeComponent implements OnInit {
 
   constructor(
     private publicationService: PublicationService,
+    private tradeService: TradeService,
     private userService: UserService,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
@@ -31,9 +34,9 @@ export class ProponerTruequeComponent implements OnInit {
   ) {
     // Initialize form group with necessary controls
     this.tradeProposal = this.formBuilder.group({
-      proposer: [0, Validators.required], // Assuming 0 is placeholder for default value
-      recipient: [0, Validators.required], // Assuming 0 is placeholder for default value
-      publication: [0, Validators.required], // Assuming 0 is placeholder for default value
+      proposer: [0, Validators.required],
+      recipient: [0, Validators.required],
+      publication: [0, Validators.required],
       proposed_items: [[], Validators.required],
       status: ['pending', Validators.required],
     });
@@ -123,7 +126,7 @@ export class ProponerTruequeComponent implements OnInit {
 
   // Propose trade using provided proposal data
   proposeTrade(proposal: TradeProposal) {
-    this.publicationService.createTradeProposal(proposal).subscribe(response => {
+    this.tradeService.createTradeProposal(proposal).subscribe(response => {
       Swal.fire('Success', 'Propuesta de trueque enviada exitosamente!', 'success');
     });
   }

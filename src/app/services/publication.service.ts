@@ -3,7 +3,6 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { Pub } from '../models/pub';
-import { TradeProposal } from '../models/tradeProposal';
 
 @Injectable({
   providedIn: 'root'
@@ -35,14 +34,6 @@ export class PublicationService {
   ];
 
   constructor(private http: HttpClient) { }
-
-  public createTradeProposal(proposal: TradeProposal): Observable<TradeProposal> {
-    return this.http.post<TradeProposal>(`${this.baseUrl}proposals/`, proposal, { headers: this.getHeaders() });
-  }
-
-  public cancelTradeProposal(id: number): Observable<void> {
-    return this.http.put<void>(`${this.baseUrl}proposals/${id}/cancel/`, {}, { headers: this.getHeaders() });
-  }
 
   public getPublicationPrice(pubId: number): Observable<number> {
     return this.getPublication(pubId).pipe(
