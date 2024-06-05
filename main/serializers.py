@@ -1,6 +1,6 @@
 from django.contrib.auth import authenticate
 from rest_framework import serializers
-from .models import Pub, User, Sucursal, TradeProposal, Venta
+from .models import Pub, User, Sucursal, TradeProposal, Sales
 
 class PubSerializer(serializers.ModelSerializer):
     class Meta:
@@ -88,7 +88,7 @@ class CustomAuthTokenSerializer(serializers.Serializer):
 
         return attrs
 
-class VentaSerializer(serializers.ModelSerializer):
+class SalesSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Venta
+        model = Sales
         fields = '__all__'
