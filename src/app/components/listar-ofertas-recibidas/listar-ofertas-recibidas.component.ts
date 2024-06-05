@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { TradeService } from 'src/app/services/trade.service';
 import { UserService } from '../../services/user.service'
 import { Router } from '@angular/router';
@@ -21,18 +21,18 @@ export class ListarOfertasRecibidasComponent implements OnInit{
     tituloPropuesta: string = '¡Oferta de trueque recibida!'
     tituloSinFecha: string = 'Confirmar fecha para realizar este trueque:'
     tituloConfirmado: string = '¡Trueque confirmado!'
-    
-    currentUserDni!: string; 
-    currentUserId!: number; 
+
+    currentUserDni!: string;
+    currentUserId!: number;
     showList: boolean[] = [false, false, false];
 
 
 
     constructor (private tradeService: TradeService, private router:Router, private userService: UserService){
     }
-  
+
     //ESTO ES POR AHORA: LA DATA LA RECIBE COMO PARAMETRO
-    ngOnInit(): void {   
+    ngOnInit(): void {
       this.userService.getCurrentUser().subscribe(
         user => {
           this.currentUserDni = user.username;
@@ -44,23 +44,23 @@ export class ListarOfertasRecibidasComponent implements OnInit{
         this.filterTradeToConfirm();
         this.filterConfirm()
       });}
-    
+
     filterProposals(): void {
-      this.filteredDataProposal = this.data.filter(proposal => 
+      this.filteredDataProposal = this.data.filter(proposal =>
         proposal.recipient.id === this.currentUserId && proposal.status === 'pending'
       );
     }
 
     /* REVISAR QUE ANDE!!!!!! */
     filterTradeToConfirm(): void {
-      this.filteredDataTradeToConfirm = this.data.filter(proposal => 
+      this.filteredDataTradeToConfirm = this.data.filter(proposal =>
         (proposal.recipient.id === this.currentUserId || proposal.proposer.id === this.currentUserId) && proposal.status === 'accepted'
       );
     }
 
     filterConfirm(): void {
-      this.filteredDataConfirm = this.data.filter(proposal => 
-        (proposal.recipient.id === this.currentUserId || proposal.proposer.id === this.currentUserId) && proposal.status === 'confirmed' 
+      this.filteredDataConfirm = this.data.filter(proposal =>
+        (proposal.recipient.id === this.currentUserId || proposal.proposer.id === this.currentUserId) && proposal.status === 'confirmed'
       );
     }
 

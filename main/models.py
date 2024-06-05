@@ -26,7 +26,19 @@ class TradeProposal(models.Model):
   proposed_items = models.ManyToManyField(Pub, related_name='trade_proposals')
   suc = models.ForeignKey('Sucursal', on_delete=models.SET_NULL, null=True)
   # TODO add status finished and not realized
-  status = models.CharField(max_length=20, choices=[('pending', 'Pending'), ('accepted', 'Accepted'), ('rejected', 'Rejected'), ('confirmed', 'Confirmed'), ('concreted', 'Concreted'), ('no_finished', 'no_finished')], default='pending')
+  status = models.CharField(
+        max_length=20,
+        choices=[
+            ('pending', 'Pending'),
+            ('accepted', 'Accepted'),
+            ('rejected', 'Rejected'),
+            ('confirmed', 'Confirmed'),
+            ('cancelled', 'Cancelled'),
+            ('concreted', 'Concreted'),
+            ('not_finished', 'Not Finished')
+        ],
+        default='pending'
+    )
   code = models.CharField(max_length=100, blank=True, default='')
   created_at = models.DateTimeField(auto_now_add=True)
   date = models.DateField(null=True, blank=True)

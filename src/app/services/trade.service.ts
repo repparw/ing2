@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams  } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { TradeProposal } from '../models/tradeProposal';
 
@@ -22,16 +22,15 @@ export class TradeService {
 
   getTradeProposals(token: string): Observable<any[]> {
     const headers = new HttpHeaders().set('Authorization', `Token ${token}`);
-    return this.http.get<any[]>(this.apiUrl);
+    return this.http.get<any[]>(this.apiUrl, { headers: this.getHeaders() } );
   }
 
   getTradeProposalsBySucursal(sucursal: number): Observable<any[]>{
-    return this.http.get<any[]>(`${this.apiUrl}by-sucursal?sucursal=${sucursal}`);
+    return this.http.get<any[]>(`${this.apiUrl}by-sucursal?sucursal=${sucursal}`, { headers: this.getHeaders() });
   }
 
   getTradeProposal(id: number): Observable<TradeProposal> {
-    return this.http.get<TradeProposal>(`${this.apiUrl}${id}/`);
-
+    return this.http.get<TradeProposal>(`${this.apiUrl}${id}/`, { headers: this.getHeaders() });
   }
 
   public deleteTradeProposal(id: number) {

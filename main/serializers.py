@@ -50,11 +50,11 @@ class SucursalSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class TradeProposalSerializer(serializers.ModelSerializer):
-    proposer = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
-    recipient = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
-    publication = serializers.PrimaryKeyRelatedField(queryset=Pub.objects.all())
-    proposed_items = serializers.PrimaryKeyRelatedField(queryset=Pub.objects.all(), many=True)
-    suc = serializers.PrimaryKeyRelatedField(queryset=Sucursal.objects.all())
+    proposer = UserSerializer()
+    recipient = UserSerializer()
+    publication = PubSerializer()
+    proposed_items = PubSerializer(many=True)
+    suc = SucursalSerializer()
 
     class Meta:
         model = TradeProposal

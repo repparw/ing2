@@ -85,13 +85,32 @@ class TradeProposalViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def perform_create(self, serializer):
-        serializer.save()
+        proposer = User.objects.get(pk=serializer.validated_data['proposer']['id'])
+        recipient = User.objects.get(pk=serializer.validated_data['recipient']['id'])
+        publication = Pub.objects.get(pk=serializer.validated_data['publication']['id'])
+        proposed_items = Pub.objects.filter(pk__in=[item['id'] for item in serializer.validated_data['proposed_items']])
+        suc = Sucursal.objects.get(pk=serializer.validated_data['suc']['id']) if serializer.validated_data.get('suc') else None
+        serializer.save(
+            proposer=proposer,
+            recipient=recipient,
+            publication=publication,
+            suc=suc,
+            proposed_items=proposed_items,
+            )
 
     def update(self, request, *args, **kwargs):
         proposal = self.get_object()
         status = request.data.get('status')
         # TODO WARNING handle more statuses
-        if status in ['accepted', 'rejected']:
+        if status in [
+            'pending',
+            'rejected',
+            'confirmed',
+            'cancelled',
+            'concreted',
+            'accepted',
+            'not_finished',
+]:
             proposal.status = status
             proposal.save()
             return Response(status=status.HTTP_200_OK)
@@ -99,9 +118,9 @@ class TradeProposalViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'], url_path='by-sucursal')
     def get_by_sucursal(self, request):
-        sucursal = request.query_params.get('sucursal')
-        if sucursal is not None:
-            trade_proposals = self.queryset.filter(suc=sucursal)
+        sucursal_id = request.query_params.get('sucursal')
+        if sucursal_id is not None:
+            trade_proposals = self.queryset.filter(suc_id=sucursal_id)
             serializer = self.get_serializer(trade_proposals, many=True)
             return Response(serializer.data)
         else:
@@ -112,7 +131,7 @@ class TradeProposalViewSet(viewsets.ModelViewSet):
         try:
             trade_proposal = TradeProposal.objects.get(id=id)
         except TradeProposal.DoesNotExist:
-            return Response(status=404)
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
         serializer = TradeProposalSerializer(trade_proposal)
         return Response(serializer.data)

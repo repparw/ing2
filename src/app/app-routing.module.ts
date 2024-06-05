@@ -24,6 +24,8 @@ import { ListarTruequesEmpleadoComponent } from './components/listar-trueques-em
 
 import { AuthGuard } from './guards/auth.guard';
 import { EmployeeGuard } from './guards/employee.guard';
+import { AdminGuard } from './guards/admin.guard';
+
 import { AdEmailComponent } from './components/ad-email/ad-email.component';
 import { CrearSucursalComponent } from './components/crear-sucursal/crear-sucursal.component';
 import { ReestablecerContraComponent } from './components/reestablecer-contra/reestablecer-contra.component';
@@ -55,7 +57,7 @@ const routes: Routes = [
   { path: 'trueques-recibidos', component: ListarOfertasRecibidasComponent},
   { path: 'trueque/:id', component: ResponderTruequeComponent},
   { path: 'agregar-fecha/:id', component: AgregarFechaComponent},
-  { path: 'crear-sucursal', component: CrearSucursalComponent},
+  { path: 'crear-sucursal', component: CrearSucursalComponent}, // canActivate: [AdminGuard] TODO
   { path: 'trueque/:id/cargar-venta', component: CargarVentaComponent},
   { path: 'trueques-empleado', component: ListarTruequesEmpleadoComponent},
   { path: '**', redirectTo: '/home', pathMatch: 'full' }

@@ -16,10 +16,10 @@ export class AdminGuard implements CanActivate {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
 
-    return this.userService.isAuthenticated$.pipe(
+    return this.userService.isAdmin$.pipe(
       take(1),
-      map(isAuthenticated => {
-      if (isAuthenticated) {
+      map(isAdmin => {
+      if (isAdmin) {
         return true; // Allow access if user is authenticated
       } else {
         this.router.navigate(['/login']); // Redirect to login page
