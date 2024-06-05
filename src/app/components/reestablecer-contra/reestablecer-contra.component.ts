@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { UserService } from '../../services/user.service';
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-reestablecer-contra',
@@ -14,20 +15,20 @@ export class ReestablecerContraComponent implements OnInit, HttpInterceptor {
     reestablecerForm= this.formBuilder.group({
       email: ['', [Validators.required, Validators.pattern('.*@.*')]],
     });
-  
+
     userService = inject(UserService);
     private _router = inject(Router)
-  
+
     constructor(private formBuilder:FormBuilder, private router:Router){}
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-  
+
       return next.handle(request);
     }
-  
+
     ngOnInit(): void{
-  
+
     }
-  
+
     get email(){
       return this.reestablecerForm.controls.email;
     }
@@ -35,14 +36,21 @@ export class ReestablecerContraComponent implements OnInit, HttpInterceptor {
     requestPasswordReset() {
       this.userService.requestPasswordReset(this.reestablecerForm.get('email')?.value || '').subscribe(
         response => {
-          console.log('Solicitud de restablecimiento de contraseña exitosa', response);
+          // TODO: animation while waiting?
+          Swal.fire({
+            title: 'Solicitud de restablecimiento de contraseña',
+            text: 'Si existe un usuario con el correo proporcionado, se enviará un correo con las instrucciones para restablecer la contraseña.',
+            icon: 'info',
+            confirmButtonText: 'Ok'
+          }).then(() => {
+            this.navigate('login');
+            });
         },
         error => {
           console.error('Solicitud de restablecimiento de contraseña fallida', error);
         });
-        this.navigate("login")
         }
-    
+
     hasErrors(controlName: string, errortype: string){
       return this.reestablecerForm.get(controlName)?.hasError(errortype) && this.reestablecerForm.get(controlName)?.touched
     }
@@ -50,5 +58,5 @@ export class ReestablecerContraComponent implements OnInit, HttpInterceptor {
   navigate(ruta: string): void{
     this._router.navigate([ruta])
   }
-    
+
 }

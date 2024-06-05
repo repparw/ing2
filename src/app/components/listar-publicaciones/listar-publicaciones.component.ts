@@ -1,7 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { PublicationService } from '../../services/publicacion.service';
-import { UserService } from '../../services/user.service';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-listar-publicaciones',
@@ -20,6 +18,10 @@ export class ListarPublicacionesComponent implements OnInit {
   getPhotos(id: number): string {
     return this.publicationService.getPhoto(id, 1);
   }
+
+  getCategory(id: number): string {
+    return this.publicationService.getCategory(id);
+      }
 
   generateLink(id: number): string {
     return this.templateUrl.replace('{{id}}', id.toString());

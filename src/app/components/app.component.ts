@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../services/user.service'
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import Swal from 'sweetalert2';
 
 @Component({

@@ -16,12 +16,13 @@ export class ListarTruequesComponent implements OnInit {
     @Input() titulo?: string;
     @Input() userID?: number;
     @Input() empleado?: boolean;
-    show: boolean[] = []; 
-    fecha2?: Date;   
+    show: boolean[] = [];
+    fecha2?: Date;
 
+    // TODO trade and user service not used?
     constructor (private tradeService: TradeService, private router:Router, private userService: UserService, private publicationService: PublicationService){
     }
-  
+
     ngOnInit(): void {
       // Initialize the show array to false for each data item
       console.log(this.data.length)
@@ -35,11 +36,11 @@ export class ListarTruequesComponent implements OnInit {
         this.show = new Array(this.data.length).fill(false);
       }
     }
-      
+
     toggleShow(index: number): void {
       this.show[index] = !this.show[index];
     }
-    
+
     getPhotos(id: number): string {
       return this.publicationService.getPhoto(id, 1);
     }
@@ -82,6 +83,7 @@ export class ListarTruequesComponent implements OnInit {
       });
     }
 
+    // TODO permitir cancelar hasta 24h antes
     fechaMas24(fecha: Date): Date{
       let fecha2 = new Date(fecha)
       console.log(fecha2.toString());
