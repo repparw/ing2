@@ -19,6 +19,8 @@ export class ResponderTruequeComponent implements OnInit{
   asuntoRecipient: string = "Usted ha aceptado un trueque";
   mensajeProposer?: string;
   mensajeRecipient?: string;
+  motivoRechazo: string = 'a';
+  asuntoRechazo: string = 'Su trueque ha sido rechazado';
   
   constructor(private router:Router, private route: ActivatedRoute, private tradeService: TradeService, private emailService: EmailService){}
 
@@ -37,7 +39,7 @@ export class ResponderTruequeComponent implements OnInit{
   }
 
   aceptar(){
-    //Envío de mails: ANDA!
+    //Envío de mails
     this.enviarMails();
 
     //Pasar el estado a aceptado
@@ -51,6 +53,8 @@ export class ResponderTruequeComponent implements OnInit{
         console.error('Error updating trade proposal', error);
       }
     );
+
+    //GENERAR CODIGO DE VERIFICACIÓN
 
     //Popup y redirect al home:
     Swal.fire({
@@ -72,6 +76,7 @@ export class ResponderTruequeComponent implements OnInit{
   }
 
   rechazar(){
+    // MOTIVO. MANDAR MAIL
     Swal.fire({
       title: "¿Estás seguro de que deseas rechazar el trueque?",
       text: "La propuesta se borrará para siempre.",
@@ -81,23 +86,52 @@ export class ResponderTruequeComponent implements OnInit{
       cancelButtonColor: "#d33",
       cancelButtonText: "Cancelar",
       confirmButtonText: "Confirmar"
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.isConfirmed) {
-        Swal.fire({
-          title: "¡Rechazado!",
-          text: "El trueque ha sido rechazado.",
-          icon: "success"
-        });
-
-        this.tradeService.deleteTradeProposal(this.trueque.id).subscribe(
-          () => {
-            console.log('Trade proposal deleted successfully.');
-          },
-          error => {
-            console.error('Error deleting trade proposal:', error);
+        const { value: formValues } = await Swal.fire({
+          title: "Motivo del rechazo",
+          input: "textarea",
+          inputPlaceholder: "Escriba el motivo aquí...",
+          inputValidator: (value) => {
+            if (!value) {
+              return "¡Debes escribir el motivo!";
+            }
+            if (value){
+              this.motivoRechazo = value;
+            }
+            return null;
           }
-        );
-        this.navigate();
+        });
+        if (formValues) {
+          Swal.fire({
+            title: "¡Rechazado!",
+            text: "El trueque ha sido rechazado.",
+            icon: "success"
+          });
+
+          //Mando mail:
+
+          let mensajeRechazo = 'Su propuesta de trueque por la publicación ' + this.trueque.publication.title + 
+                               ' del usuario ' + this.trueque.recipient.name + ' ha sido rechazada. \n \n Motivo: ' + this.motivoRechazo;
+          this.emailService.sendEmail(this.asuntoRechazo, mensajeRechazo, [this.trueque.proposer.email]).subscribe(
+            response => {
+              console.log('Email sent successfully', response);
+            },
+            error => {
+              console.error('Error sending email', error);
+            }
+          );
+          
+          this.tradeService.deleteTradeProposal(this.trueque.id).subscribe(
+            () => {
+              console.log('Trade proposal deleted successfully.');
+            },
+            error => {
+              console.error('Error deleting trade proposal:', error);
+            }
+          );
+          this.navigate();
+        }
       }
     });
   }
@@ -108,7 +142,7 @@ export class ResponderTruequeComponent implements OnInit{
                             ' ha sido aceptada. \n \n Ahora aparecerá en "Mis trueques" como "Trueque con fecha pendiente". \n \n Coordine con ' + recipientName + 
                             ' la fecha y la sucursal donde realizarán el trueque, que luego ' + recipientName + ' deberá cargar. \n \n El email de ' + recipientName 
                             + ' es: ' + this.trueque.recipient.email;
-    this.emailService.sendEmail(this.asuntoProposer, this.mensajeProposer, ['cachitococo@gmail.com']).subscribe(
+    this.emailService.sendEmail(this.asuntoProposer, this.mensajeProposer, [this.trueque.proposer.email]).subscribe(
       response => {
         console.log('Email sent successfully', response);
       },
@@ -121,7 +155,7 @@ export class ResponderTruequeComponent implements OnInit{
     '". \n \n Ahora aparecerá en "Mis trueques" como "Trueque con fecha pendiente". \n \n Coordine con ' + proposerName + 
     ' la fecha y la sucursal donde realizarán el trueque, que luego usted deberá cargar en la sección previamente mencionada. \n \n El email de ' + proposerName 
     + ' es: ' + this.trueque.proposer.email;                   
-    this.emailService.sendEmail(this.asuntoRecipient, this.mensajeRecipient, ['cachitococo@gmail.com']).subscribe(
+    this.emailService.sendEmail(this.asuntoRecipient, this.mensajeRecipient, [this.trueque.recipient.email]).subscribe(
       response => {
         console.log('Email sent successfully', response);
       },
