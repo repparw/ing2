@@ -121,42 +121,30 @@ class TradeProposalViewSet(viewsets.ModelViewSet):
             return Response({'error': 'Invalid sucursal'}, status=status.HTTP_400_BAD_REQUEST)
 
     def update(self, request, *args, **kwargs):
-        instance = self.get_object()
-
-        proposer_id = request.data.get('proposer_id')
-        recipient_id = request.data.get('recipient_id')
-        publication_id = request.data.get('publication_id')
-        proposed_item_ids = request.data.get('proposed_items_id', [])
-        suc_id = request.data.get('suc_id')
-
-        try:
-            proposer = User.objects.get(pk=proposer_id)
-            recipient = User.objects.get(pk=recipient_id)
-            publication = Pub.objects.get(pk=publication_id)
-            proposed_items = Pub.objects.filter(pk__in=proposed_item_ids)
-            suc = Sucursal.objects.get(pk=suc_id) if suc_id else None
-
-            instance.proposer = proposer
-            instance.recipient = recipient
-            instance.publication = publication
-            instance.suc = suc
-            instance.status = request.data.get('status', instance.status)
-            instance.code = request.data.get('code', instance.code)
-            instance.created_at = request.data.get('created_at', instance.created_at)
-            instance.date = request.data.get('date', instance.date)
-
-            instance.proposed_items.set(proposed_items)
-            instance.save()
-
-            serializer = self.get_serializer(instance)
-            return Response(serializer.data)
-
-        except User.DoesNotExist:
-            return Response({'error': 'Invalid proposer or recipient'}, status=status.HTTP_400_BAD_REQUEST)
-        except Pub.DoesNotExist:
-            return Response({'error': 'Invalid publication or proposed items'}, status=status.HTTP_400_BAD_REQUEST)
-        except Sucursal.DoesNotExist:
-            return Response({'error': 'Invalid sucursal'}, status=status.HTTP_400_BAD_REQUEST)
+        proposal = self.get_object()
+        status_value = request.data.get('status')
+        code = request.data.get('code')
+        date = request.data.get('date')
+        suc = request.data.get('suc')
+        # TODO WARNING handle more statuses
+        if status_value in [
+            'pending',
+            'rejected',
+            'confirmed',
+            'cancelled',
+            'concreted',
+            'accepted',
+            'not_finished',
+        ]:
+            proposal.status = status_value
+            if code is not None:
+              proposal.code = code
+            if date and suc is not None:
+              proposal.date = date
+              proposal.suc = suc
+            proposal.save()
+            return Response(status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
 
     @action(detail=False, methods=['get'], url_path='by-sucursal')
     def get_by_sucursal(self, request):
