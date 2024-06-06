@@ -3,6 +3,9 @@ import { TradeService } from 'src/app/services/trade.service';
 import { Router } from '@angular/router';
 import { PublicationService } from 'src/app/services/publication.service';
 import Swal from 'sweetalert2';
+import { EmailService } from 'src/app/services/email.service';
+import { TradeProposal } from 'src/app/models/tradeProposal';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-listar-trueques',
@@ -23,6 +26,8 @@ export class ListarTruequesComponent implements OnInit, OnChanges {
     constructor (private tradeService: TradeService,
                  private publicationService: PublicationService,
                  private router:Router,
+                 private emailService: EmailService,
+                 private userService: UserService,
                 ){}
 
     ngOnInit(): void {
@@ -87,7 +92,8 @@ export class ListarTruequesComponent implements OnInit, OnChanges {
             trade => {
               trade.status = "cancelled";
               this.tradeService.updateTrade(id, trade).subscribe();
-      });
+              this.mandarMailCancelar(trade);
+        });
       }
       });
     }
@@ -100,6 +106,31 @@ export class ListarTruequesComponent implements OnInit, OnChanges {
       const date2 = new Date(date);
       const diff = date2.getTime() - currentDate.getTime();
       return diff > 86400000;
+    }
+
+    mandarMailCancelar(trueque: TradeProposal) {
+      let receptorMail: string = '';
+      this.userService.getCurrentUser().subscribe(
+        user => {
+          if (user.id == trueque.recipient_id){
+            receptorMail = trueque.proposer.email
+          }
+          else{
+            receptorMail = trueque.recipient.email
+          }
+
+      });
+      let asuntoCancelar = 'Su trueque ha sido cancelado'
+      let mensajeCancelar = 'Su trueque por la publicación ' + trueque.publication.title +
+      ' del usuario ' + trueque.recipient.name + ' ha sido cancelado.' ;
+      this.emailService.sendEmail(asuntoCancelar, mensajeCancelar, [receptorMail]).subscribe(
+      response => {
+      console.log('Email sent successfully', response);
+      },
+      error => {
+      console.error('Error sending email', error);
+      }
+      );
     }
 
   }
