@@ -1,7 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SucursalService } from 'src/app/services/sucursal.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import { TradeService } from 'src/app/services/trade.service';
+import { TradeProposal } from 'src/app/models/tradeProposal';
+import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-agregar-fecha',
@@ -11,29 +15,63 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class AgregarFechaComponent implements OnInit {
   tradeID: number;
   agregarFechaForm: FormGroup;
-  sucursales: string[] =[];
+  sucursales: any[] = [];
   minDate: string;
 
-  constructor(private fb: FormBuilder, private route: ActivatedRoute, private sucursalService: SucursalService){
+  constructor(
+    private fb: FormBuilder,
+    private route: ActivatedRoute,
+    private sucursalService: SucursalService,
+    private tradeService: TradeService,
+    private router: Router
+  ) {
     this.agregarFechaForm = this.fb.group({
       sucursal: ['', Validators.required],
-      fecha: ['', Validators.required] //(YYYY-MM-DD) 
+      fecha: ['', Validators.required],
+      hora: ['', [Validators.required, this.timeRangeValidator]]
     });
     this.tradeID = parseInt(this.route.snapshot.params['id'], 10);
-    sucursalService.getSucursales().subscribe((sucursal) => {
-      this.sucursales=(sucursal.map(item => item.direccion));
-    }
-  )
-  const today = new Date();
-  this.minDate = today.toISOString().split('T')[0]; // Formato 'yyyy-MM-dd'
-}
+
+    const today = new Date();
+    this.minDate = today.toISOString().split('T')[0];
+  }
+
   ngOnInit(): void {
+    this.sucursalService.getSucursales().subscribe((sucursalData) => {
+      this.sucursales = sucursalData;
+    });
+  }
+
+  timeRangeValidator(control: FormControl): { [key: string]: any } | null {
+    const value: string = control.value;
+    if (value) {
+      const hour = parseInt(value.split(':')[0], 10);
+      if (hour < 8 || hour > 16) {
+        return { 'timeOutOfRange': true };
+      }
+    }
+    return null;
+  }
+
+  onSubmit() {
     
+    this.tradeService.getTradeProposal(this.tradeID).subscribe((tradeProposal: TradeProposal) => {
+      console.log(tradeProposal);
+      tradeProposal.suc_id = this.agregarFechaForm.value.sucursal;
+      tradeProposal.date = this.agregarFechaForm.value.fecha;
+      tradeProposal.status="confirmed";
+
+      
+      this.tradeService.updateTrade(this.tradeID, tradeProposal).subscribe(
+        updatedTradeProposal => {
+          console.log('TradeProposal actualizado:');
+        },
+        error => {
+          console.error('Error al actualizar el TradeProposal:', error);
+        }
+      );
+      
+    });
+    this.router.navigateByUrl('/home');
   }
-
-  guardarTrueque(){
-    console.log(this.agregarFechaForm.value);
-
-  }
-
 }
