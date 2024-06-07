@@ -107,6 +107,16 @@ class TradeProposalViewSet(viewsets.ModelViewSet):
             return Response(serializer.data)
         return Response({"error": "Sucursal not provided"}, status=status.HTTP_400_BAD_REQUEST)
 
+    @action(detail=False, methods=['get'], url_path='by-publication')
+    def get_by_publication(self, request):
+      publication_id = request.query_params.get('publication')
+      if publication_id:
+        # look in publication and proposed_items
+          trade_proposals = self.queryset.filter(publication=publication_id) | self.queryset.filter(proposed_items__id=publication_id)
+          serializer = self.get_serializer(trade_proposals, many=True)
+          return Response(serializer.data)
+      return Response({"error": "Publication not provided"}, status=status.HTTP_400_BAD_REQUEST)
+
     @action(detail=True, methods=['get'], url_path='get-trade-proposal')
     def get_trade_proposal_by_id(self, request, pk=None):
         trade_proposal = self.get_object()

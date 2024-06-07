@@ -36,6 +36,10 @@ export class TradeService {
       .pipe(catchError(this.handleError));
   }
 
+  getTradeProposalsByPublication(pubId: number): Observable<TradeProposal[]> {
+    return this.http.get<TradeProposal[]>(`${this.apiUrl}by-publication?publication=${pubId}`, { headers: this.getHeaders() })
+  }
+
   getTradeProposalsBySucursal(sucursal: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}by-sucursal?sucursal=${sucursal}`, { headers: this.getHeaders() })
       .pipe(catchError(this.handleError));

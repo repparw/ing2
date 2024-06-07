@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Pub } from '../../models/pub';
 import { PublicationService } from '../../services/publication.service';
+import { TradeService } from '../../services/trade.service';
 import { ActivatedRoute } from '@angular/router';
 import { UserService } from '../../services/user.service'
 import { Router } from '@angular/router';
@@ -20,7 +21,11 @@ export class VerPublicacionComponent implements OnInit{
   canEdit!: boolean;
 
 
-  constructor (private route: ActivatedRoute, private  publicationService: PublicationService, private userService: UserService, private router:Router ){
+  constructor (private route: ActivatedRoute,
+               private publicationService: PublicationService,
+               private tradeService: TradeService,
+               private userService: UserService,
+               private router:Router ){
 
   }
 
@@ -70,22 +75,48 @@ export class VerPublicacionComponent implements OnInit{
     }
 
   confirmDeletePublication(productID: number): void {
-    Swal.fire({
-      title: 'Confirmar',
-      text: '¿Estás seguro de que deseas eliminar esta publicación?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Eliminar'
+    // First, check if the publication is part of a 'status' = confirmed tradeProposal
+    this.tradeService.getTradeProposalsByPublication(productID).subscribe(
+      (proposals: any[]) => {
+        const confirmedProposal = proposals.find(proposal => proposal.status === 'confirmed');
+        if (confirmedProposal) {
+          // If there's a confirmed proposal, show an alert that the publication can't be deleted
+          Swal.fire({
+            title: 'No se puede eliminar',
+            text: 'Esta publicación no se puede eliminar porque tiene un trueque confirmado asociado.',
+            icon: 'error',
+            confirmButtonText: 'Entendido'
+          });
+        } else {
+          // If no confirmed proposal found, confirm deletion of the publication
+          Swal.fire({
+            title: 'Confirmar',
+            text: '¿Estás seguro de que deseas eliminar esta publicación?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Eliminar'
           }).then((result) => {
-      if (result.isConfirmed) {
-        this.deletePublication(productID);
-        Swal.fire('Publicación eliminada', 'La publicación ha sido eliminada exitosamente', 'success').then(() => {
-          this.router.navigate(['/home']);
+            if (result.isConfirmed) {
+              this.deletePublication(productID);
+              Swal.fire('Publicación eliminada', 'La publicación ha sido eliminada exitosamente', 'success').then(() => {
+                this.router.navigate(['/home']);
+              });
+            }
+          });
+        }
+      },
+      error => {
+        // Handle error fetching trade proposals appropriately
+        Swal.fire({
+          title: 'Error',
+          text: 'Hubo un problema al verificar el estado del trueque asociado a la publicación.',
+          icon: 'error',
+          confirmButtonText: 'Entendido'
         });
       }
-          });
+    );
   }
 
   getCategory(price: number): string {
