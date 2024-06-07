@@ -14,6 +14,12 @@ export class EmailService {
 
   sendEmail(subject: string, message: string, recipientList: string[]): Observable<any> {
     const body = { subject, message, recipient_list: recipientList };
+    // check if recipient list is empty
+    if (recipientList.length === 0) {
+      return new Observable(observer => {
+      observer.error('Recipient list is empty');
+      });
+    }
     return this.http.post(this.apiUrl, body);
   }
 }

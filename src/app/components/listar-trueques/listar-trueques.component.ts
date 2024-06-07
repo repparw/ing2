@@ -26,7 +26,6 @@ export class ListarTruequesComponent implements OnInit, OnChanges {
                  private publicationService: PublicationService,
                  private router:Router,
                  private emailService: EmailService,
-                 private userService: UserService,
                 ){}
 
     ngOnInit(): void {
@@ -101,22 +100,19 @@ export class ListarTruequesComponent implements OnInit, OnChanges {
       const copiedDate = new Date(date);
       this.limitDate = new Date(copiedDate.setDate(copiedDate.getDate() - 1));
       // sum 3 hours to limitDate
-      this.limitDate.setHours(this.limitDate.getHours() + 3);
+      this.limitDate.setHours(this.limitDate.getHours() + 9);
       const currentDate = new Date();
       return this.limitDate.getTime() > currentDate.getTime();
   }
     mandarMailCancelar(trueque: TradeProposal) {
       let receptorMail: string = '';
-      this.userService.getCurrentUser().subscribe(
-        user => {
-          if (user.id == trueque.recipient_id){
+          if (this.userID == trueque.recipient.id){
             receptorMail = trueque.proposer.email
           }
-          else{
+          else {
             receptorMail = trueque.recipient.email
           }
 
-      });
       let asuntoCancelar = 'Su trueque ha sido cancelado'
       let mensajeCancelar = 'Su trueque por la publicación ' + trueque.publication.title +
       ' del usuario ' + trueque.recipient.name + ' ha sido cancelado.' ;

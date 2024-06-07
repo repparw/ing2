@@ -365,6 +365,7 @@ def send_email(request):
         subject = data['subject']
         message = data['message']
         recipient_list = data['recipient_list']
+
         send_mail(subject, message, '1francoagostinelli2000@gmail.com', recipient_list)
         return JsonResponse({'message': 'Email sent successfully'})
 
