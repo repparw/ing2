@@ -63,7 +63,47 @@ class TradeProposalSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TradeProposal
-        fields = ['id', 'proposer_id', 'proposer', 'recipient_id', 'recipient', 'publication_id', 'publication', 'proposed_items_id', 'proposed_items', 'suc_id', 'suc', 'status', 'date']
+        fields = [
+            'id', 'proposer_id', 'proposer', 'recipient_id', 'recipient',
+            'publication_id', 'publication', 'proposed_items_id', 'proposed_items',
+            'suc_id', 'suc', 'status', 'code', 'created_at', 'date'
+        ]
+
+    def create(self, validated_data):
+        proposer = validated_data.pop('proposer_id')
+        recipient = validated_data.pop('recipient_id')
+        publication = validated_data.pop('publication_id')
+        proposed_items = validated_data.pop('proposed_items_id')
+        suc = validated_data.pop('suc_id', None)
+
+        trade_proposal = TradeProposal.objects.create(
+            proposer=proposer,
+            recipient=recipient,
+            publication=publication,
+            suc=suc,
+            status=validated_data.get('status', 'pending'),
+            code=validated_data.get('code', ''),
+            date=validated_data.get('date')
+        )
+
+        trade_proposal.proposed_items.set(proposed_items)
+        return trade_proposal
+
+    def update(self, instance, validated_data):
+        instance.proposer = validated_data.get('proposer_id', instance.proposer)
+        instance.recipient = validated_data.get('recipient_id', instance.recipient)
+        instance.publication = validated_data.get('publication_id', instance.publication)
+        instance.suc = validated_data.get('suc_id', instance.suc)
+        instance.status = validated_data.get('status', instance.status)
+        instance.code = validated_data.get('code', instance.code)
+        instance.date = validated_data.get('date', instance.date)
+
+        proposed_items = validated_data.get('proposed_items_id')
+        if proposed_items is not None:
+            instance.proposed_items.set(proposed_items)
+
+        instance.save()
+        return instance
 
 class CustomAuthTokenSerializer(serializers.Serializer):
     username = serializers.CharField()

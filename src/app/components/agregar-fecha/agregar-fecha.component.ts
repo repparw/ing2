@@ -4,6 +4,7 @@ import { SucursalService } from 'src/app/services/sucursal.service';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { TradeService } from 'src/app/services/trade.service';
 import { TradeProposal } from 'src/app/models/tradeProposal';
+import { Sucursal } from 'src/app/models/sucursal';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 
@@ -15,7 +16,7 @@ import { Router } from '@angular/router';
 export class AgregarFechaComponent implements OnInit {
   tradeID: number;
   agregarFechaForm: FormGroup;
-  sucursales: any[] = [];
+  sucursales: Sucursal[] = [];
   minDate: string;
 
   constructor(
@@ -26,7 +27,7 @@ export class AgregarFechaComponent implements OnInit {
     private router: Router
   ) {
     this.agregarFechaForm = this.fb.group({
-      sucursal: ['', Validators.required],
+      sucursal: [0, Validators.required],
       fecha: ['', Validators.required],
       hora: ['', [Validators.required, this.timeRangeValidator]]
     });
@@ -54,23 +55,24 @@ export class AgregarFechaComponent implements OnInit {
   }
 
   onSubmit() {
-    
+
     this.tradeService.getTradeProposal(this.tradeID).subscribe((tradeProposal: TradeProposal) => {
       console.log(tradeProposal);
-      tradeProposal.suc_id = this.agregarFechaForm.value.sucursal;
+      tradeProposal.suc_id = this.agregarFechaForm.value.sucursal as number;
+      console.log('fecha:', this.agregarFechaForm.value.fecha);
       tradeProposal.date = this.agregarFechaForm.value.fecha;
+      console.log('date:', tradeProposal.date);
       tradeProposal.status="confirmed";
 
-      
       this.tradeService.updateTrade(this.tradeID, tradeProposal).subscribe(
         updatedTradeProposal => {
-          console.log('TradeProposal actualizado:');
+          console.log('TradeProposal actualizado:', updatedTradeProposal);
         },
         error => {
           console.error('Error al actualizar el TradeProposal:', error);
         }
       );
-      
+
     });
     this.router.navigateByUrl('/home');
   }

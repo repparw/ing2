@@ -5,7 +5,7 @@
       <div class="form-group">
         <label for="sucursal">Seleccionar sucursal:</label>
         <select id="sucursal" formControlName="sucursal" class="form-control">
-          <option *ngFor="let sucursal of sucursales" [value]="sucursal.address">{{ sucursal.address }}</option>
+          <option *ngFor="let sucursal of sucursales" [value]="sucursal.id">{{ sucursal.address }}</option>
         </select>
       </div>
       <div class="form-group">

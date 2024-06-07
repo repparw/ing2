@@ -1,14 +1,19 @@
 import { Component, OnInit } from '@angular/core';
-import { TradeService } from 'src/app/services/trade.service';
+import { TradeService } from 'src/app/services/trade.service'
 import { UserService } from '../../services/user.service'
 import { Router } from '@angular/router';
+
+import { TradeProposal } from 'src/app/models/tradeProposal';
+import { Pub } from 'src/app/models/pub';
+import { Sucursal } from 'src/app/models/sucursal';
+import { User } from 'src/app/models/user';
 
 @Component({
   selector: 'app-listar-ofertas-recibidas',
   templateUrl: './listar-ofertas-recibidas.component.html',
   styleUrls: ['./listar-ofertas-recibidas.component.css']
 })
-export class ListarOfertasRecibidasComponent implements OnInit{
+export class ListarOfertasRecibidasComponent implements OnInit {
     data: any[] = [];
     filteredDataProposal: any[] = [];
     filteredDataTradeToConfirm: any[] = [];
@@ -22,28 +27,53 @@ export class ListarOfertasRecibidasComponent implements OnInit{
     tituloSinFecha: string = 'Confirmar fecha para realizar este trueque:'
     tituloConfirmado: string = '¡Trueque confirmado!'
 
-    currentUserDni!: string;
     currentUserId!: number;
     showList: boolean[] = [false, false, false];
 
 
 
-    constructor (private tradeService: TradeService, private router:Router, private userService: UserService){
-    }
+    constructor (private tradeService: TradeService,
+                 private router:Router,
+                 private userService: UserService
+                ){}
 
     //ESTO ES POR AHORA: LA DATA LA RECIBE COMO PARAMETRO
     ngOnInit(): void {
-      this.userService.getCurrentUser().subscribe(
-        user => {
-          this.currentUserDni = user.username;
-          this.currentUserId = user.id;
+        this.userService.getCurrentUser().subscribe({
+          next: (user: User) => {
+            this.currentUserId = user.id; // Assuming id is the user's ID field in your User model
+
+            // Once you have the current user, fetch trade proposals
+            this.fetchTradeProposals();
+          },
+          error: (error: any) => {
+            console.error('Error fetching current user:', error);
+            // Handle error fetching current user
+          }
         });
-      this.tradeService.getTradeProposals(this.currentUserDni).subscribe(data => {
-        this.data = data;
-        this.filterProposals();
-        this.filterTradeToConfirm();
-        this.filterConfirm()
-      });}
+      }
+
+    fetchTradeProposals(): void {
+      this.tradeService.getTradeProposals().subscribe({
+        next: (response: TradeProposal[]) => {
+          this.data = response;
+          console.log('Proposals:', this.data);
+
+          // Apply filters after fetching data
+          this.filterTradeToConfirm();
+          this.filterProposals();
+          this.filterConfirm();
+
+          console.log('Filtered proposals to confirm:', this.filteredDataTradeToConfirm);
+          console.log('Filtered proposals:', this.filteredDataProposal);
+          console.log('Filtered confirmations:', this.filteredDataConfirm);
+        },
+        error: (error: any) => {
+          console.error('Error fetching trade proposals:', error);
+          // Handle error fetching trade proposals
+        }
+      });
+    }
 
     filterProposals(): void {
       this.filteredDataProposal = this.data.filter(proposal =>

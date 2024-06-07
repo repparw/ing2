@@ -22,7 +22,6 @@ export class ListarTruequesComponent implements OnInit, OnChanges {
     fecha2?: Date;
     limitDate?: Date;
 
-    // TODO trade and user service not used?
     constructor (private tradeService: TradeService,
                  private publicationService: PublicationService,
                  private router:Router,
@@ -37,7 +36,6 @@ export class ListarTruequesComponent implements OnInit, OnChanges {
 
     ngOnChanges(changes: SimpleChanges): void {
       if (changes['data']) {
-        console.log('ngOnChanges - data length:', this.data.length);
         // Re-initialize the show array whenever data changes
         this.show = new Array(this.data.length).fill(false);
       }
@@ -100,14 +98,13 @@ export class ListarTruequesComponent implements OnInit, OnChanges {
 
     // validate Date is more than 24 hours away from var date
     validateDate(date: Date): boolean {
-      // save limitDate with value date - 24 hours
-      this.limitDate = (new Date(date.setDate(date.getDate() - 1)));
+      const copiedDate = new Date(date);
+      this.limitDate = new Date(copiedDate.setDate(copiedDate.getDate() - 1));
+      // sum 3 hours to limitDate
+      this.limitDate.setHours(this.limitDate.getHours() + 3);
       const currentDate = new Date();
-      const date2 = new Date(date);
-      const diff = date2.getTime() - currentDate.getTime();
-      return diff > 86400000;
-    }
-
+      return this.limitDate.getTime() > currentDate.getTime();
+  }
     mandarMailCancelar(trueque: TradeProposal) {
       let receptorMail: string = '';
       this.userService.getCurrentUser().subscribe(

@@ -42,9 +42,6 @@ export class UserService {
           const isAdmin = !!user && user.is_superuser === true;
           this.isEmployeeSubject.next(isEmployee);
           this.isAdminSubject.next(isAdmin);
-          console.log('IsAdmin', isAdmin);
-          console.log('IsAdmin$', this.isAdmin$);
-          console.log('IsAdminSubject', this.isAdminSubject);
         }),
         catchError((error: any) => {
           console.error('Error fetching current user:', error);
