@@ -41,7 +41,7 @@ export class EditarPublicacionComponent implements OnInit {
       rating: new FormControl(0),
       price: new FormControl(0),
       user: new FormControl(0),
-     });
+    });
   }
 
   ngOnInit() {
@@ -78,11 +78,11 @@ export class EditarPublicacionComponent implements OnInit {
   }
 
   getPublication(id: number): void {
-   this.publicationService.getPublication(id).subscribe((pub: Pub) => {
-        if (pub.user !== this.userId) { Swal.fire('Error','No está autorizado para editar esta publicación','error').then(() => this.goBack()); } else {
-          this.prodForm = this.getForm(pub);
-        }
-        })
+    this.publicationService.getPublication(id).subscribe((pub: Pub) => {
+      if (pub.user !== this.userId) { Swal.fire('Error', 'No está autorizado para editar esta publicación', 'error').then(() => this.goBack()); } else {
+        this.prodForm = this.getForm(pub);
+      }
+    })
   }
 
   getForm(data: Pub) {
@@ -95,7 +95,7 @@ export class EditarPublicacionComponent implements OnInit {
       rating: new FormControl(data.rating),
       price: new FormControl(data.price),
       user: new FormControl(data.user),
-          });
+    });
   }
 
   hasErrors(controlName: string, errorType: string) {
@@ -104,8 +104,16 @@ export class EditarPublicacionComponent implements OnInit {
   }
 
   goBack(): void {
-    window.history.back();
-      }
+    window.location.href = '..';
+  }
+
+  goBackAndRefresh() {
+    this.location.back();  // Navigate back
+    setTimeout(() => {
+      window.location.reload();  // Refresh the page after navigation
+    }, 500);  // Delay to ensure the navigation is completed before refreshing
+  }
+
 
   onSubmit() {
     if (this.prodForm.invalid) {
@@ -121,7 +129,7 @@ export class EditarPublicacionComponent implements OnInit {
           return;
         }
         else if (this.uploader.queue.length === 0) {
-          Swal.fire('Publicación creada', 'La publicación ha sido creada exitosamente', 'success').then(() => {
+          Swal.fire('Publicación editada', 'La publicación ha sido editada exitosamente', 'success').then(() => {
             this.goBack();
           });
         }
@@ -132,20 +140,20 @@ export class EditarPublicacionComponent implements OnInit {
 
             this.uploader.onCompleteAll = () => {
               console.log('Fotos subidas exitosamente');
-              Swal.fire('Publicación creada', 'La publicación ha sido creada exitosamente', 'success').then(() => {
-              this.goBack();
+              Swal.fire('Publicación editada', 'La publicación ha sido editada exitosamente', 'success').then(() => {
+                this.goBackAndRefresh();
               });
 
-            this.uploader.onErrorItem = (item, response, status, headers) => {
-              console.error('Error subiendo fotos:', response);
+              this.uploader.onErrorItem = (item, response, status, headers) => {
+                console.error('Error subiendo fotos:', response);
               };
             }
           });
         }
 
       },
-    error => {
-      Swal.fire('Error', 'No se ha podido actualizar la publicación', 'error');
-  });
+      error => {
+        Swal.fire('Error', 'No se ha podido actualizar la publicación', 'error');
+      });
   }
 }

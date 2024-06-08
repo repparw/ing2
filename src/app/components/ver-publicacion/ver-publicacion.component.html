@@ -1,47 +1,56 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista de Publicaciones</title>
-  </head>
-  <body>
-    <div class="container">
-      <div class="carousel-container">
-        <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-          <div class="carousel-inner">
-            <div class="carousel-item c-item" *ngFor="let foto of linkFoto; let i = index" [class.active]="i === 0">
-              <img class="d-block w-100 c-img" [src]="foto" [alt]="'Slide ' + (i + 1)">
-            </div>
-          </div>
 
-          <button class="carousel-control-prev slide-control" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-          </button>
-          <button class="carousel-control-next slide-control" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-          </button>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lista de Publicaciones</title>
+</head>
+
+<body>
+  <div class="container">
+    <div class="carousel-container">
+      <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner">
+          <div class="carousel-item c-item" *ngFor="let foto of linkFoto; let i = index" [class.active]="i === 0">
+            <img class="d-block w-100 c-img" [src]="foto" [alt]="'Slide ' + (i + 1)">
+          </div>
         </div>
+
+        <button class="carousel-control-prev slide-control" type="button" data-bs-target="#carouselExampleIndicators"
+          data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        </button>
+        <button class="carousel-control-next slide-control" type="button" data-bs-target="#carouselExampleIndicators"
+          data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        </button>
       </div>
-      <div *ngIf="data" class="carousel-text text-start text-justify">
-        <h2>{{data.title}}</h2>
-        <p>Categoria: {{data.category}}</p>
-        <p>
+    </div>
+    <div *ngIf="data" class="carousel-text text-start text-justify">
+      <h2>{{data.title}}</h2>
+      <p>Categoria: {{data.category}}</p>
+      <p>
         <a href="javascript:void(0);" (click)="showPricingGuide()">Precio: </a>
         <br>
         Categoría {{ getCategory(data.price) }}
-        </p>
-        <p>
+      </p>
+      <p>
         <a *ngIf="username" (click)="navigate(username)">Dueño: {{owner}}</a>
-        </p>
-        <p>Descripcion: {{data.desc}}</p>
-        <!-- TODO  <p>Preguntas (solo si está logueado)</p> -->
-      </div>
-        <div class="col mb-3 float-end text-end text-justify">
-          <button *ngIf="canEdit" type="button" (click)="editar(productID)" class="btn btn-primary">Modificar publicacion</button><br>
-          <button *ngIf="canEdit" type="button" (click)="confirmDeletePublication(productID)" class="btn btn-danger">Eliminar publicacion</button>
-          <button *ngIf="!canEdit && !data?.is_paused" type="button" (click)="proponerTrueque(productID)" class="btn btn-primary">Proponer Trueque</button>
-        </div>
+      </p>
+      <p>Descripcion: {{data.desc}}</p>
+      <!-- TODO  <p>Preguntas (solo si está logueado)</p> -->
+      <p>Productos deseados: {{data.desired}}</p>
     </div>
-  </body>
+    <div class="col mb-3 float-end text-end text-justify">
+      <button *ngIf="canEdit" type="button" (click)="editar(productID)" class="btn btn-primary">Modificar
+        publicacion</button><br>
+      <button *ngIf="canEdit" type="button" (click)="confirmDeletePublication(productID)"
+        class="btn btn-danger">Eliminar publicacion</button>
+      <button *ngIf="!canEdit && !data?.is_paused" type="button" (click)="proponerTrueque(productID)"
+        class="btn btn-primary">Proponer Trueque</button>
+    </div>
+  </div>
+</body>
+
 </html>

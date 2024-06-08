@@ -266,7 +266,7 @@ class UpdatePasswordView(UpdateAPIView):
   """
   serializer_class = UpdatePasswordSerializer
   model = User
-  permission_classes = (IsAuthenticated)
+  permission_classes = [IsAuthenticated]
 
   def get_object(self, queryset=None):
       obj = self.request.user
