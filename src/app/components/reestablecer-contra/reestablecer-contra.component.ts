@@ -33,10 +33,29 @@ export class ReestablecerContraComponent implements OnInit, HttpInterceptor {
       return this.reestablecerForm.controls.email;
     }
 
-    requestPasswordReset() {
-      this.userService.requestPasswordReset(this.reestablecerForm.get('email')?.value || '').subscribe(
-        response => {
-          // TODO: animation while waiting?
+requestPasswordReset() {
+      Swal.fire({
+        title: 'Procesando...',
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      });
+
+      this.userService.requestPasswordReset(this.reestablecerForm.get('email')?.value || '').subscribe({
+        next: (response) => {
+          // Handle the response if needed
+        },
+        error: (error) => {
+          // Handle the error if needed
+        },
+        complete: () => {
+          // This block is intentionally left empty because finalize will handle both cases
+        }
+      }).add(() => {
+        // This code will run regardless of success or error
+        setTimeout(() => {
+          Swal.close();
           Swal.fire({
             title: 'Solicitud de restablecimiento de contraseña',
             text: 'Si existe un usuario con el correo proporcionado, se enviará un correo con las instrucciones para restablecer la contraseña.',
@@ -44,12 +63,10 @@ export class ReestablecerContraComponent implements OnInit, HttpInterceptor {
             confirmButtonText: 'Ok'
           }).then(() => {
             this.navigate('login');
-            });
-        },
-        error => {
-          console.error('Solicitud de restablecimiento de contraseña fallida', error);
-        });
-        }
+          });
+        }, 3000); // Espera 3 segundos antes de mostrar el mensaje de confirmación
+      });
+    }
 
     hasErrors(controlName: string, errortype: string){
       return this.reestablecerForm.get(controlName)?.hasError(errortype) && this.reestablecerForm.get(controlName)?.touched
