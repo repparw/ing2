@@ -45,8 +45,10 @@
               <button type="button" class="btn btn-outline-danger"  (click)="cancel(trueque.id)">Cancelar Trueque</button>
               <span>Tiempo hasta: {{ limitDate | date:'dd/MM/yyyy HH:mm:ss'}}</span>
             </div>
-            <!-- Hacer redirect del empleado -->
-            <button *ngIf="empleado == true" type="button" class="btn btn-outline-primary" (click)="navigateConcretar(trueque.id)">Confirmar trueque como realizado</button>
+            <div *ngIf="empleado == true && trueque.status == 'confirmed'">
+              <button type="button" class="btn btn-outline-primary" (click)="navigateConcretar(trueque.id)">Concretar Trueque</button>
+              <button type="button" class="btn btn-outline-primary" (click)="navigateVentas(trueque.id)">Cargar Ventas Asociadas</button>              
+            </div>
           </div>
         </li>
         <!-- if list is empty, show message-->

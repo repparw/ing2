@@ -501,3 +501,13 @@ class SalesViewSet(viewsets.ModelViewSet):
             return Response({"message": "Ventas created successfully"}, status=status.HTTP_201_CREATED)
         else:
             return Response({"id": sales.id, "message": "Venta created successfully"}, status=status.HTTP_201_CREATED)
+        
+    @action(detail=False, methods=['get'])
+    def by_trade(self, request):
+        trade_id = request.query_params.get('trade')
+        if trade_id is not None:
+            ventas = self.get_queryset().filter(trade=trade_id)
+            serializer = self.get_serializer(ventas, many=True)
+            return Response(serializer.data)
+        return Response({"error": "Trade ID not provided"}, status=400)
+

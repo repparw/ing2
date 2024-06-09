@@ -1,2 +1,14 @@
-<p>concretar-trueque works!</p>
-<p>ID del trueque: {{tradeID}}</p>
+<html>
+<body>
+    <form [formGroup]="codeForm">
+        <div class="campo-codigo">
+            <label for="codigo" class="form-label">Codigo del trueque:</label>
+            <input type="text" class="form-control" id="codigo" formControlName="codigo" maxlength="6">
+            <div class="text-danger" *ngIf="hasErrors('codigo', 'minlength') ">El código es de 6 caracteres</div>
+        </div>
+    
+        <button type="button" class="btn-primary" [disabled]="codeForm.invalid" (click)="concretar(true)">Concretar Trueque</button>
+        <button type="button" class="btn btn-danger" [disabled]="codeForm.invalid" (click)="concretar(false)">Concretar como "No realizado"</button>
+  </form>
+</body>
+</html>

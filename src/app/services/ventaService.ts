@@ -25,4 +25,8 @@ export class VentaService {
   obtenerVentas(): Observable<Venta[]> {
     return this.http.get<Venta[]>(this.apiUrl, { headers: this.getHeaders() });
   }
+
+  obtenerVentasPorTrade(tradeId: number): Observable<Venta[]> {
+    return this.http.get<Venta[]>(`${this.apiUrl}by_trade?trade=${tradeId}`, { headers: this.getHeaders() });
+  }
 }
