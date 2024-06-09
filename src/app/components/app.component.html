@@ -30,6 +30,9 @@
           <li class="nav-item">
             <a class="nav-link" routerLink="crear-sucursal">Crear sucursal</a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="registrar-empleado">Registrar empleado</a>
+          </li>
         </ng-container>
         <ng-container *ngIf="(isEmployee$ | async)">
           <li class="nav-item">
@@ -55,9 +58,6 @@
         <ng-container *ngIf="!(isAuthenticated$ | async)">
         <li  class="nav-item">
           <a class="nav-link" routerLink="registrar-usuario">Registrar usuario</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="registrar-empleado">Registrar empleado</a>
         </li>
         </ng-container>
       </ul>

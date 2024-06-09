@@ -80,19 +80,19 @@ export class ListarTruequesComponent implements OnInit, OnChanges {
         confirmButtonText: "Confirmar"
       }).then((result) => {
         if (result.isConfirmed) {
-          Swal.fire({
-            title: "¡Cancelado!",
-            text: "El trueque ha sido cancelado.",
-            icon: "success"
-          });
           this.tradeService.getTradeProposal(id).subscribe(
             trade => {
               trade.status = "cancelled";
               this.tradeService.updateTrade(id, trade).subscribe();
               this.mandarMailCancelar(trade);
-        });
-      }
+              Swal.fire({
+                title: "¡Cancelado!",
+                text: "El trueque ha sido cancelado.",
+                icon: "success"
+              }).then(() => { location.reload(); });
       });
+    }
+    });
     }
 
     // validate Date is more than 24 hours away from var date

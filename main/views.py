@@ -489,7 +489,15 @@ class SalesViewSet(viewsets.ModelViewSet):
     serializer_class = SalesSerializer
 
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
+        if isinstance(request.data, list):
+            serializer = self.get_serializer(data=request.data, many=True)
+        else:
+            serializer = self.get_serializer(data=request.data)
+
         serializer.is_valid(raise_exception=True)
         sales = serializer.save()
-        return Response({"id": sales.id, "message": "Venta created successfully"}, status=status.HTTP_201_CREATED)
+
+        if isinstance(sales, list):
+            return Response({"message": "Ventas created successfully"}, status=status.HTTP_201_CREATED)
+        else:
+            return Response({"id": sales.id, "message": "Venta created successfully"}, status=status.HTTP_201_CREATED)

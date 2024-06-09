@@ -18,8 +18,8 @@ export class VentaService {
 
   constructor(private http: HttpClient) { }
 
-  cargarVenta(nuevaVenta: Venta): Observable<any> {
-    return this.http.post(this.apiUrl, nuevaVenta , { headers: this.getHeaders() });
+  cargarVenta(nuevasVentas: Venta[]): Observable<any> {
+    return this.http.post(this.apiUrl, nuevasVentas , { headers: this.getHeaders() });
   }
 
   obtenerVentas(): Observable<Venta[]> {

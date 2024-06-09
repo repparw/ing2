@@ -1,34 +1,47 @@
 <html lang="es">
-<div class="form-container w-25">
-    <h1>Registro de Venta</h1>
-    <p>Por favor, ingrese los datos de la venta</p>
-    <form [formGroup]="ventaForm" (ngSubmit)="cargarVenta()">
-        <div>
-            <label for="product">Código de Producto</label>
-            <input  id="product" class="form-control" formControlName="product">
-            <div>
-                <small class="text-danger" *ngIf="hasErrors('product', 'required')">El producto es requerido</small>
+  <div class="container">
+    <div class="form-container w-100">
+      <h1>Registro de Venta</h1>
+      <p>Por favor, ingrese los datos de la venta</p>
+      <form [formGroup]="ventaForm" (ngSubmit)="cargarVenta()">
+        <div formArrayName="ventas">
+          <button type="button" class="btn btn-secondary" (click)="addVenta()">+</button>
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label for="product" class="form-label">Código de Producto</label>
             </div>
-        </div>
-
-        <div>
-            <label for="quantity">Cantidad de Unidades</label>
-            <input  id="quantity" class="form-control" formControlName="quantity">
-            <div>
-                <small class="text-danger" *ngIf="hasErrors('quantity', 'required')">La cantidad es requerida</small>
+            <div class="col-md-4">
+              <label for="quantity" class="form-label">Cantidad de Unidades</label>
             </div>
-        </div>
-
-        <div>
-            <label for="price">Monto</label>
-            <input id="price" class="form-control" formControlName="price">
-            <div>
-                <small class="text-danger" *ngIf="hasErrors('price', 'required')">El monto es requerido</small>
+            <div class="col-md-3">
+              <label for="price" class="form-label">Monto</label>
             </div>
+          </div>
+          <div *ngFor="let venta of ventasFormArray.controls; let i=index" [formGroupName]="i" class="mb-3">
+            <div class="row g-3">
+              <div class="col-md-4">
+                <input id="product-{{i}}" class="form-control" formControlName="product">
+              </div>
+              <div class="col-md-4">
+                <input id="quantity-{{i}}" class="form-control" formControlName="quantity">
+              </div>
+              <div class="col-md-3">
+                <input id="price-{{i}}" class="form-control" formControlName="price">
+              </div>
+              <div class="col-md-1 text-start">
+                <button type="button" class="btn btn-danger btn-sm mt-1" (click)="removeVenta(i)" *ngIf="ventasFormArray.length > 1">一</button>
+              </div>
+            </div>
+          </div>
         </div>
-
-        <p *ngIf="registroError" class="text-danger">{{registroError}}</p>
-        <button type="submit" class="btn btn-primary" [disabled]="ventaForm.invalid">Registrar</button>
-    </form>
-</div>
+        <div class="row g-3">
+          <small class="text-danger" *ngIf="hasAnyErrors('product', 'required')">El código de producto es requerido</small>
+          <small class="text-danger" *ngIf="hasAnyErrors('quantity', 'required')">La cantidad es requerida</small>
+          <small class="text-danger" *ngIf="hasAnyErrors('price', 'required')">El monto es requerido</small>
+          <small *ngIf="registroError" class="text-danger">{{registroError}}</small>
+        </div>
+        <button type="submit" class="btn btn-primary mt-3" [disabled]="ventaForm.invalid">Registrar</button>
+      </form>
+    </div>
+  </div>
 </html>
