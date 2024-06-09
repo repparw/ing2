@@ -15,6 +15,10 @@ export class SucursalService {
     return this.http.get<any[]>(this.apiUrl);
   }
 
+  getSucursal(id: number): Observable<Sucursal> {
+    return this.http.get<Sucursal>(`${this.apiUrl}${id}/`);
+  }
+
   public getPhotos(id: number): string {
     return `${this.apiUrl}${id}/photos/`;
   }
