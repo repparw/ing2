@@ -119,7 +119,7 @@ export class ListarTruequesComponent implements OnInit, OnChanges {
 
       let asuntoCancelar = 'Su trueque ha sido cancelado'
       let mensajeCancelar = 'Su trueque por la publicación ' + trueque.publication.title +
-      ' del usuario ' + trueque.recipient.name + ' ha sido cancelado.' ;
+      ' del usuario ' + trueque.recipient.name + ' con el usuario ' + trueque.proposer.name + ' ha sido cancelado.' ;
       this.emailService.sendEmail(asuntoCancelar, mensajeCancelar, [receptorMail]).subscribe(
       response => {
       console.log('Email sent successfully', response);
