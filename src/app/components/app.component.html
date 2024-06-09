@@ -4,7 +4,8 @@
     <a class="navbar-brand" href="#">
       <img src="assets/logos/Solo_Logo.png" alt="Fedeteria Logo" style="max-height: 40px;">
     </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
@@ -21,9 +22,6 @@
           </li>
           <li class="nav-item">
             <a class="nav-link" routerLink="trueques-recibidos">Mis trueques</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" routerLink="trueque/:id/cargar-venta">Cargar venta</a>
           </li>
         </ng-container>
         <ng-container *ngIf="(isAdmin$ | async)">
@@ -53,22 +51,22 @@
 
         </ng-container>
         <ng-container *ngIf="!(isAuthenticated$ | async)">
-        <li  class="nav-item">
-          <a class="nav-link" routerLink="registrar-usuario">Registrar usuario</a>
-        </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="registrar-usuario">Registrar usuario</a>
+          </li>
         </ng-container>
       </ul>
       <ul class="navbar-nav ms-auto">
         <ng-container *ngIf="isAuthenticated$ | async">
-        <li class="nav-item justify-content-end">
-          <a class="nav-link" (click)="onLogout()">Cerrar Sesión</a>
-        </li>
+          <li class="nav-item justify-content-end">
+            <a class="nav-link" (click)="onLogout()">Cerrar Sesión</a>
+          </li>
         </ng-container>
 
         <ng-container *ngIf="!(isAuthenticated$ | async)">
-        <li class="nav-item justify-content-end">
-          <a class="nav-link" routerLink="login">Inicio Sesion</a>
-        </li>
+          <li class="nav-item justify-content-end">
+            <a class="nav-link" routerLink="login">Inicio Sesion</a>
+          </li>
         </ng-container>
       </ul>
     </div>
