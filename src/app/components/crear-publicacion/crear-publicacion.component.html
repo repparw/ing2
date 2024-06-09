@@ -23,24 +23,21 @@
     </div>
   </div>
 
+<div class="mb-3">
+  <label class="form-label" for="category">Categoria</label>
+  <select class="form-control" id="category" [formControlName]="'category'">
+    <option value="" disabled selected>Seleccione una categoria</option>
+    <option value="Serruchos">Serruchos</option>
+    <option value="Destornillador">Destornillador</option>
+    <option value="Powertools">Powertools</option>
+    <option value="Otros">Otros</option>
+  </select>
   <div class="mb-3">
-    <label class="form-label" for="category">
-      Categoria
-    </label>
-    <input class="form-control" list="catOptions" id="category" [formControlName]="'category'" placeholder="e.g serruchos">
-<datalist id="catOptions">
-  <option value="Serruchos">
-  <option value="Powertools">
-  <option value="cat3">
-  <option value="otra cat">
-  <option value="test">
-</datalist>
-    <div class="mb-3">
-    <small class="text-danger" *ngIf="hasErrors('category', 'required')" >Una categoria es obligatoria</small>
-    </div>
+    <small class="text-danger" *ngIf="hasErrors('category', 'required')">Una categoria es obligatoria</small>
   </div>
+</div>
 
-    <input type="hidden" id="is_paused" name="is_paused" [formControlName]="'is_paused'">
+<input type="hidden" id="is_paused" name="is_paused" [formControlName]="'is_paused'">
 
   <div class="mb-3">
      <label class="form-label" for="photos">

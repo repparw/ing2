@@ -13,7 +13,7 @@ export class HomeComponent implements OnInit {
   sortField: string = '';
   sortOrder: 'asc' | 'desc' = 'asc';
   searchTerm: string = ''; // Nueva propiedad para el término de búsqueda
-  categories: string[] = ['Serruchos', 'Destornillador', 'Powertools'];
+  categories: string[] = ['Serruchos', 'Destornillador', 'Powertools', 'Otros'];
   selectedCategory: string = '';
   noResultsFound: boolean = false;
 
