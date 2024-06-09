@@ -8,6 +8,8 @@ import Swal from 'sweetalert2';
 
 import { UserService } from '../../services/user.service';
 import { User } from '../../models/user';
+import { Sucursal } from 'src/app/models/sucursal';
+import { SucursalService } from 'src/app/services/sucursal.service';
 
 @Component({
   selector: 'app-modificar-perfil',
@@ -24,9 +26,10 @@ export class ModificarPerfilComponent implements OnInit {
       mailing: new FormControl(false),
       date: new FormControl(new Date()),
       });
+  sucursales: Sucursal[] = [];
 
 
-  constructor(private formBuilder: FormBuilder, private userService: UserService, private location: Location){
+  constructor(private formBuilder: FormBuilder, private userService: UserService, private location: Location, private sucursalService: SucursalService){
   }
 
   ngOnInit() {
@@ -39,9 +42,12 @@ export class ModificarPerfilComponent implements OnInit {
       this.userForm.controls['mailing'].setValue(user.mailing as boolean);
       this.userForm.controls['date'].setValue(user.date);
       });
-    this.userForm.get('username')?.disable()
-    this.userForm.get('email')?.disable()
-    this.userForm.get('date')?.disable()
+    this.userForm.get('username')?.disable();
+    this.userForm.get('email')?.disable();
+    this.userForm.get('date')?.disable();
+    this.sucursalService.getSucursales().subscribe((sucursalData) => {
+      this.sucursales = sucursalData;
+    });
   }
 
   hasErrors(controlName: string, errorType: string) {

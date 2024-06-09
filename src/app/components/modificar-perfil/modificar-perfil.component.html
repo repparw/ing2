@@ -32,40 +32,16 @@
       </label>
       <input type="date" id="date" class="form-control" formControlName="date" readonly>
     </div>
-
-    <div>
-      <label for="suc">
-        Sucursal Mas Cercana
-      </label>
-      <input type="text" class="form-control" id="suc" formControlName="suc">
+    
+    <div class="form-group">
+      <label for="suc">Seleccionar sucursal más cercana:</label>
+      <select id="suc" formControlName="suc" class="form-control">
+        <option *ngFor="let sucursal of sucursales" [value]="sucursal.id">{{ sucursal.address }}</option>
+      </select>
       <div>
         <small class="text-danger" *ngIf="hasErrors('suc', 'required')" >La sucursal es requerida</small>
       </div>
     </div>
-
-<!--
-    <div *ngIf="contraVisible">
-      <label for="passwordActual">Contraseña actual</label>
-      <input type="password" id="passwordActual" class="form-control" formControlName="passwordActual">
-      <div>
-        <small class="text-danger" *ngIf="hasErrors('passwordActual', 'required')">La contraseña anterior es requerida</small>
-        <small class="text-danger" *ngIf="hasErrors('passwordActual', 'minlength')">La contraseña debe tener 6 o más caracteres</small>
-        <small class="text-danger" *ngIf="hasErrors('passwordActual', 'pattern') ">La contraseña debe tener al menos 1 símbolo.</small>
-      </div>
-
-      <label for="passwordNueva">Nueva contraseña</label>
-      <input type="password" id="passwordNueva" class="form-control" formControlName="passwordNueva">
-      <div>
-        <small class="text-danger" *ngIf="hasErrors('passwordNueva', 'required')">La contraseña es requerida</small>
-        <small class="text-danger" *ngIf="hasErrors('passwordNueva', 'minlength')">La contraseña debe tener 6 o más caracteres</small>
-        <small class="text-danger" *ngIf="hasErrors('passwordNueva', 'pattern') ">La nueva contraseña debe tener al menos 1 símbolo.</small>
-        <small class="text-danger" *ngIf="sonIguales('passwordNueva', 'passwordActual') ">La nueva contraseña debe ser distinta a la anterior.</small>
-      </div>
-      <div>
-        <button type="button" class="btn btn-danger" (click)="ocultarForm()">Cancelar</button>
-      </div>
-    </div>
--->
 
     <div>
       <label class="form-label" for="mailing">Mailing</label>
