@@ -104,7 +104,7 @@ export class ListarTruequesComponent implements OnInit, OnChanges {
       const copiedDate = new Date(date);
       this.limitDate = new Date(copiedDate.setDate(copiedDate.getDate() - 1));
       // sum 3 hours to limitDate
-      this.limitDate.setHours(this.limitDate.getHours() + 9);
+      this.limitDate.setHours(this.limitDate.getHours() + 3);
       const currentDate = new Date();
       return this.limitDate.getTime() > currentDate.getTime();
   }
