@@ -1,27 +1,44 @@
 <div class="container mt-4">
-    <div class="mb-3">
-        <input type="text" class="form-control" placeholder="Buscar..." [(ngModel)]="searchTerm"
-            (input)="onSearchTermChange()" />
-    </div>
-    <div>
-        <select class="form-select" (change)="selectCategory($event)">
+    <div class="row">
+      <!-- Left ad-banner -->
+      <div class="col-2 d-none d-md-block">
+        <div class="ad-banner">
+          <img src="/assets/ads/left-ad.png" alt="Left Ad" class="img-fluid">
+        </div>
+      </div>
+      <!-- Main content -->
+      <div class="col-12 col-md-8">
+        <div class="mb-3">
+          <input type="text" class="form-control" placeholder="Buscar..." [(ngModel)]="searchTerm" (input)="onSearchTermChange()" />
+        </div>
+        <div>
+          <select class="form-select" (change)="selectCategory($event)">
             <option value="" selected>Filtrar por producto</option>
             <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
-        </select>
-    </div>
-    <!-- Agrega el mensaje de advertencia aquí -->
-    <div *ngIf="noResultsFound" class="alert alert-warning" role="alert">
-        No hay publicaciones que cumplan con la categoría "{{ selectedCategory }}"
-    </div>
-    <div class="d-flex justify-content-between mb-3">
-        <button class="btn btn-primary" (click)="setSort('price')">
+          </select>
+        </div>
+        <!-- Agrega el mensaje de advertencia aquí -->
+        <div *ngIf="noResultsFound" class="alert alert-warning" role="alert">
+          No hay publicaciones que cumplan con la categoría "{{ selectedCategory }}"
+        </div>
+        <div class="d-flex justify-content-between mb-3">
+          <button class="btn btn-primary" (click)="setSort('price')">
             Ordenar por precio
             <span *ngIf="sortField === 'price'">{{ sortOrder === 'asc' ? '▲' : '▼' }}</span>
-        </button>
-        <button class="btn btn-primary" (click)="setSort('title')">
+          </button>
+          <button class="btn btn-primary" (click)="setSort('title')">
             Ordenar por título
             <span *ngIf="sortField === 'title'">{{ sortOrder === 'asc' ? '▲' : '▼' }}</span>
-        </button>
+          </button>
+        </div>
+        <app-listar-publicaciones [data]="filteredData"></app-listar-publicaciones>
+      </div>
+      <!-- Right ad-banner -->
+      <div class="col-2 d-none d-md-block">
+        <div class="ad-banner">
+          <img src="assets/ads/left-ad.png" alt="Right Ad" class="img-fluid">
+        </div>
+      </div>
     </div>
-    <app-listar-publicaciones [data]="filteredData"></app-listar-publicaciones>
-</div>
+  </div>
+  
