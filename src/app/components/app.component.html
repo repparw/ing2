@@ -1,6 +1,5 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid d-flex">
-    <!-- Wrap the img inside an anchor tag -->
     <a class="navbar-brand" href="#">
       <img src="assets/logos/Solo_Logo.png" alt="Fedeteria Logo" style="max-height: 40px;">
     </a>
@@ -20,8 +19,15 @@
           <li class="nav-item">
             <a class="nav-link" routerLink="sucursales">Ver sucursales</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" routerLink="trueques-recibidos">Mis trueques</a>
+          <!-- Trueques Dropdown -->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="truequesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Trueques
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="truequesDropdown">
+              <li><a class="dropdown-item" routerLink="trueques-recibidos">Mis trueques</a></li>
+              <li  *ngIf="(isEmployee$ | async)"><a class="dropdown-item" routerLink="trueques-empleado">Trueques Confirmados</a></li>
+            </ul>
           </li>
         </ng-container>
         <ng-container *ngIf="(isAdmin$ | async)">
@@ -36,19 +42,17 @@
           <li class="nav-item">
             <a class="nav-link" routerLink="tasar-publicaciones">Tasar publicaciones</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" routerLink="ad-email">Ad-email</a>
+          <!-- Promociones Dropdown -->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="promocionesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Promociones
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="promocionesDropdown">
+              <li><a class="dropdown-item" routerLink="ad-email">Ad-email</a></li>
+              <li><a class="dropdown-item" routerLink="enviar-descuento">Enviar descuento</a></li>
+              <li><a class="dropdown-item" routerLink="verificar-codigo">Verificar código</a></li>
+            </ul>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" routerLink="enviar-descuento">Enviar descuento</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" routerLink="verificar-codigo">Verificar código</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" routerLink="trueques-empleado">Trueques Confirmados</a>
-          </li>
-
         </ng-container>
         <ng-container *ngIf="!(isAuthenticated$ | async)">
           <li class="nav-item">
