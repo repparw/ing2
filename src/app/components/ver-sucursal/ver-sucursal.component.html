@@ -1,0 +1,28 @@
+<div class="container">
+  <div *ngIf="sucursal">
+    <h3>Detalles de sucursal</h3>
+    <p><strong>Dirección:</strong> {{ sucursal.address }}</p>
+    <p><strong>Teléfono:</strong> {{ sucursal.phone }}</p>
+    <img [src]="getPhotos(sucursal.id)" class="img-thumbnail" alt="{{ sucursal.address }}">
+  </div>
+
+  <div *ngIf="noStatistics" class="alert alert-warning" role="alert">
+    No hay estadísticas disponibles para esta sucursal.
+  </div>
+
+  <div *ngIf="statistics && !noStatistics">
+  <h2>Estadisticas de sucursal</h2>
+  <p>Usuarios totales: {{ statistics.total_users }}</p>
+  <p>Publicaciones totales: {{ statistics.total_publications }}</p>
+  <p>Trueques totales : {{ statistics.total_trade_proposals }}</p>
+  <p>Ventas totales: {{ statistics.total_sales }}</p>
+  <p>Ingresos totales: {{ statistics.total_revenue }}</p>
+  <p>Trueques completados: {{ statistics.completed_percentage }}%</p>
+  <p>Trueques rechazados: {{ statistics.rejected_percentage }}%</p>
+  <div>
+    <img [src]="'data:image/png;base64,' + statistics.sales_plot" alt="Ventas por precio">
+  </div>
+  <div>
+    <img [src]="'data:image/png;base64,' + statistics.status_plot" alt="Distribucion de estado de trueques">
+  </div>
+</div>

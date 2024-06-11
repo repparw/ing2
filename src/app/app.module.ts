@@ -38,6 +38,8 @@ import { CargarVentaComponent } from './components/cargar-venta/cargar-venta.com
 import { AgregarFechaComponent } from './components/agregar-fecha/agregar-fecha.component';
 import { ListarTruequesEmpleadoComponent } from './components/listar-trueques-empleado/listar-trueques-empleado.component';
 import { ConcretarTruequeComponent } from './components/concretar-trueque/concretar-trueque.component';
+import { EstadisticasGlobalesComponent } from './components/estadisticas-globales/estadisticas-globales.component';
+import { VerSucursalComponent } from './components/ver-sucursal/ver-sucursal.component';
 
 
 @NgModule({
@@ -72,6 +74,8 @@ import { ConcretarTruequeComponent } from './components/concretar-trueque/concre
     AgregarFechaComponent,
     ListarTruequesEmpleadoComponent,
     ConcretarTruequeComponent,
+    EstadisticasGlobalesComponent,
+    VerSucursalComponent,
   ],
   imports: [
     BrowserModule,

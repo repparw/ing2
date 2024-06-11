@@ -112,8 +112,10 @@ export class TasarPublicacionComponent implements OnInit {
       confirmButtonText: 'Eliminar'
           }).then((result) => {
       if (result.isConfirmed) {
+        // TODO cambiar delete para q modifique el estado?
         this.publicationService.deletePublication(this.id).subscribe(
           () => {
+            // TODO notificar via mail al usuario que su publicacion fue rechazada
             Swal.fire(
               'Eliminada',
               'Publicación eliminada correctamente',

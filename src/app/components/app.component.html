@@ -4,20 +4,30 @@
       <img src="assets/logos/Solo_Logo.png" alt="Fedeteria Logo" style="max-height: 40px;">
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                                                                           aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
-        <ng-container *ngIf="isAuthenticated$ | async">
+        <ng-container *ngIf="(isAdmin$ | async)">
           <li class="nav-item">
-            <a class="nav-link" routerLink="ver-mi-perfil">Ver Mi Perfil</a>
+            <a class="nav-link" routerLink="estadisticas">Estadisticas</a>
+          </li>
+        </ng-container>
+        <ng-container *ngIf="isAuthenticated$ | async">
+          <ng-container *ngIf="(!(isAdmin$ | async) && (isEmployee$ | async))">
+            <li class="nav-item" *ngIf="(sucEmpl$ | async) as sucEmpl">
+              <a class="nav-link" [routerLink]="['/sucursal', sucEmpl]">Mi sucursal</a>
+            </li>
+          </ng-container>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="ver-mi-perfil">Mi Perfil</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" routerLink="crear-publicacion">Crear publicación</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" routerLink="sucursales">Ver sucursales</a>
+            <a class="nav-link" routerLink="sucursales">Sucursales</a>
           </li>
           <!-- Trueques Dropdown -->
           <li class="nav-item dropdown">
@@ -26,7 +36,7 @@
             </a>
             <ul class="dropdown-menu" aria-labelledby="truequesDropdown">
               <li><a class="dropdown-item" routerLink="trueques-recibidos">Mis trueques</a></li>
-              <li  *ngIf="(isEmployee$ | async)"><a class="dropdown-item" routerLink="trueques-empleado">Trueques Confirmados</a></li>
+              <li *ngIf="(isEmployee$ | async)"><a class="dropdown-item" routerLink="trueques-empleado">Trueques Confirmados</a></li>
             </ul>
           </li>
         </ng-container>
@@ -40,7 +50,7 @@
         </ng-container>
         <ng-container *ngIf="(isEmployee$ | async)">
           <li class="nav-item">
-            <a class="nav-link" routerLink="tasar-publicaciones">Tasar publicaciones</a>
+            <a class="nav-link" routerLink="tasar-publicaciones">Tasar</a>
           </li>
           <!-- Promociones Dropdown -->
           <li class="nav-item dropdown">
@@ -64,7 +74,6 @@
         <ng-container *ngIf="isAuthenticated$ | async">
           <li class="nav-item justify-content-end">
             <a class="nav-link" (click)="onLogout()">Cerrar Sesión</a>
-          </li>
         </ng-container>
 
         <ng-container *ngIf="!(isAuthenticated$ | async)">

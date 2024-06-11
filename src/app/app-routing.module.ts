@@ -21,6 +21,7 @@ import { VerPublicacionComponent } from './components/ver-publicacion/ver-public
 import { ResponderTruequeComponent } from './components/responder-trueque/responder-trueque.component';
 import { AgregarFechaComponent } from './components/agregar-fecha/agregar-fecha.component';
 import { ListarTruequesEmpleadoComponent } from './components/listar-trueques-empleado/listar-trueques-empleado.component';
+import { EstadisticasGlobalesComponent } from './components/estadisticas-globales/estadisticas-globales.component';
 
 import { AuthGuard } from './guards/auth.guard';
 import { EmployeeGuard } from './guards/employee.guard';
@@ -33,6 +34,7 @@ import { EnviarDescuentoComponent } from './components/enviar-descuento/enviar-d
 import { VerificarCodigoComponent } from './components/verificar-codigo/verificar-codigo.component';
 import { CargarVentaComponent } from './components/cargar-venta/cargar-venta.component';
 import { ConcretarTruequeComponent } from './components/concretar-trueque/concretar-trueque.component';
+import { VerSucursalComponent } from './components/ver-sucursal/ver-sucursal.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -54,7 +56,8 @@ const routes: Routes = [
   { path: 'enviar-descuento', component: EnviarDescuentoComponent, canActivate: [EmployeeGuard] },
   { path: 'verificar-codigo', component: VerificarCodigoComponent, canActivate: [EmployeeGuard] },
   { path: 'publicacion/:id/editar', component: EditarPublicacionComponent, canActivate: [AuthGuard] },
-  { path: 'sucursales', component: ListarSucursalesComponent },
+  { path: 'sucursales', component: ListarSucursalesComponent},
+  { path: 'sucursal/:id', component: VerSucursalComponent, canActivate: [AuthGuard] },
   { path: 'trueques-recibidos', component: ListarOfertasRecibidasComponent},
   { path: 'trueque/:id', component: ResponderTruequeComponent},
   { path: 'agregar-fecha/:id', component: AgregarFechaComponent},
@@ -62,6 +65,7 @@ const routes: Routes = [
   { path: 'trueque/:id/cargar-venta', component: CargarVentaComponent},
   { path: 'trueques-empleado', component: ListarTruequesEmpleadoComponent},
   { path: 'concretar-trueque/:id', component: ConcretarTruequeComponent},
+  { path: 'estadisticas', component: EstadisticasGlobalesComponent, canActivate: [AdminGuard] },
   { path: '**', redirectTo: '/home', pathMatch: 'full' }
 ];
 

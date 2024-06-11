@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
 from main.views import PubViewSet, SucursalViewSet, TradeProposalViewSet, UserViewSet, SalesViewSet
-from main.views import CurrentUserView, CustomAuthToken, UpdatePasswordView, SendResetPasswordEmailView, PasswordResetConfirmView
+from main.views import CurrentUserView, CustomAuthToken, UpdatePasswordView, SendResetPasswordEmailView, PasswordResetConfirmView, StatisticsView
 from main.views import return_pub_images_id, serve_publication_image, serve_branch_image, send_email, get_all_emails, save_discount_codes, verificar_codigo, borrar_codigo
 
 router = routers.DefaultRouter()
@@ -33,6 +33,8 @@ urlpatterns = [
     path('publications/<int:pub_id>/photos/', return_pub_images_id, name='publication_image'),
     path('publications/<int:pub_id>/photos/<int:photo_id>/', serve_publication_image, name='serve_specific_image'),
     path('branches/<int:pk>/photos/', serve_branch_image, name='branch_image'),
+    path('statistics/', StatisticsView.as_view(), name='statistics'),
+    path('statistics/sucursal/<int:sucursal_id>/', StatisticsView.as_view(), name='sucursal_statistics'),
     path('api-token-auth/', CustomAuthToken.as_view(), name='api_token_auth'),
     path('users/current/', CurrentUserView.as_view(), name='current_user'),
     path('profiles/<str:username>/', UserViewSet.as_view({'get': 'profile_by_username'}), name='profile-by-username'),

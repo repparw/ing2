@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SucursalService } from '../../services/sucursal.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-listar-sucursales',
@@ -8,10 +9,8 @@ import { SucursalService } from '../../services/sucursal.service';
 })
 export class ListarSucursalesComponent implements OnInit {
   data: any[] = [];
-  templateUrl: string = 'http://localhost:4200/sucursal/{{id}}';
-  selectedSucursal: any = null;
 
-  constructor(private sucursalService: SucursalService) { }
+  constructor(private sucursalService: SucursalService, private router: Router) { }
 
   ngOnInit(): void {
     this.sucursalService.getSucursales().subscribe((data: any[]) => {
@@ -19,16 +18,11 @@ export class ListarSucursalesComponent implements OnInit {
     });
   }
 
-  generateLink(id: number): string {
-    return this.templateUrl.replace('{{id}}', id.toString());
-  }
-
   getPhotos(id: number): string {
     return this.sucursalService.getPhotos(id);
-      }
-
-  selectSucursal(sucursal: any): void {
-    this.selectedSucursal = sucursal;
   }
 
+  navigateToSucursal(id: number): void {
+    this.router.navigate(['/sucursal', id]);
+  }
 }

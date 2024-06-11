@@ -1,0 +1,23 @@
+<div>
+  <h1>Statistics</h1>
+  <p>Total Users: {{ statistics.total_users }}</p>
+  <p>Total Publications: {{ statistics.total_publications }}</p>
+  <p>Total Trade Proposals: {{ statistics.total_trade_proposals }}</p>
+  <p>Total Sales: {{ statistics.total_sales }}</p>
+  <p>Total Revenue: {{ statistics.total_revenue }}</p>
+  <p>Completed Trade Proposals: {{ statistics.completed_percentage }}%</p>
+  <p>Rejected Trade Proposals: {{ statistics.rejected_percentage }}%</p>
+  <div>
+    <h2>Sales by Price</h2>
+    <img [src]="'data:image/png;base64,' + statistics.sales_plot" alt="Sales by Price">
+  </div>
+  <div>
+    <h2>Trade Proposal Status Distribution</h2>
+    <img [src]="'data:image/png;base64,' + statistics.status_plot" alt="Trade Proposal Status Distribution">
+  </div>
+</div>
+<div>
+  <h2>Load Sucursal Statistics</h2>
+  <input #sucursalId type="text" placeholder="Enter Sucursal ID">
+  <button (click)="loadStatistics(sucursalId.value)">Load</button>
+</div>

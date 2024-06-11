@@ -19,12 +19,101 @@ from .serializers import CurrentUserSerializer, CustomAuthTokenSerializer, Updat
 from django.core.mail import send_mail
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+## imports statistics
+import matplotlib
+matplotlib.use('Agg')  # Set the backend to 'Agg' before importing pyplot
 import json
 import requests
 import os
 from django.conf import settings
+import pandas as pd
+import matplotlib.pyplot as plt
+matplotlib.use('Agg')  # Use 'Agg' backend for generating images without GUI
+from io import BytesIO
+import base64
 
-# ViewSets
+class StatisticsView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, sucursal_id=None):
+        if sucursal_id:
+            try:
+                sucursal = Sucursal.objects.get(pk=sucursal_id)
+            except Sucursal.DoesNotExist:
+                return JsonResponse({'error': 'Sucursal not found'}, status=404)
+
+            users = User.objects.filter(suc=sucursal)
+            publications = Pub.objects.filter(user__suc=sucursal)
+            trade_proposals = TradeProposal.objects.filter(suc=sucursal)
+            sales_data = Sales.objects.filter(trade__suc=sucursal).values('price', 'quantity')
+        else:
+            users = User.objects.all()
+            publications = Pub.objects.all()
+            trade_proposals = TradeProposal.objects.all()
+            sales_data = Sales.objects.values('price', 'quantity')
+
+        total_users = int(users.count())
+        total_publications = int(publications.count())
+        total_trade_proposals = int(trade_proposals.count())
+
+        sales_df = pd.DataFrame(list(sales_data))
+        total_sales = int(sales_df['quantity'].sum()) if not sales_df.empty else 0
+        total_revenue = float(sales_df['price'].sum()) if not sales_df.empty else 0.0
+
+        # Calculate trade proposal status percentages
+        if not trade_proposals:
+            status_counts = pd.Series(dtype=int)
+        else:
+            trade_proposals_df = pd.DataFrame(list(trade_proposals.values('status')))
+            status_counts = trade_proposals_df['status'].value_counts()
+
+        status_percentages = (status_counts / total_trade_proposals) * 100 if total_trade_proposals > 0 else pd.Series()
+
+        completed_percentage = float(status_percentages.get('concreted', 0))
+        rejected_percentage = float(status_percentages.get('rejected', 0))
+
+        # Generate sales by price plot
+        fig, ax = plt.subplots()
+        if not sales_df.empty:
+            sales_df.groupby('price')['quantity'].sum().plot(kind='bar', ax=ax)
+        ax.set_title('Ventas por precio')
+        ax.set_xlabel('Price')
+        ax.set_ylabel('Quantity Sold')
+
+        buf = BytesIO()
+        plt.savefig(buf, format='png', facecolor='none', edgecolor='none', transparent=True)
+        buf.seek(0)
+        sales_plot_base64 = base64.b64encode(buf.getvalue()).decode('utf-8')
+        plt.close(fig)
+
+        # Generate trade proposal status plot
+        fig, ax = plt.subplots()
+        if not status_percentages.empty:
+            status_percentages.plot(kind='pie', autopct='%1.1f%%', ax=ax)
+        ax.set_title('Distribucion de estado de propuestas de trueque')
+        ax.set_ylabel('')  # Remove the ylabel
+
+        # Add footer text
+        plt.figtext(0.5, 0.01, f'Total de propuestas de trueque = {total_trade_proposals}', ha='center', fontsize=10)
+
+        buf = BytesIO()
+        plt.savefig(buf, format='png', facecolor='none', edgecolor='none', transparent=True)
+        buf.seek(0)
+        status_plot_base64 = base64.b64encode(buf.getvalue()).decode('utf-8')
+        plt.close(fig)
+
+        data = {
+            'total_users': total_users,
+            'total_publications': total_publications,
+            'total_trade_proposals': total_trade_proposals,
+            'total_sales': total_sales,
+            'total_revenue': total_revenue,
+            'completed_percentage': completed_percentage,
+            'rejected_percentage': rejected_percentage,
+            'sales_plot': sales_plot_base64,
+            'status_plot': status_plot_base64,
+        }
+        return JsonResponse(data)
 
 class SendResetPasswordEmailView(APIView):
     permission_classes = [AllowAny]
@@ -77,6 +166,8 @@ class PasswordResetConfirmView(APIView):
             return Response({'message': 'Password has been reset successfully.'}, status=status.HTTP_200_OK)
 
         return Response({'error': 'Invalid reset link.'}, status=status.HTTP_400_BAD_REQUEST)
+
+# ViewSets
 
 class TradeProposalViewSet(viewsets.ModelViewSet):
     queryset = TradeProposal.objects.all()
@@ -501,7 +592,7 @@ class SalesViewSet(viewsets.ModelViewSet):
             return Response({"message": "Ventas created successfully"}, status=status.HTTP_201_CREATED)
         else:
             return Response({"id": sales.id, "message": "Venta created successfully"}, status=status.HTTP_201_CREATED)
-        
+
     @action(detail=False, methods=['get'])
     def by_trade(self, request):
         trade_id = request.query_params.get('trade')

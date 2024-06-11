@@ -7,32 +7,22 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-  <div class="container">
-    <ul class="list-group">
-      <li *ngFor="let item of data" class="list-group-item">
-        <div class="d-flex justify-content-between align-items-center">
-          <div>
-            <img [src]="getPhotos(item.id)" class="img-thumbnail" width="100" height="100" alt="{{ item.address }}">
-            <div class="info">
-              <span class="address">{{ item.address }}</span>
-              <span class="phone">{{ item.phone }}</span>
-            </div>
+<div class="container">
+  <ul class="list-group">
+    <li *ngFor="let item of data" class="list-group-item">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <img [src]="getPhotos(item.id)" class="img-thumbnail" width="100" height="100" alt="{{ item.address }}">
+          <div class="info">
+            <span class="address">{{ item.address }}</span>
+            <span class="phone">{{ item.phone }}</span>
           </div>
-          <button class="btn btn-primary" (click)="selectSucursal(item)">Ver detalles</button>
         </div>
-      </li>
-    </ul>
-    <p *ngIf="data.length === 0" class="text-center text-danger">No hay sucursales para mostrar</p>
-
-    <!-- Detalles de la sucursal seleccionada -->
-    <div *ngIf="selectedSucursal" class="mt-4">
-      <h3>Detalles de la Sucursal</h3>
-      <p><strong>Dirección:</strong> {{ selectedSucursal.address }}</p>
-      <p><strong>Teléfono:</strong> {{ selectedSucursal.phone }}</p>
-      <img [src]="getPhotos(selectedSucursal.id)" class="img-thumbnail" alt="{{ selectedSucursal.address }}">
-      <button class="btn btn-secondary mt-2" (click)="selectedSucursal = null">Cerrar</button>
-    </div>
-  </div>
-</body>
+        <button class="btn btn-primary" (click)="navigateToSucursal(item.id)">Ver detalles</button>
+      </div>
+    </li>
+  </ul>
+  <p *ngIf="data.length === 0" class="text-center text-danger">No hay sucursales para mostrar</p>
+</div></body>
 </html>
 
