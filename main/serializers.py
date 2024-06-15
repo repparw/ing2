@@ -1,6 +1,6 @@
 from django.contrib.auth import authenticate
 from rest_framework import serializers
-from .models import Pub, User, Sucursal, TradeProposal, Sales
+from .models import Pub, User, Sucursal, TradeProposal, Sales, AdsImage
 
 class PubSerializer(serializers.ModelSerializer):
     class Meta:
@@ -137,3 +137,9 @@ class SalesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Sales
         fields = '__all__'
+
+
+class AdsImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AdsImage
+        fields = ['image', 'uploaded_at']

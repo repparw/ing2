@@ -40,6 +40,7 @@ import { ListarTruequesEmpleadoComponent } from './components/listar-trueques-em
 import { ConcretarTruequeComponent } from './components/concretar-trueque/concretar-trueque.component';
 import { EstadisticasGlobalesComponent } from './components/estadisticas-globales/estadisticas-globales.component';
 import { VerSucursalComponent } from './components/ver-sucursal/ver-sucursal.component';
+import { ModificarBannersComponent } from './components/modificar-banners/modificar-banners.component';
 
 
 @NgModule({
@@ -76,6 +77,7 @@ import { VerSucursalComponent } from './components/ver-sucursal/ver-sucursal.com
     ConcretarTruequeComponent,
     EstadisticasGlobalesComponent,
     VerSucursalComponent,
+    ModificarBannersComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,11 @@
+<div>
+    <input type="file" (change)="onFileSelected($event)">
+    <button (click)="onUpload()">Upload</button>
+  </div>
+  
+  <div *ngIf="images.length > 0">
+    <div *ngFor="let image of images">
+      <img [src]="'http://127.0.0.1:8000' + image.image" alt="Promotion Image">
+    </div>
+  </div>
+  

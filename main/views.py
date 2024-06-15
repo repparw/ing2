@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.decorators import action, api_view
+from rest_framework.parsers import MultiPartParser, FormParser
 from django.http import HttpResponse, Http404
 from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
@@ -13,8 +14,8 @@ from django.urls import reverse
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.views import APIView
 from rest_framework.generics import UpdateAPIView
-from .models import Pub, User, Sucursal, TradeProposal, Photo, Sales
-from .serializers import PubSerializer, UserSerializer, SucursalSerializer, TradeProposalSerializer, SalesSerializer
+from .models import AdsImage, Pub, User, Sucursal, TradeProposal, Photo, Sales
+from .serializers import AdsImageSerializer, PubSerializer, UserSerializer, SucursalSerializer, TradeProposalSerializer, SalesSerializer
 from .serializers import CurrentUserSerializer, CustomAuthTokenSerializer, UpdatePasswordSerializer
 from django.core.mail import send_mail
 from django.http import JsonResponse
@@ -602,3 +603,9 @@ class SalesViewSet(viewsets.ModelViewSet):
             return Response(serializer.data)
         return Response({"error": "Trade ID not provided"}, status=400)
 
+
+class AdsImageViewSet(viewsets.ModelViewSet):
+    queryset = AdsImage.objects.all()
+    serializer_class = AdsImageSerializer
+    parser_classes = [MultiPartParser, FormParser]
+    permission_classes = [AllowAny]

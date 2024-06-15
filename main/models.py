@@ -57,3 +57,10 @@ class Sales(models.Model):
     price = models.FloatField()
     quantity = models.IntegerField()
     trade = models.ForeignKey(TradeProposal, on_delete=models.CASCADE, related_name='sales')
+
+class AdsImage(models.Model):
+    image = models.ImageField(upload_to='photos/ads')
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+       
+    def __str__(self):
+        return self.image.url

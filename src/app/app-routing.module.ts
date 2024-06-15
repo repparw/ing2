@@ -35,6 +35,7 @@ import { VerificarCodigoComponent } from './components/verificar-codigo/verifica
 import { CargarVentaComponent } from './components/cargar-venta/cargar-venta.component';
 import { ConcretarTruequeComponent } from './components/concretar-trueque/concretar-trueque.component';
 import { VerSucursalComponent } from './components/ver-sucursal/ver-sucursal.component';
+import { ModificarBannersComponent } from './components/modificar-banners/modificar-banners.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -66,6 +67,7 @@ const routes: Routes = [
   { path: 'trueques-empleado', component: ListarTruequesEmpleadoComponent},
   { path: 'concretar-trueque/:id', component: ConcretarTruequeComponent},
   { path: 'estadisticas', component: EstadisticasGlobalesComponent, canActivate: [AdminGuard] },
+  {path: 'modificar-banners', component: ModificarBannersComponent, canActivate:[EmployeeGuard]},
   { path: '**', redirectTo: '/home', pathMatch: 'full' }
 ];
 
