@@ -78,8 +78,8 @@ class StatisticsView(APIView):
         if not sales_df.empty:
             sales_df.groupby('price')['quantity'].sum().plot(kind='bar', ax=ax)
         ax.set_title('Ventas por precio')
-        ax.set_xlabel('Price')
-        ax.set_ylabel('Quantity Sold')
+        ax.set_xlabel('Precio')
+        ax.set_ylabel('Cantidad vendida')
 
         buf = BytesIO()
         plt.savefig(buf, format='png', facecolor='none', edgecolor='none', transparent=True)

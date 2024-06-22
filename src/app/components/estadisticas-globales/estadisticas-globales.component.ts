@@ -17,8 +17,8 @@ export class EstadisticasGlobalesComponent implements OnInit {
     this.loadStatistics();
   }
 
-  loadStatistics(sucursalId?: string): void {
-    this.statisticsService.getStatistics(sucursalId).subscribe(data => {
+  loadStatistics(): void {
+    this.statisticsService.getStatistics().subscribe(data => {
       this.statistics = data;
     });
   }

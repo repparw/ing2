@@ -1,5 +1,3 @@
 -Codigo incorrecto al concretar trueque: Sale un cartelito. Volver a ingresar
 
 -Trueque rechazado: estado 'no realizado'. Si A/B no viene: penalización automático.
-
--Habría que tener de antemano un trueque confirmado para el martes y otro para el miércoles el día de la demo
