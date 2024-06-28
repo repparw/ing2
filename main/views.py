@@ -62,21 +62,35 @@ class StatisticsView(APIView):
             sales_df.rename(columns={'trade_id': 'trade_id', 'trade__suc': 'sucursal_id'}, inplace=True)
         total_sales = int(sales_df['quantity'].sum()) if not sales_df.empty else 0
         total_revenue = float(sales_df['price'].sum()) if not sales_df.empty else 0.0
+        total_revenue_formatted = f"${total_revenue:,.2f}"  # Format total_revenue to include $
 
-        # Calculate trade proposal status percentages
+        # Mapeo de estados a español
+        status_translation = {
+            'concreted': 'Concretado',
+            'rejected': 'Rechazado',
+            'cancelled': 'Cancelado',
+            'finished': 'Finalizado',
+            'pending': 'Pendiente',
+            'accepted': 'Aceptado',
+            'confirmed': 'Confirmado',
+            'not_finished': 'No finalizado',
+        }
+
+        # Renombrar los estados en español
         if not trade_proposals:
             status_counts = pd.Series(dtype=int)
         else:
             trade_proposals_df = pd.DataFrame(list(trade_proposals.values('status', 'id')))
+            trade_proposals_df['status'] = trade_proposals_df['status'].map(status_translation)  # Traducir estados
             status_counts = trade_proposals_df['status'].value_counts()
 
         status_percentages = (status_counts / total_trade_proposals) * 100 if total_trade_proposals > 0 else pd.Series()
 
-        completed_percentage = float(status_percentages.get('concreted', 0))
-        rejected_percentage = float(status_percentages.get('rejected', 0))
+        completed_percentage = float(status_percentages.get('Concretado', 0))
+        rejected_percentage = float(status_percentages.get('Rechazado', 0))
 
         # Calculate concreted trades with and without sales
-        concreted_trades = trade_proposals_df[trade_proposals_df['status'] == 'concreted']
+        concreted_trades = trade_proposals_df[trade_proposals_df['status'] == 'Concretado']
         concreted_trade_ids = concreted_trades['id'].tolist() if not concreted_trades.empty else []
 
         trades_with_sales = sales_df[sales_df['trade_id'].isin(concreted_trade_ids)]['trade_id'].unique()
@@ -92,6 +106,7 @@ class StatisticsView(APIView):
         ax.set_title('Ventas por precio')
         ax.set_xlabel('Precio')
         ax.set_ylabel('Cantidad vendida')
+        ax.set_xticklabels([f"${x:,.2f}" for x in ax.get_xticks()])  # Add $ to x-ticks
 
         buf = BytesIO()
         plt.savefig(buf, format='png', facecolor='none', edgecolor='none', transparent=True)
@@ -103,7 +118,7 @@ class StatisticsView(APIView):
         fig, ax = plt.subplots()
         if not status_percentages.empty:
             status_percentages.plot(kind='pie', autopct='%1.1f%%', ax=ax)
-        ax.set_title('Distribucion de estado de propuestas de trueque')
+        ax.set_title('Distribución de estado de propuestas de trueque')
         ax.set_ylabel('')  # Remove the ylabel
 
         # Add footer text
@@ -119,7 +134,7 @@ class StatisticsView(APIView):
         fig, ax = plt.subplots()
         if not sales_df.empty:
             revenue_by_sucursal = sales_df.groupby('sucursal_id')['price'].sum()
-            revenue_by_sucursal.plot(kind='pie', autopct='%1.1f%%', ax=ax)
+            revenue_by_sucursal.plot(kind='pie', autopct=lambda p: f"${p * revenue_by_sucursal.sum() / 100:,.2f}", ax=ax)
         ax.set_title('Porcentaje de ingresos por sucursal')
         ax.set_ylabel('')  # Remove the ylabel
 
@@ -148,7 +163,7 @@ class StatisticsView(APIView):
             'total_publications': total_publications,
             'total_trade_proposals': total_trade_proposals,
             'total_sales': total_sales,
-            'total_revenue': total_revenue,
+            'total_revenue': total_revenue_formatted,
             'completed_percentage': completed_percentage,
             'rejected_percentage': rejected_percentage,
             'concreted_with_sales_percentage': concreted_with_sales_percentage,
