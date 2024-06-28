@@ -46,18 +46,20 @@ class StatisticsView(APIView):
             users = User.objects.filter(suc=sucursal)
             publications = Pub.objects.filter(user__suc=sucursal)
             trade_proposals = TradeProposal.objects.filter(suc=sucursal)
-            sales_data = Sales.objects.filter(trade__suc=sucursal).values('price', 'quantity')
+            sales_data = Sales.objects.filter(trade__suc=sucursal).values('price', 'quantity', 'trade_id', 'trade__suc')
         else:
             users = User.objects.all()
             publications = Pub.objects.all()
             trade_proposals = TradeProposal.objects.all()
-            sales_data = Sales.objects.values('price', 'quantity')
+            sales_data = Sales.objects.values('price', 'quantity', 'trade_id', 'trade__suc')
 
         total_users = int(users.count())
         total_publications = int(publications.count())
         total_trade_proposals = int(trade_proposals.count())
 
         sales_df = pd.DataFrame(list(sales_data))
+        if not sales_df.empty:
+            sales_df.rename(columns={'trade_id': 'trade_id', 'trade__suc': 'sucursal_id'}, inplace=True)
         total_sales = int(sales_df['quantity'].sum()) if not sales_df.empty else 0
         total_revenue = float(sales_df['price'].sum()) if not sales_df.empty else 0.0
 
@@ -65,13 +67,23 @@ class StatisticsView(APIView):
         if not trade_proposals:
             status_counts = pd.Series(dtype=int)
         else:
-            trade_proposals_df = pd.DataFrame(list(trade_proposals.values('status')))
+            trade_proposals_df = pd.DataFrame(list(trade_proposals.values('status', 'id')))
             status_counts = trade_proposals_df['status'].value_counts()
 
         status_percentages = (status_counts / total_trade_proposals) * 100 if total_trade_proposals > 0 else pd.Series()
 
         completed_percentage = float(status_percentages.get('concreted', 0))
         rejected_percentage = float(status_percentages.get('rejected', 0))
+
+        # Calculate concreted trades with and without sales
+        concreted_trades = trade_proposals_df[trade_proposals_df['status'] == 'concreted']
+        concreted_trade_ids = concreted_trades['id'].tolist() if not concreted_trades.empty else []
+
+        trades_with_sales = sales_df[sales_df['trade_id'].isin(concreted_trade_ids)]['trade_id'].unique()
+        trades_with_sales_count = len(trades_with_sales)
+
+        concreted_with_sales_percentage = (trades_with_sales_count / len(concreted_trade_ids)) * 100 if concreted_trade_ids else 0
+        concreted_without_sales_percentage = 100 - concreted_with_sales_percentage
 
         # Generate sales by price plot
         fig, ax = plt.subplots()
@@ -103,6 +115,34 @@ class StatisticsView(APIView):
         status_plot_base64 = base64.b64encode(buf.getvalue()).decode('utf-8')
         plt.close(fig)
 
+        # Generate revenue by branch plot
+        fig, ax = plt.subplots()
+        if not sales_df.empty:
+            revenue_by_sucursal = sales_df.groupby('sucursal_id')['price'].sum()
+            revenue_by_sucursal.plot(kind='pie', autopct='%1.1f%%', ax=ax)
+        ax.set_title('Porcentaje de ingresos por sucursal')
+        ax.set_ylabel('')  # Remove the ylabel
+
+        buf = BytesIO()
+        plt.savefig(buf, format='png', facecolor='none', edgecolor='none', transparent=True)
+        buf.seek(0)
+        revenue_plot_base64 = base64.b64encode(buf.getvalue()).decode('utf-8')
+        plt.close(fig)
+
+        # Generate concreted trades with/without sales pie chart
+        fig, ax = plt.subplots()
+        labels = ['Con ventas', 'Sin ventas']
+        sizes = [concreted_with_sales_percentage, concreted_without_sales_percentage]
+        ax.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90)
+        ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+        ax.set_title('Porcentaje de trueques concretados con y sin ventas')
+
+        buf = BytesIO()
+        plt.savefig(buf, format='png', facecolor='none', edgecolor='none', transparent=True)
+        buf.seek(0)
+        concreted_sales_plot_base64 = base64.b64encode(buf.getvalue()).decode('utf-8')
+        plt.close(fig)
+
         data = {
             'total_users': total_users,
             'total_publications': total_publications,
@@ -111,8 +151,12 @@ class StatisticsView(APIView):
             'total_revenue': total_revenue,
             'completed_percentage': completed_percentage,
             'rejected_percentage': rejected_percentage,
+            'concreted_with_sales_percentage': concreted_with_sales_percentage,
+            'concreted_without_sales_percentage': concreted_without_sales_percentage,
             'sales_plot': sales_plot_base64,
             'status_plot': status_plot_base64,
+            'revenue_plot': revenue_plot_base64,
+            'concreted_sales_plot': concreted_sales_plot_base64,
         }
         return JsonResponse(data)
 
