@@ -10,7 +10,7 @@ export class ListarPublicacionesComponent implements OnInit {
   @Input() data: any[] = [];
   @Input() templateUrl: string = 'http://localhost:4200/publicacion/{{id}}';
 
-  constructor (private publicationService: PublicationService){
+  constructor(private publicationService: PublicationService) {
   }
 
   ngOnInit(): void { }
@@ -21,7 +21,7 @@ export class ListarPublicacionesComponent implements OnInit {
 
   getCategory(id: number): string {
     return this.publicationService.getCategory(id);
-      }
+  }
 
   generateLink(id: number): string {
     return this.templateUrl.replace('{{id}}', id.toString());

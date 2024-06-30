@@ -1,3 +1,4 @@
+from tokenize import Comment
 from django.contrib.auth import authenticate
 from rest_framework import serializers
 from .models import Pub, User, Sucursal, TradeProposal, Sales, AdsImage
@@ -143,3 +144,8 @@ class AdsImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = AdsImage
         fields = ['image', 'uploaded_at']
+
+class CommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
+        fields = '__all__'

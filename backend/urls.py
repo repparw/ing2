@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
-from main.views import AdsImageViewSet, PubViewSet, SucursalViewSet, TradeProposalViewSet, UserViewSet, SalesViewSet
+from main.views import AdsImageViewSet, PubViewSet, SucursalViewSet, TradeProposalViewSet, UserViewSet, SalesViewSet, CommentViewSet
 from main.views import CurrentUserView, CustomAuthToken, UpdatePasswordView, SendResetPasswordEmailView, PasswordResetConfirmView, StatisticsView
 from main.views import return_pub_images_id, serve_publication_image, serve_branch_image, send_email, get_all_emails, save_discount_codes, verificar_codigo, borrar_codigo
 from django.conf import settings
@@ -31,6 +31,7 @@ router.register('branches', SucursalViewSet, basename='branches' )
 router.register('proposals', TradeProposalViewSet, basename='proposals' )
 router.register('ventas', SalesViewSet, basename='ventas')
 router.register('ads', AdsImageViewSet, basename='ads')
+router.register('comments', CommentViewSet, basename='comments')
 
 urlpatterns = [
     path('admin/', admin.site.urls),

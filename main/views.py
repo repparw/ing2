@@ -14,8 +14,8 @@ from django.urls import reverse
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.views import APIView
 from rest_framework.generics import UpdateAPIView
-from .models import AdsImage, Pub, User, Sucursal, TradeProposal, Photo, Sales
-from .serializers import AdsImageSerializer, PubSerializer, UserSerializer, SucursalSerializer, TradeProposalSerializer, SalesSerializer
+from .models import AdsImage, Pub, User, Sucursal, TradeProposal, Photo, Sales, Comment
+from .serializers import AdsImageSerializer, CommentSerializer, PubSerializer, UserSerializer, SucursalSerializer, TradeProposalSerializer, SalesSerializer
 from .serializers import CurrentUserSerializer, CustomAuthTokenSerializer, UpdatePasswordSerializer
 from django.core.mail import send_mail
 from django.http import JsonResponse
@@ -668,3 +668,21 @@ class AdsImageViewSet(viewsets.ModelViewSet):
     serializer_class = AdsImageSerializer
     parser_classes = [MultiPartParser, FormParser]
     permission_classes = [AllowAny]
+
+class CommentViewSet(viewsets.ModelViewSet):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def perform_create(self, serializer):
+        pub_id = self.request.data.get('pub')
+        pub = get_object_or_404(Pub, id=pub_id)
+        if pub.user == self.request.user:
+            raise Response(("You cannot comment on your own publication."), status=400)
+        serializer.save(user=self.request.user)
+    
+    @action(detail=False, methods=['get'], url_path='comments-by-pub/(?P<pub_id>[^/.]+)')
+    def get_comments_by_pub(self, request, pub_id=None):
+        comments = Comment.objects.filter(pub_id=pub_id)
+        serializer = self.get_serializer(comments, many=True)
+        return Response(serializer.data)

@@ -11,7 +11,7 @@ import { VerPerfilComponent } from './components/ver-perfil/ver-perfil.component
 import { CambiarContraComponent } from './components/cambiar-contra/cambiar-contra.component';
 import { CrearPublicacionComponent } from './components/crear-publicacion/crear-publicacion.component';
 import { VerPublicacionComponent } from './components/ver-publicacion/ver-publicacion.component';
-import { HTTP_INTERCEPTORS, HttpClientModule, HttpClientXsrfModule} from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule, HttpClientXsrfModule } from '@angular/common/http';
 import { VerMiPerfilComponent } from './components/ver-mi-perfil/ver-mi-perfil.component';
 import { ModificarPerfilComponent } from './components/modificar-perfil/modificar-perfil.component';
 import { EditarPublicacionComponent } from './components/editar-publicacion/editar-publicacion.component';
@@ -41,6 +41,7 @@ import { ConcretarTruequeComponent } from './components/concretar-trueque/concre
 import { EstadisticasGlobalesComponent } from './components/estadisticas-globales/estadisticas-globales.component';
 import { VerSucursalComponent } from './components/ver-sucursal/ver-sucursal.component';
 import { ModificarBannersComponent } from './components/modificar-banners/modificar-banners.component';
+import { CrearComentarioComponent } from './components/crear-comentario/CrearComentarioComponent';
 
 
 @NgModule({
@@ -78,6 +79,7 @@ import { ModificarBannersComponent } from './components/modificar-banners/modifi
     EstadisticasGlobalesComponent,
     VerSucursalComponent,
     ModificarBannersComponent,
+    CrearComentarioComponent
   ],
   imports: [
     BrowserModule,
@@ -96,10 +98,10 @@ import { ModificarBannersComponent } from './components/modificar-banners/modifi
     importProvidersFrom(HttpClientModule),
     importProvidersFrom(
       HttpClientXsrfModule.withOptions({
-      cookieName: 'csrftoken',
-      headerName: 'X-CSRFToken',
-    }),
-  )
+        cookieName: 'csrftoken',
+        headerName: 'X-CSRFToken',
+      }),
+    )
   ],
   bootstrap: [AppComponent],
 })

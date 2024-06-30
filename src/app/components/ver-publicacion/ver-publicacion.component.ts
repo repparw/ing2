@@ -12,7 +12,7 @@ import Swal from 'sweetalert2';
   templateUrl: './ver-publicacion.component.html',
   styleUrls: ['./ver-publicacion.component.css']
 })
-export class VerPublicacionComponent implements OnInit{
+export class VerPublicacionComponent implements OnInit {
   data: Pub | null = null;
   username: string | null = null;
   owner: string | null = null;
@@ -21,15 +21,15 @@ export class VerPublicacionComponent implements OnInit{
   canEdit!: boolean;
 
 
-  constructor (private route: ActivatedRoute,
-               private publicationService: PublicationService,
-               private tradeService: TradeService,
-               private userService: UserService,
-               private router:Router ){
+  constructor(private route: ActivatedRoute,
+    private publicationService: PublicationService,
+    private tradeService: TradeService,
+    private userService: UserService,
+    private router: Router) {
 
   }
 
- ngOnInit(): void {
+  ngOnInit(): void {
     this.productID = parseInt(this.route.snapshot.params['id'], 10);
 
     this.publicationService.getPublication(this.productID).subscribe(
@@ -43,7 +43,7 @@ export class VerPublicacionComponent implements OnInit{
           error => {
             console.error('Error fetching photos:', error);
           }
-                  );
+        );
       },
       error => {
         console.error('Error fetching publication:', error);
@@ -64,15 +64,15 @@ export class VerPublicacionComponent implements OnInit{
     };
 
     this.userService.getUser(publication.user).subscribe(
-        user => {
-          this.username = user.username;
-          this.owner = user.name;
-        },
-        error => {
-          console.error('Error fetching user:', error);
-        }
-      );
-    }
+      user => {
+        this.username = user.username;
+        this.owner = user.name;
+      },
+      error => {
+        console.error('Error fetching user:', error);
+      }
+    );
+  }
 
   confirmDeletePublication(productID: number): void {
     // First, check if the publication is part of a 'status' = confirmed tradeProposal
@@ -129,15 +129,15 @@ export class VerPublicacionComponent implements OnInit{
     });
   }
 
-  editar(id:number){
+  editar(id: number) {
     this.router.navigate([`publicacion/${id}/editar`])
   }
 
-  proponerTrueque(id:number){
+  proponerTrueque(id: number) {
     this.router.navigate([`publicacion/${id}/proponer`])
-    }
+  }
 
-  navigate(ruta: string): void{
+  navigate(ruta: string): void {
     this.router.navigate([`usuarios/${ruta}`])
   }
 
