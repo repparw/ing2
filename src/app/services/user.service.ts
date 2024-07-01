@@ -84,6 +84,19 @@ export class UserService {
     );
   }
 
+  isOwner1(pub: Pub): Observable<boolean> {
+    return this.getCurrentUser().pipe(
+      take(1),
+      map(user => {
+        if (!pub.user) {
+          console.error('La publicación no tiene un usuario asociado.');
+          return false;
+        }
+        return user.id === pub.user;
+      })
+    );
+  }
+
   createUser(user: User): Observable<User> {
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
     return this.http.post<User>(this.userUrl, user, { headers });
@@ -111,18 +124,18 @@ export class UserService {
       'Content-Type': 'application/json',
       'Authorization': `Token ${authToken}`
     });
-    return this.http.put<User>(`${this.userUrl}change-password/`, {old_password: oldPassword, new_password: newPassword, new_password2: newPassword2 }, { headers, withCredentials: true });
-      }
+    return this.http.put<User>(`${this.userUrl}change-password/`, { old_password: oldPassword, new_password: newPassword, new_password2: newPassword2 }, { headers, withCredentials: true });
+  }
 
   requestPasswordReset(email: string): Observable<any> {
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
     return this.http.post<any>(`${this.resetPasswordUrl}`, { email }, { headers });
-    }
+  }
 
   resetPassword(uidb64: string, token: string, password: string): Observable<any> {
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
     return this.http.post<any>(`${this.resetPasswordUrl}${uidb64}/${token}/`, { password }, { headers });
-    }
+  }
 
   getCurrentUser(): Observable<User> {
     const authToken = localStorage.getItem('token');
@@ -139,7 +152,7 @@ export class UserService {
         console.error('Error fetching current user:', error);
         return throwError(error); // Forward the error to the caller
       }));
-      }
+  }
 
 
   getUserByUsername(username: string): Observable<User> {
