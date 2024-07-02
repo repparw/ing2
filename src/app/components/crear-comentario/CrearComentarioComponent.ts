@@ -4,7 +4,6 @@ import { UserService } from '../../services/user.service';
 import { Pub } from '../../models/pub';
 import { Comment } from '../../models/comment';
 import { FormControl, Validators } from '@angular/forms';
-import { Observable } from 'rxjs';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -17,84 +16,69 @@ export class CrearComentarioComponent implements OnInit {
     comments: Comment[] = [];
     newComment = new FormControl('', Validators.required);
 
-    constructor(private commentService: CommentService, private userService: UserService) { }
+    constructor(private commentService: CommentService, private userService: UserService) {}
 
     ngOnInit(): void {
         this.loadComments();
     }
 
     loadComments(): void {
-        if (this.pubi && this.pubi.id) {
-            this.commentService.getComments(this.pubi.id!).subscribe(comments => this.comments = comments);
+        if (this.pubi?.id) {
+            this.commentService.getComments(this.pubi.id).subscribe(
+                comments => this.comments = comments,
+                error => this.handleError('Error loading comments', error)
+            );
         }
     }
 
     addComment(): void {
         this.userService.getCurrentUser().subscribe(user => {
-            if (!this.pubi || !this.pubi.user) {
-                console.error('La publicación no está definida o no tiene dueño.');
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'La publicación no está definida o no tiene dueño.',
-                    confirmButtonColor: '#3085d6',
-                    confirmButtonText: 'Entendido'
-                });
-                return;
-            }
-
-            console.log('ID del dueño de la publicación:', this.pubi.user);
-            console.log('ID del usuario actual:', user.id);
+            if (!this.validatePublication()) return;
 
             this.userService.isOwner(this.pubi).subscribe(isOwner => {
                 if (!isOwner) {
-                    const comment: Comment = {
-                        pub: this.pubi.id!,
-                        user: user.id,
-                        text: this.newComment.value!
-                    };
-
-                    this.commentService.createComment(comment).subscribe(() => {
-                        this.newComment.reset('');
-                        this.loadComments();
-                    }, error => {
-                        console.error('Error al crear el comentario:', error);
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: 'Hubo un problema al intentar crear el comentario. Por favor, inténtalo de nuevo más tarde.',
-                            confirmButtonColor: '#3085d6',
-                            confirmButtonText: 'Entendido'
-                        });
-                    });
+                    this.createComment(user);
                 } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'No puedes comentar en tu propia publicación.',
-                        confirmButtonColor: '#3085d6',
-                        confirmButtonText: 'Entendido'
-                    });
+                    this.showError('No puedes comentar en tu propia publicación.');
                 }
-            }, error => {
-                console.error('Error al verificar si es propietario:', error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Hubo un problema al verificar si eres propietario de la publicación. Por favor, inténtalo de nuevo más tarde.',
-                    confirmButtonColor: '#3085d6',
-                    confirmButtonText: 'Entendido'
-                });
-            });
-        }, error => {
-            console.error('Error al obtener el usuario actual:', error);
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Hubo un problema al obtener tu información de usuario. Por favor, inténtalo de nuevo más tarde.',
-                confirmButtonColor: '#3085d6',
-                confirmButtonText: 'Entendido'
-            });
+            }, error => this.handleError('Error verifying ownership', error));
+        }, error => this.handleError('Error getting current user', error));
+    }
+
+    private validatePublication(): boolean {
+        if (!this.pubi || !this.pubi.user) {
+            this.showError('La publicación no está definida o no tiene dueño.');
+            return false;
+        }
+        return true;
+    }
+
+    private createComment(user: any): void {
+        const comment: Comment = {
+            pub: this.pubi.id!,
+            user: user.id,
+            text: this.newComment.value!
+        };
+
+        this.commentService.createComment(comment).subscribe(() => {
+            this.newComment.reset('');
+            this.loadComments();
+        }, error => this.handleError('Error creating comment', error));
+    }
+
+    private showError(message: string): void {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: message,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Entendido'
         });
     }
+
+    private handleError(message: string, error: any): void {
+        console.error(message, error);
+        this.showError('Hubo un problema. Por favor, inténtalo de nuevo más tarde.');
+    }
 }
+

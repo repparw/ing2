@@ -1,7 +1,6 @@
-from tokenize import Comment
 from django.contrib.auth import authenticate
 from rest_framework import serializers
-from .models import Pub, User, Sucursal, TradeProposal, Sales, AdsImage
+from .models import Pub, User, Sucursal, TradeProposal, Sales, AdsImage, Comment
 
 class PubSerializer(serializers.ModelSerializer):
     class Meta:

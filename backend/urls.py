@@ -20,9 +20,6 @@ from rest_framework import routers
 from main.views import AdsImageViewSet, PubViewSet, SucursalViewSet, TradeProposalViewSet, UserViewSet, SalesViewSet, CommentViewSet
 from main.views import CurrentUserView, CustomAuthToken, UpdatePasswordView, SendResetPasswordEmailView, PasswordResetConfirmView, StatisticsView
 from main.views import return_pub_images_id, serve_publication_image, serve_branch_image, send_email, get_all_emails, save_discount_codes, verificar_codigo, borrar_codigo
-from django.conf import settings
-from django.conf.urls.static import static
-
 
 router = routers.DefaultRouter()
 router.register('publications', PubViewSet, basename='publications' )
@@ -53,4 +50,4 @@ urlpatterns = [
     path('verificar-codigo/', verificar_codigo, name='verificar_codigo'),
     path('borrar-codigo/<str:codigo>/', borrar_codigo, name='borrar_codigo'),
     path('', include(router.urls)),
-] + router.urls 
+] + router.urls

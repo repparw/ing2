@@ -680,7 +680,7 @@ class CommentViewSet(viewsets.ModelViewSet):
         if pub.user == self.request.user:
             raise Response(("You cannot comment on your own publication."), status=400)
         serializer.save(user=self.request.user)
-    
+
     @action(detail=False, methods=['get'], url_path='comments-by-pub/(?P<pub_id>[^/.]+)')
     def get_comments_by_pub(self, request, pub_id=None):
         comments = Comment.objects.filter(pub_id=pub_id)
