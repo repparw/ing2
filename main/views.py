@@ -19,7 +19,7 @@ from .serializers import CommentSerializer, PubSerializer, UserSerializer, Sucur
 from .serializers import CurrentUserSerializer, CustomAuthTokenSerializer, UpdatePasswordSerializer
 from django.core.mail import send_mail
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt, require_POST
+from django.views.decorators.csrf import csrf_exempt
 ## imports statistics
 import matplotlib
 matplotlib.use('Agg')  # Set the backend to 'Agg' before importing pyplot
