@@ -24,6 +24,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.llenarData();
+    this.loadBanners();
   }
 
   llenarData(): void {
