@@ -43,6 +43,7 @@ import { VerSucursalComponent } from './components/ver-sucursal/ver-sucursal.com
 import { ModificarBannersComponent } from './components/modificar-banners/modificar-banners.component';
 import { CrearComentarioComponent } from './components/crear-comentario/CrearComentarioComponent';
 import { ListarOfertasEnviadasComponent } from './components/listar-ofertas-enviadas/listar-ofertas-enviadas.component';
+import { CheckoutComponent } from './components/checkout/checkout.component';
 
 
 @NgModule({
@@ -81,7 +82,8 @@ import { ListarOfertasEnviadasComponent } from './components/listar-ofertas-envi
     VerSucursalComponent,
     ModificarBannersComponent,
     CrearComentarioComponent,
-    ListarOfertasEnviadasComponent
+    ListarOfertasEnviadasComponent,
+    CheckoutComponent
   ],
   imports: [
     BrowserModule,

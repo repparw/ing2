@@ -19,7 +19,7 @@ from .serializers import CommentSerializer, PubSerializer, UserSerializer, Sucur
 from .serializers import CurrentUserSerializer, CustomAuthTokenSerializer, UpdatePasswordSerializer
 from django.core.mail import send_mail
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_exempt, require_POST
 ## imports statistics
 import matplotlib
 matplotlib.use('Agg')  # Set the backend to 'Agg' before importing pyplot
@@ -33,6 +33,8 @@ matplotlib.use('Agg')  # Use 'Agg' backend for generating images without GUI
 from io import BytesIO
 import base64
 from django.db import models
+
+
 
 class StatisticsView(APIView):
     permission_classes = [IsAuthenticated]
