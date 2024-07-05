@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PublicationService } from '../../services/publication.service';
+import { AdsService } from 'src/app/services/ads.service';
 
 @Component({
   selector: 'app-home',
@@ -16,11 +17,14 @@ export class HomeComponent implements OnInit {
   categories: string[] = ['Serruchos', 'Destornillador', 'Powertools', 'Otros'];
   selectedCategory: string = '';
   noResultsFound: boolean = false;
+  leftBannerImage: string = ''; // Propiedad para almacenar la imagen del banner izquierdo
+  rightBannerImage: string = ''; // Propiedad para almacenar la imagen del banner derecho
 
-  constructor(public publicationService: PublicationService) { }
+  constructor(public publicationService: PublicationService , private adsService: AdsService) { }
 
   ngOnInit(): void {
     this.llenarData();
+    this.loadBanners();
   }
 
   llenarData(): void {
@@ -77,6 +81,23 @@ export class HomeComponent implements OnInit {
     const selectedValue = (event.target as HTMLSelectElement).value;
     this.selectedCategory = selectedValue;
     this.applyFilter();
+  }
+
+
+  loadBanners(): void {
+    this.adsService.getBanners().subscribe(data => {
+      // Filtrar los banners izquierdo y derecho
+      const leftBanner = data.find((banner: { position: string; }) => banner.position === 'left');
+      const rightBanner = data.find((banner: { position: string; }) => banner.position === 'right');
+
+      if (leftBanner) {
+        this.leftBannerImage = 'data:image/jpeg;base64,' + leftBanner.image;
+      }
+
+      if (rightBanner) {
+        this.rightBannerImage = 'data:image/jpeg;base64,' + rightBanner.image;
+      }
+    });
   }
 
 

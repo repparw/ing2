@@ -1,4 +1,3 @@
-// promotion-image.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -11,13 +10,15 @@ export class AdsService {
 
   constructor(private http: HttpClient) { }
 
-  uploadImage(image: File): Observable<any> {
+  uploadImages(images: File[]): Observable<any> {
     const formData: FormData = new FormData();
-    formData.append('image', image, image.name);
+    images.forEach((image, index) => {
+      formData.append('images', image, `banner_${index}.jpg`);
+    });
     return this.http.post(this.apiUrl, formData);
   }
 
-  getImages(): Observable<any> {
-    return this.http.get(this.apiUrl);
+  getBanners(): Observable<any> {
+    return this.http.get(`${this.apiUrl}get_banners/`);
   }
 }

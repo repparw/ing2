@@ -1,4 +1,3 @@
-// promotion-image.component.ts
 import { Component, OnInit } from '@angular/core';
 import { AdsService } from 'src/app/services/ads.service';
 
@@ -8,7 +7,7 @@ import { AdsService } from 'src/app/services/ads.service';
   styleUrls: ['./modificar-banners.component.css']
 })
 export class ModificarBannersComponent implements OnInit {
-  selectedFile!: File;
+  selectedFiles: File[] = [];
   images: any[] = [];
 
   constructor(private adsService: AdsService) { }
@@ -17,20 +16,27 @@ export class ModificarBannersComponent implements OnInit {
     this.loadImages();
   }
 
-  onFileSelected(event: Event) {
+  onFilesSelected(event: Event) {
     const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      this.selectedFile = input.files[0];
+    if (input.files && input.files.length === 2) {
+      this.selectedFiles = Array.from(input.files);
+    } else {
+      alert('Please select exactly two images.');
     }
   }
+
   onUpload() {
-    this.adsService.uploadImage(this.selectedFile).subscribe(response => {
-      this.loadImages();
-    });
+    if (this.selectedFiles.length === 2) {
+      this.adsService.uploadImages(this.selectedFiles).subscribe(response => {
+        this.loadImages();
+      });
+    } else {
+      alert('You need to select exactly two images.');
+    }
   }
 
   loadImages() {
-    this.adsService.getImages().subscribe(data => {
+    this.adsService.getBanners().subscribe(data => {
       this.images = data;
     });
   }

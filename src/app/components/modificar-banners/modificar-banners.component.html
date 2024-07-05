@@ -1,11 +1,17 @@
 <div>
-    <input type="file" (change)="onFileSelected($event)">
-    <button (click)="onUpload()">Upload</button>
-  </div>
-  
-  <div *ngIf="images.length > 0">
-    <div *ngFor="let image of images">
-      <img [src]="'http://127.0.0.1:8000' + image.image" alt="Promotion Image">
+  <input type="file" (change)="onFilesSelected($event)" multiple>
+  <button (click)="onUpload()">Upload</button>
+</div>
+
+<div *ngIf="images.length > 0">
+  <div *ngFor="let image of images">
+    <div *ngIf="image.position === 'left'">
+      <h3>Left Banner</h3>
+      <img [src]="'data:image/jpeg;base64,' + image.image" alt="Left Banner">
+    </div>
+    <div *ngIf="image.position === 'right'">
+      <h3>Right Banner</h3>
+      <img [src]="'data:image/jpeg;base64,' + image.image" alt="Right Banner">
     </div>
   </div>
-  
+</div>

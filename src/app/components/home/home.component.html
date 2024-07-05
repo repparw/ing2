@@ -3,7 +3,7 @@
       <!-- Left ad-banner -->
       <div class="col-2 d-none d-md-block">
         <div class="ad-banner">
-          <img src="/assets/ads/left-ad.png" alt="Left Ad" class="img-fluid">
+          <img *ngIf="leftBannerImage" [src]="leftBannerImage" alt="Left Ad" class="img-fluid">
         </div>
       </div>
       <!-- Main content -->
@@ -36,7 +36,7 @@
       <!-- Right ad-banner -->
       <div class="col-2 d-none d-md-block">
         <div class="ad-banner">
-          <img src="assets/ads/left-ad.png" alt="Right Ad" class="img-fluid">
+          <img *ngIf="rightBannerImage" [src]="rightBannerImage" alt="Right Ad" class="img-fluid">
         </div>
       </div>
     </div>
