@@ -15,20 +15,19 @@ export class CrearComentarioComponent implements OnInit {
     @Input() pubi!: Pub;
     comments: Comment[] = [];
     newComment = new FormControl('', Validators.required);
+    showComments: boolean = false;
 
-    constructor(private commentService: CommentService, private userService: UserService) {}
+    constructor(private commentService: CommentService, private userService: UserService) { }
 
     ngOnInit(): void {
-        this.loadComments();
+        // No cargar los comentarios al inicio
     }
 
-    loadComments(): void {
-        if (this.pubi?.id) {
-            this.commentService.getComments(this.pubi.id).subscribe(
-                comments => this.comments = comments,
-                error => this.handleError('Error loading comments', error)
-            );
-        }
+    loadComments(pubId: number): void {
+        this.commentService.getComments(pubId).subscribe(
+            comments => this.comments = comments,
+            error => this.handleError('Error loading comments', error)
+        );
     }
 
     addComment(): void {
@@ -62,7 +61,7 @@ export class CrearComentarioComponent implements OnInit {
 
         this.commentService.createComment(comment).subscribe(() => {
             this.newComment.reset('');
-            this.loadComments();
+            this.loadComments(this.pubi.id!);
         }, error => this.handleError('Error creating comment', error));
     }
 
@@ -80,5 +79,11 @@ export class CrearComentarioComponent implements OnInit {
         console.error(message, error);
         this.showError('Hubo un problema. Por favor, inténtalo de nuevo más tarde.');
     }
-}
 
+    toggleComments(pubId: number): void {
+        this.showComments = !this.showComments;
+        if (this.showComments) {
+            this.loadComments(pubId);
+        }
+    }
+}

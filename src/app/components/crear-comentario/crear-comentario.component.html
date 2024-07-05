@@ -1,18 +1,19 @@
 <div>
-    <div class="comments">
-        <div *ngFor="let comment of comments" class="comment">
-            <p>{{ comment.text }}</p>
-            <!-- <small>Por: {{ comment.user }}</small> -->
-        </div>
-    </div>
-
-
     <div>
-
         <input type="text" [formControl]="newComment" placeholder="Escribe un comentario">
         <div *ngIf="newComment.invalid && (newComment.dirty || newComment.touched)" class="error-message">
-            <div *ngIf="newComment.errors!">El comentario es requerido.</div>
+            <div *ngIf="newComment.errors">El comentario es requerido.</div>
         </div>
-        <button (click)="addComment()" [disabled]="newComment.invalid">Comentar</button>
+        <button (click)="addComment()" [disabled]="newComment.invalid">Preguntar</button>
+    </div>
+
+    <button (click)="toggleComments(pubi.id!)">
+        {{ showComments ? 'Ocultar Comentarios' : 'Ver Comentarios' }}
+    </button>
+
+    <div *ngIf="showComments" class="comments">
+        <div *ngFor="let comment of comments" class="comment">
+            <p>{{ comment.text }}</p>
+        </div>
     </div>
 </div>

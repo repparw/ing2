@@ -19,14 +19,13 @@ export class CommentService {
 
   constructor(private http: HttpClient) { }
 
-
   createComment(comment: Comment): Observable<Comment> {
     return this.http.post<Comment>(this.baseUrl, comment, { headers: this.getHeaders() })
       .pipe(catchError(this.handleError));
   }
 
   getComments(pubId: number): Observable<Comment[]> {
-    return this.http.get<Comment[]>(`${this.baseUrl}?pub=${pubId}`, { headers: this.getHeaders() })
+    return this.http.get<Comment[]>(`${this.baseUrl}comments-by-pub/${pubId}/`, { headers: this.getHeaders() })
       .pipe(catchError(this.handleError));
   }
 
@@ -38,6 +37,4 @@ export class CommentService {
     }
     return throwError(() => new Error('Por favor, inténtelo de nuevo más tarde.'));
   }
-
-
 }
