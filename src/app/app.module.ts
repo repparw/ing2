@@ -42,6 +42,7 @@ import { EstadisticasGlobalesComponent } from './components/estadisticas-globale
 import { VerSucursalComponent } from './components/ver-sucursal/ver-sucursal.component';
 import { ModificarBannersComponent } from './components/modificar-banners/modificar-banners.component';
 import { CrearComentarioComponent } from './components/crear-comentario/CrearComentarioComponent';
+import { ListarOfertasEnviadasComponent } from './components/listar-ofertas-enviadas/listar-ofertas-enviadas.component';
 
 
 @NgModule({
@@ -79,7 +80,8 @@ import { CrearComentarioComponent } from './components/crear-comentario/CrearCom
     EstadisticasGlobalesComponent,
     VerSucursalComponent,
     ModificarBannersComponent,
-    CrearComentarioComponent
+    CrearComentarioComponent,
+    ListarOfertasEnviadasComponent
   ],
   imports: [
     BrowserModule,

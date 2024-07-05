@@ -6,15 +6,15 @@ import { User } from 'src/app/models/user';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-listar-ofertas-recibidas',
-  templateUrl: './listar-ofertas-recibidas.component.html',
-  styleUrls: ['./listar-ofertas-recibidas.component.css']
+  selector: 'app-listar-ofertas-enviadas',
+  templateUrl: './listar-ofertas-enviadas.component.html',
+  styleUrls: ['./listar-ofertas-enviadas.component.css']
 })
-export class ListarOfertasRecibidasComponent implements OnInit {
+export class ListarOfertasEnviadasComponent implements OnInit {
     data: TradeProposal[] = [];
 
-    mensajeFallidoPropuesta: string = 'propuestas de trueque recibidas';
-    tituloPropuesta: string = '¡Oferta de trueque recibida!';
+    mensajeFallidoPropuesta: string = 'propuestas de trueque enviadas';
+    tituloPropuesta: string = '¡Oferta de trueque enviada!';
 
     currentUserId!: number;
 
@@ -37,7 +37,7 @@ export class ListarOfertasRecibidasComponent implements OnInit {
     fetchTradeProposals(): void {
         this.tradeService.getTradeProposals().subscribe({
             next: (response: TradeProposal[]) => {
-                this.data = response.filter(proposal => proposal.recipient.id === this.currentUserId);
+                this.data = response.filter(proposal => proposal.proposer.id === this.currentUserId);
                 console.log('Proposals:', this.data);
             },
             error: (error: any) => {
@@ -46,8 +46,8 @@ export class ListarOfertasRecibidasComponent implements OnInit {
         });
     }
 
-    navigateToEnviadas(): void {
-        this.router.navigate(['/trueques-enviados']);
+    navigateToRecibidas(): void {
+        this.router.navigate(['/trueques-recibidos']);
     }
 
 }

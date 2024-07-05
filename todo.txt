@@ -1,3 +1,5 @@
--Codigo incorrecto al concretar trueque: Sale un cartelito. Volver a ingresar
+-Trueque rechazado: estado 'not finished'. Si A/B no viene: penalización automático.
 
--Trueque rechazado: estado 'no realizado'. Si A/B no viene: penalización automático.
+-Mis trueques/Mis ofertas: Agregar funcionalidad y agregarlo en las HU.
+
+-Escribir HU listar productos para canje

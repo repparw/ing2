@@ -5,7 +5,6 @@ import { PublicationService } from 'src/app/services/publication.service';
 import Swal from 'sweetalert2';
 import { EmailService } from 'src/app/services/email.service';
 import { TradeProposal } from 'src/app/models/tradeProposal';
-import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-listar-trueques',

@@ -36,6 +36,7 @@ import { CargarVentaComponent } from './components/cargar-venta/cargar-venta.com
 import { ConcretarTruequeComponent } from './components/concretar-trueque/concretar-trueque.component';
 import { VerSucursalComponent } from './components/ver-sucursal/ver-sucursal.component';
 import { ModificarBannersComponent } from './components/modificar-banners/modificar-banners.component';
+import { ListarOfertasEnviadasComponent } from './components/listar-ofertas-enviadas/listar-ofertas-enviadas.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -60,6 +61,7 @@ const routes: Routes = [
   { path: 'sucursales', component: ListarSucursalesComponent},
   { path: 'sucursal/:id', component: VerSucursalComponent, canActivate: [AuthGuard] },
   { path: 'trueques-recibidos', component: ListarOfertasRecibidasComponent},
+  { path: 'trueques-enviados', component: ListarOfertasEnviadasComponent},
   { path: 'trueque/:id', component: ResponderTruequeComponent},
   { path: 'agregar-fecha/:id', component: AgregarFechaComponent},
   { path: 'crear-sucursal', component: CrearSucursalComponent, canActivate: [AdminGuard] },
