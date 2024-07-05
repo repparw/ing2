@@ -58,12 +58,17 @@ class Sales(models.Model):
     quantity = models.IntegerField()
     trade = models.ForeignKey(TradeProposal, on_delete=models.CASCADE, related_name='sales')
 
-class AdsImage(models.Model):
-    image = models.ImageField(upload_to='photos/ads')
-    uploaded_at = models.DateTimeField(auto_now_add=True)
-       
-    def __str__(self):
-        return self.image.url
+
+class Banner(models.Model):
+    LEFT = 'left'
+    RIGHT = 'right'
+    POSITION_CHOICES = [
+        (LEFT, 'Left'),
+        (RIGHT, 'Right')
+    ]
+
+    position = models.CharField(max_length=10, choices=POSITION_CHOICES, unique=True)
+    image = models.BinaryField()
     
 class Comment(models.Model):
     pub = models.ForeignKey(Pub, on_delete=models.CASCADE, related_name='comments')

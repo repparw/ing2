@@ -14,8 +14,8 @@ from django.urls import reverse
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.views import APIView
 from rest_framework.generics import UpdateAPIView
-from .models import AdsImage, Pub, User, Sucursal, TradeProposal, Photo, Sales, Comment
-from .serializers import AdsImageSerializer, CommentSerializer, PubSerializer, UserSerializer, SucursalSerializer, TradeProposalSerializer, SalesSerializer
+from .models import  Banner, Pub, User, Sucursal, TradeProposal, Photo, Sales, Comment
+from .serializers import CommentSerializer, PubSerializer, UserSerializer, SucursalSerializer, TradeProposalSerializer, SalesSerializer, BannerSerializer
 from .serializers import CurrentUserSerializer, CustomAuthTokenSerializer, UpdatePasswordSerializer
 from django.core.mail import send_mail
 from django.http import JsonResponse
@@ -32,6 +32,7 @@ import matplotlib.pyplot as plt
 matplotlib.use('Agg')  # Use 'Agg' backend for generating images without GUI
 from io import BytesIO
 import base64
+from django.db import models
 
 class StatisticsView(APIView):
     permission_classes = [IsAuthenticated]
@@ -661,13 +662,43 @@ class SalesViewSet(viewsets.ModelViewSet):
             serializer = self.get_serializer(ventas, many=True)
             return Response(serializer.data)
         return Response({"error": "Trade ID not provided"}, status=400)
+    
 
 
-class AdsImageViewSet(viewsets.ModelViewSet):
-    queryset = AdsImage.objects.all()
-    serializer_class = AdsImageSerializer
+class BannerViewSet(viewsets.ModelViewSet):
+    queryset = Banner.objects.all()
+    serializer_class = BannerSerializer
     parser_classes = [MultiPartParser, FormParser]
     permission_classes = [AllowAny]
+
+    def create(self, request, *args, **kwargs):
+        banners = request.FILES.getlist('images')
+        positions = [Banner.LEFT, Banner.RIGHT]
+
+        if len(banners) != 2:
+            return Response({"error": "Please upload exactly two images."}, status=400)
+
+        Banner.objects.all().delete()  # Delete all previous banners
+
+        for position, banner in zip(positions, banners):
+            image_data = banner.read()
+            Banner.objects.create(position=position, image=image_data)
+
+        return Response({"status": "success"})
+
+    @action(detail=False, methods=['get'])
+    def get_banners(self, request):
+        banners = Banner.objects.all()
+        banner_data = []
+        for banner in banners:
+            encoded_string = base64.b64encode(banner.image).decode()
+            banner_data.append({
+                "position": banner.position,
+                "image": encoded_string
+            })
+        return JsonResponse(banner_data, safe=False)
+
+
 
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
