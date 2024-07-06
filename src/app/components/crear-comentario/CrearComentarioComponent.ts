@@ -5,6 +5,7 @@ import { Pub } from '../../models/pub';
 import { Comment } from '../../models/comment';
 import { FormControl, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
+import { Observable } from 'rxjs';
 
 @Component({
     selector: 'app-crear-comentario',
@@ -19,8 +20,11 @@ export class CrearComentarioComponent implements OnInit {
     currentUser: any;
     replyCommentId: number | null = null;
     replyCommentText = new FormControl('', Validators.required);
+    isAdmin$: Observable<boolean> | undefined;
 
-    constructor(private commentService: CommentService, private userService: UserService) { }
+    constructor(private commentService: CommentService, private userService: UserService) {
+        this.isAdmin$ = this.userService.isAdmin$;
+    }
 
     ngOnInit(): void {
         this.userService.getCurrentUser().subscribe(user => {
