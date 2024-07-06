@@ -29,6 +29,16 @@ export class CommentService {
       .pipe(catchError(this.handleError));
   }
 
+  deleteComment(commentId: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}${commentId}/`, { headers: this.getHeaders() })
+      .pipe(catchError(this.handleError));
+  }
+
+  replyToComment(commentId: number, responseText: string): Observable<Comment> {
+    return this.http.patch<Comment>(`${this.baseUrl}${commentId}/`, { respuesta: responseText }, { headers: this.getHeaders() })
+      .pipe(catchError(this.handleError));
+  }
+
   private handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {
       console.error('Se ha producido un error:', error.error.message);
