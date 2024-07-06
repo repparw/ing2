@@ -66,7 +66,6 @@ const routes: Routes = [
   { path: 'trueque/:id', component: ResponderTruequeComponent },
   { path: 'agregar-fecha/:id', component: AgregarFechaComponent },
   { path: 'crear-sucursal', component: CrearSucursalComponent, canActivate: [AdminGuard] },
-<<<<<<< HEAD
   { path: 'trueque/:id/cargar-venta', component: CargarVentaComponent },
   { path: 'trueques-empleado', component: ListarTruequesEmpleadoComponent },
   { path: 'concretar-trueque/:id', component: ConcretarTruequeComponent },
