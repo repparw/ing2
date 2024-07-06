@@ -6,6 +6,13 @@
     <img [src]="getPhotos(sucursal.id)" class="img-thumbnail" alt="{{ sucursal.address }}">
   </div>
 
+  <ng-container *ngIf="(isAdmin$ | async)">
+    <div>
+      <p>Acá van las valoraciones de la sucursal</p>
+      <!--- TODO --->
+    </div>
+  </ng-container>
+
   <ng-container *ngIf="(isAdmin$ | async) || sucEmpl == sucursal.id && (isEmployee$ | async)">
     <div *ngIf="noStatistics" class="alert alert-warning" role="alert">
       No hay estadísticas disponibles para esta sucursal.

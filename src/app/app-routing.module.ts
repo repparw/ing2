@@ -60,20 +60,18 @@ const routes: Routes = [
   { path: 'publicacion/:id/editar', component: EditarPublicacionComponent, canActivate: [AuthGuard] },
   { path: 'sucursales', component: ListarSucursalesComponent},
   { path: 'sucursal/:id', component: VerSucursalComponent, canActivate: [AuthGuard] },
-  { path: 'trueques-recibidos', component: ListarOfertasRecibidasComponent},
-  { path: 'trueques-enviados', component: ListarOfertasEnviadasComponent},
-  { path: 'trueque/:id', component: ResponderTruequeComponent},
-  { path: 'agregar-fecha/:id', component: AgregarFechaComponent},
+  { path: 'trueques-recibidos', component: ListarOfertasRecibidasComponent },
+  { path: 'trueques-enviados', component: ListarOfertasEnviadasComponent },
+  { path: 'trueque/:id', component: ResponderTruequeComponent },
+  { path: 'agregar-fecha/:id', component: AgregarFechaComponent },
   { path: 'crear-sucursal', component: CrearSucursalComponent, canActivate: [AdminGuard] },
-  { path: 'trueque/:id/cargar-venta', component: CargarVentaComponent},
-  { path: 'trueques-empleado', component: ListarTruequesEmpleadoComponent},
-  { path: 'concretar-trueque/:id', component: ConcretarTruequeComponent},
+  { path: 'trueque/:id/cargar-venta', component: CargarVentaComponent },
+  { path: 'trueques-empleado', component: ListarTruequesEmpleadoComponent },
+  { path: 'concretar-trueque/:id', component: ConcretarTruequeComponent },
   { path: 'estadisticas', component: EstadisticasGlobalesComponent, canActivate: [AdminGuard] },
-  {path: 'modificar-banners', component: ModificarBannersComponent, canActivate:[EmployeeGuard]},
+  { path: 'modificar-banners', component: ModificarBannersComponent, canActivate:[EmployeeGuard] },
   { path: '**', redirectTo: '/home', pathMatch: 'full' }
 ];
-
-
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
