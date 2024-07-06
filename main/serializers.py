@@ -1,6 +1,6 @@
 from django.contrib.auth import authenticate
 from rest_framework import serializers
-from .models import Pub, User, Sucursal, TradeProposal, Sales, Comment, Banner
+from .models import Pub, User, Sucursal, TradeProposal, Sales, Comment, Banner, Rating
 
 class PubSerializer(serializers.ModelSerializer):
     class Meta:
@@ -18,7 +18,13 @@ class CurrentUserSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'name', 'username', 'email', 'date', 'rating', 'suc', 'mailing', 'is_staff', 'is_superuser') # Add more fields as needed
 
+class RatingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Rating
+        fields = '__all__'
+        
 class UserSerializer(serializers.ModelSerializer):
+    ratings_received = RatingSerializer(many=True, read_only=True)
     class Meta:
         model = User
         fields = '__all__'
