@@ -37,6 +37,7 @@ import { ConcretarTruequeComponent } from './components/concretar-trueque/concre
 import { VerSucursalComponent } from './components/ver-sucursal/ver-sucursal.component';
 import { ModificarBannersComponent } from './components/modificar-banners/modificar-banners.component';
 import { ListarOfertasEnviadasComponent } from './components/listar-ofertas-enviadas/listar-ofertas-enviadas.component';
+import { CheckoutComponent } from './components/checkout/checkout.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -65,11 +66,20 @@ const routes: Routes = [
   { path: 'trueque/:id', component: ResponderTruequeComponent },
   { path: 'agregar-fecha/:id', component: AgregarFechaComponent },
   { path: 'crear-sucursal', component: CrearSucursalComponent, canActivate: [AdminGuard] },
+<<<<<<< HEAD
   { path: 'trueque/:id/cargar-venta', component: CargarVentaComponent },
   { path: 'trueques-empleado', component: ListarTruequesEmpleadoComponent },
   { path: 'concretar-trueque/:id', component: ConcretarTruequeComponent },
   { path: 'estadisticas', component: EstadisticasGlobalesComponent, canActivate: [AdminGuard] },
   { path: 'modificar-banners', component: ModificarBannersComponent, canActivate:[EmployeeGuard] },
+=======
+  { path: 'trueque/:id/cargar-venta', component: CargarVentaComponent},
+  { path: 'trueques-empleado', component: ListarTruequesEmpleadoComponent},
+  { path: 'checkout/:id', component: CheckoutComponent},
+  { path: 'concretar-trueque/:id', component: ConcretarTruequeComponent},
+  { path: 'estadisticas', component: EstadisticasGlobalesComponent, canActivate: [AdminGuard] },
+  { path: 'modificar-banners', component: ModificarBannersComponent, canActivate:[EmployeeGuard]},
+>>>>>>> 5fb741245b0ea3f71c3263132bdc59c892ec2904
   { path: '**', redirectTo: '/home', pathMatch: 'full' }
 ];
 
