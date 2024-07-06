@@ -16,11 +16,16 @@ export class CrearComentarioComponent implements OnInit {
     comments: Comment[] = [];
     newComment = new FormControl('', Validators.required);
     showComments: boolean = false;
+    currentUser: any;
+    replyCommentId: number | null = null;
+    replyCommentText = new FormControl('', Validators.required);
 
     constructor(private commentService: CommentService, private userService: UserService) { }
 
     ngOnInit(): void {
-        // No cargar los comentarios al inicio
+        this.userService.getCurrentUser().subscribe(user => {
+            this.currentUser = user;
+        });
     }
 
     loadComments(pubId: number): void {
@@ -42,6 +47,21 @@ export class CrearComentarioComponent implements OnInit {
                 }
             }, error => this.handleError('Error verifying ownership', error));
         }, error => this.handleError('Error getting current user', error));
+    }
+
+    deleteComment(commentId: number): void {
+        this.commentService.deleteComment(commentId).subscribe(() => {
+            this.loadComments(this.pubi.id!);
+        }, error => this.handleError('Error deleting comment', error));
+    }
+
+    replyToComment(commentId: number): void {
+        const responseText = this.replyCommentText.value!;
+        this.commentService.replyToComment(commentId, responseText).subscribe(() => {
+            this.replyCommentText.reset('');
+            this.loadComments(this.pubi.id!);
+            this.replyCommentId = null;
+        }, error => this.handleError('Error replying to comment', error));
     }
 
     private validatePublication(): boolean {
@@ -85,5 +105,13 @@ export class CrearComentarioComponent implements OnInit {
         if (this.showComments) {
             this.loadComments(pubId);
         }
+    }
+
+    setReplyCommentId(commentId: number): void {
+        this.replyCommentId = commentId;
+    }
+
+    clearReplyCommentId(): void {
+        this.replyCommentId = null;
     }
 }
