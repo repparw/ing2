@@ -70,16 +70,9 @@ const routes: Routes = [
   { path: 'trueque/:id/cargar-venta', component: CargarVentaComponent },
   { path: 'trueques-empleado', component: ListarTruequesEmpleadoComponent },
   { path: 'concretar-trueque/:id', component: ConcretarTruequeComponent },
+  { path: 'checkout/:id', component: CheckoutComponent },
   { path: 'estadisticas', component: EstadisticasGlobalesComponent, canActivate: [AdminGuard] },
   { path: 'modificar-banners', component: ModificarBannersComponent, canActivate:[EmployeeGuard] },
-=======
-  { path: 'trueque/:id/cargar-venta', component: CargarVentaComponent},
-  { path: 'trueques-empleado', component: ListarTruequesEmpleadoComponent},
-  { path: 'checkout/:id', component: CheckoutComponent},
-  { path: 'concretar-trueque/:id', component: ConcretarTruequeComponent},
-  { path: 'estadisticas', component: EstadisticasGlobalesComponent, canActivate: [AdminGuard] },
-  { path: 'modificar-banners', component: ModificarBannersComponent, canActivate:[EmployeeGuard]},
->>>>>>> 5fb741245b0ea3f71c3263132bdc59c892ec2904
   { path: '**', redirectTo: '/home', pathMatch: 'full' }
 ];
 
