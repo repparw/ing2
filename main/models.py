@@ -78,3 +78,10 @@ class Comment(models.Model):
 
     def __str__(self):
         return f'Comment by {self.user.username} on {self.pub.title}'
+    
+class Rating(models.Model):
+    recipient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='ratings_received')
+    rating_score = models.IntegerField()
+
+    def __str__(self):
+        return f'Rating: {self.rating_score} for {self.recipient.username}'

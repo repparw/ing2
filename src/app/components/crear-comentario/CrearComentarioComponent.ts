@@ -56,6 +56,7 @@ export class CrearComentarioComponent implements OnInit {
     deleteComment(commentId: number): void {
         this.commentService.deleteComment(commentId).subscribe(() => {
             this.loadComments(this.pubi.id!);
+            this.showSuccessNotification('El comentario fue borrado con éxito.');
         }, error => this.handleError('Error deleting comment', error));
     }
 
@@ -93,6 +94,16 @@ export class CrearComentarioComponent implements OnInit {
         Swal.fire({
             icon: 'error',
             title: 'Error',
+            text: message,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Entendido'
+        });
+    }
+
+    private showSuccessNotification(message: string): void {
+        Swal.fire({
+            icon: 'success',
+            title: 'Éxito',
             text: message,
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Entendido'
