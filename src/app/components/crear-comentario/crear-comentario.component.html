@@ -5,22 +5,23 @@
             <div *ngIf="newComment.invalid && (newComment.dirty || newComment.touched)" class="text-danger mt-2">
                 <div *ngIf="newComment.errors">El comentario es requerido.</div>
             </div>
-            <button (click)="addComment()" [disabled]="newComment.invalid"
+            <button class="btn btn-primary" (click)="addComment()" [disabled]="newComment.invalid"
                 class="btn btn-primary mt-3">Preguntar</button>
         </div>
 
-        <button (click)="toggleComments(pubi.id!)">
+        <button class="btn btn-primary" (click)="toggleComments(pubi.id!)">
             {{ showComments ? 'Ocultar Comentarios' : 'Ver Comentarios' }}
         </button>
 
         <div *ngIf="showComments" class="comments">
             <div *ngFor="let comment of comments" class="comment">
                 <p><strong>Pregunta:</strong> {{ comment.text }}</p>
-                <button *ngIf="comment.user === currentUser.id" (click)="deleteComment(comment.id!)">Eliminar</button>
+                <button class="btn btn-primary" *ngIf="comment.user === currentUser.id"
+                    (click)="deleteComment(comment.id!)">Eliminar</button>
                 <div *ngIf="comment.respuesta" class="response">
                     <p><strong>Respuesta:</strong> {{ comment.respuesta }}</p>
                 </div>
-                <button *ngIf="pubi.user === currentUser.id && !replyCommentId"
+                <button class="btn btn-primary" *ngIf="pubi.user === currentUser.id && !replyCommentId"
                     (click)="setReplyCommentId(comment.id!)">Responder</button>
                 <div *ngIf="replyCommentId === comment.id" class="reply-form">
                     <input type="text" [formControl]="replyCommentText" placeholder="Escribe tu respuesta">
@@ -28,7 +29,8 @@
                         class="error-message">
                         <div *ngIf="replyCommentText.errors">La respuesta es requerida.</div>
                     </div>
-                    <button (click)="replyToComment(comment.id)" [disabled]="replyCommentText.invalid">Enviar
+                    <button class="btn btn-primary" (click)="replyToComment(comment.id)"
+                        [disabled]="replyCommentText.invalid">Enviar
                         Respuesta</button>
                 </div>
             </div>
