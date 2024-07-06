@@ -6,6 +6,11 @@ body {
   background-color: #DFD0B8 !important;
 }
 
+.card {
+    color: #f7f5f3 !important;
+    background-color: #3C5B6F !important;
+}
+
 .container,
 .form-container,
 form {
