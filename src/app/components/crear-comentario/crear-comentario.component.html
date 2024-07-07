@@ -16,8 +16,8 @@
         <div *ngIf="showComments" class="comments">
             <div *ngFor="let comment of comments" class="comment">
                 <p><strong>Pregunta:</strong> {{ comment.text }}</p>
-                <button class="btn btn-primary" *ngIf="comment.user === currentUser.id"
-                    (click)="deleteComment(comment.id!)">Eliminar</button>
+                <button class="btn btn-primary" *ngIf="(isAdmin$ | async)" (click)="deleteComment(comment.id!)">Eliminar
+                    pregunta</button>
                 <div *ngIf="comment.respuesta" class="response">
                     <p><strong>Respuesta:</strong> {{ comment.respuesta }}</p>
                 </div>

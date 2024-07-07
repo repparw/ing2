@@ -28,9 +28,14 @@ export class ListarTruequesEmpleadoComponent implements OnInit{
     ngOnInit(): void {
   this.userService.getCurrentUser().pipe(
     switchMap(user => {
-      this.currentUserSucursal = user.suc;
-      console.log('Current user sucursal:', this.currentUserSucursal);
-      return this.tradeService.getTradeProposalsBySucursal(this.currentUserSucursal);
+      if (! this.userService.isAdmin$){
+        this.currentUserSucursal = user.suc;
+        console.log('Current user sucursal:', this.currentUserSucursal);
+        return this.tradeService.getTradeProposalsBySucursal(this.currentUserSucursal);
+      }
+      else{
+        return this.tradeService.getTradeProposals();
+      }
     })
   ).subscribe(
     data => {

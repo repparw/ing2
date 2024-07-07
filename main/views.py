@@ -14,8 +14,8 @@ from django.urls import reverse
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.views import APIView
 from rest_framework.generics import UpdateAPIView
-from .models import  Banner, Pub, User, Sucursal, TradeProposal, Photo, Sales, Comment
-from .serializers import CommentSerializer, PubSerializer, UserSerializer, SucursalSerializer, TradeProposalSerializer, SalesSerializer, BannerSerializer
+from .models import  Banner, Pub, User, Sucursal, TradeProposal, Photo, Sales, Comment, Rating
+from .serializers import CommentSerializer, PubSerializer, UserSerializer, SucursalSerializer, TradeProposalSerializer, SalesSerializer, BannerSerializer, RatingSerializer
 from .serializers import CurrentUserSerializer, CustomAuthTokenSerializer, UpdatePasswordSerializer
 from django.core.mail import send_mail
 from django.http import JsonResponse
@@ -755,4 +755,12 @@ class ProcessPaymentAPIView(APIView):
 
             return Response(data={"body": status, "statusCode": payment_response["status"]}, status=201)
         except Exception as e:
+<<<<<<< HEAD
             return Response(data={"body": str(e)}, status=400)
+=======
+            return Response(data={"body": payment_response}, status=400)
+        
+class RatingViewSet(viewsets.ModelViewSet):
+    queryset = Rating.objects.all()
+    serializer_class = RatingSerializer
+>>>>>>> f57fa45aa73ecb28caaeef8b92f270d6374a1c03

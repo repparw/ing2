@@ -5,6 +5,7 @@ import { Pub } from '../../models/pub';
 import { Comment } from '../../models/comment';
 import { FormControl, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
+import { Observable } from 'rxjs';
 
 @Component({
     selector: 'app-crear-comentario',
@@ -19,8 +20,11 @@ export class CrearComentarioComponent implements OnInit {
     currentUser: any;
     replyCommentId: number | null = null;
     replyCommentText = new FormControl('', Validators.required);
+    isAdmin$: Observable<boolean> | undefined;
 
-    constructor(private commentService: CommentService, private userService: UserService) { }
+    constructor(private commentService: CommentService, private userService: UserService) {
+        this.isAdmin$ = this.userService.isAdmin$;
+    }
 
     ngOnInit(): void {
         this.userService.getCurrentUser().subscribe(user => {
@@ -52,6 +56,7 @@ export class CrearComentarioComponent implements OnInit {
     deleteComment(commentId: number): void {
         this.commentService.deleteComment(commentId).subscribe(() => {
             this.loadComments(this.pubi.id!);
+            this.showSuccessNotification('El comentario fue borrado con éxito.');
         }, error => this.handleError('Error deleting comment', error));
     }
 
@@ -89,6 +94,16 @@ export class CrearComentarioComponent implements OnInit {
         Swal.fire({
             icon: 'error',
             title: 'Error',
+            text: message,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Entendido'
+        });
+    }
+
+    private showSuccessNotification(message: string): void {
+        Swal.fire({
+            icon: 'success',
+            title: 'Éxito',
             text: message,
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Entendido'

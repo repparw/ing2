@@ -10,6 +10,7 @@ fonttools==4.53.0
 idna==3.7
 kiwisolver==1.4.5
 matplotlib==3.9.0
+mercadopago==2.2.3
 numpy==1.26.4
 packaging==24.1
 pandas==2.2.2

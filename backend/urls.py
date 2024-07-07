@@ -1,12 +1,18 @@
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
+<<<<<<< HEAD
 from main.views import (
     PubViewSet, SucursalViewSet, TradeProposalViewSet, UserViewSet, SalesViewSet, CommentViewSet, BannerViewSet,
     CurrentUserView, CustomAuthToken, UpdatePasswordView, SendResetPasswordEmailView, PasswordResetConfirmView,
     StatisticsView, ProcessPaymentAPIView, return_pub_images_id, serve_publication_image, serve_branch_image,
     send_email, get_all_emails, save_discount_codes, verificar_codigo, borrar_codigo
 )
+=======
+from main.views import PubViewSet, SucursalViewSet, TradeProposalViewSet, UserViewSet, SalesViewSet, CommentViewSet, BannerViewSet, RatingViewSet
+from main.views import CurrentUserView, CustomAuthToken, UpdatePasswordView, SendResetPasswordEmailView, PasswordResetConfirmView, StatisticsView
+from main.views import return_pub_images_id, serve_publication_image, serve_branch_image, send_email, get_all_emails, save_discount_codes, verificar_codigo, borrar_codigo
+>>>>>>> f57fa45aa73ecb28caaeef8b92f270d6374a1c03
 
 router = routers.DefaultRouter()
 router.register('publications', PubViewSet, basename='publications')
@@ -16,6 +22,8 @@ router.register('proposals', TradeProposalViewSet, basename='proposals')
 router.register('ventas', SalesViewSet, basename='ventas')
 router.register('ads', BannerViewSet, basename='ads')
 router.register('comments', CommentViewSet, basename='comments')
+router.register('ratings', RatingViewSet)
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
