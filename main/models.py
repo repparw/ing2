@@ -9,7 +9,7 @@ class User(AbstractUser):
   rating = models.FloatField(default=0.00, blank=True)
   suc = models.ForeignKey('Sucursal', on_delete=models.SET_NULL, null=True)
   email = models.EmailField(unique=True)
-  total_ratings = models.IntegerField(default=0)
+  total_ratings = models.IntegerField(default=0, blank=True)
 
 class Pub(models.Model):
   title = models.CharField(max_length=100)

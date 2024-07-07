@@ -252,6 +252,9 @@ export class ListarTruequesComponent implements OnInit, OnChanges {
                 // Update the user's rating and total ratings fields
                   user.rating = averageRating;
                   user.total_ratings = totalRatings;
+
+                 // Log the user object before sending the request
+                console.log('Updating user with data:', user);
           
                   // Update the user
                   this.userService.updateUser(user).subscribe({
