@@ -13,6 +13,7 @@ import Swal from 'sweetalert2';
   styleUrls: ['./ver-publicacion.component.css']
 })
 export class VerPublicacionComponent implements OnInit {
+
   data: Pub | null = null;
   username: string | null = null;
   owner: string | null = null;
@@ -150,6 +151,10 @@ export class VerPublicacionComponent implements OnInit {
       confirmButtonText: 'Cerrar'
     });
   }
+
+  destacarPublicacion(id: number) {
+    this.router.navigate([`checkout/${id}`])
+    }
 
 }
 

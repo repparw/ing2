@@ -8,13 +8,13 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class MercadoPagoService {
-  private publicKey = 'TU_PUBLIC_KEY'; // Reemplaza con tu PUBLIC_KEY de Mercado Pago
-  private apiUrl = 'https://api.mercadopago.com';
+  private baseUrl = 'http://127.0.0.1:8000/';
 
   constructor(private http: HttpClient) { }
 
   generatePreference(preferenceData: any): Observable<any> {
-    const url = `${this.apiUrl}/checkout/preferences?access_token=${this.publicKey}`;
+    const url = `${this.baseUrl}checkout/`;
+    console.log(preferenceData);
     return this.http.post<any>(url, preferenceData);
   }
 

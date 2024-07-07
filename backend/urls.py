@@ -1,31 +1,18 @@
-"""
-URL configuration for backend project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.0/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
-from main.views import PubViewSet, SucursalViewSet, TradeProposalViewSet, UserViewSet, SalesViewSet, CommentViewSet, BannerViewSet
-from main.views import CurrentUserView, CustomAuthToken, UpdatePasswordView, SendResetPasswordEmailView, PasswordResetConfirmView, StatisticsView
-from main.views import return_pub_images_id, serve_publication_image, serve_branch_image, send_email, get_all_emails, save_discount_codes, verificar_codigo, borrar_codigo
+from main.views import (
+    PubViewSet, SucursalViewSet, TradeProposalViewSet, UserViewSet, SalesViewSet, CommentViewSet, BannerViewSet,
+    CurrentUserView, CustomAuthToken, UpdatePasswordView, SendResetPasswordEmailView, PasswordResetConfirmView,
+    StatisticsView, ProcessPaymentAPIView, return_pub_images_id, serve_publication_image, serve_branch_image,
+    send_email, get_all_emails, save_discount_codes, verificar_codigo, borrar_codigo
+)
 
 router = routers.DefaultRouter()
-router.register('publications', PubViewSet, basename='publications' )
-router.register('users', UserViewSet, basename='users' )
-router.register('branches', SucursalViewSet, basename='branches' )
-router.register('proposals', TradeProposalViewSet, basename='proposals' )
+router.register('publications', PubViewSet, basename='publications')
+router.register('users', UserViewSet, basename='users')
+router.register('branches', SucursalViewSet, basename='branches')
+router.register('proposals', TradeProposalViewSet, basename='proposals')
 router.register('ventas', SalesViewSet, basename='ventas')
 router.register('ads', BannerViewSet, basename='ads')
 router.register('comments', CommentViewSet, basename='comments')
@@ -49,5 +36,6 @@ urlpatterns = [
     path('reset-password/<uidb64>/<token>/', PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('verificar-codigo/', verificar_codigo, name='verificar_codigo'),
     path('borrar-codigo/<str:codigo>/', borrar_codigo, name='borrar_codigo'),
+    path('checkout/', ProcessPaymentAPIView.as_view(), name='checkout'),
     path('', include(router.urls)),
-] + router.urls
+]

@@ -156,3 +156,4 @@ EMAIL_HOST_USER = '1francoagostinelli2000@gmail.com'
 EMAIL_HOST_PASSWORD = 'rrpy lrxi kokd uldi'
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CODIGOS_JSON_PATH = os.path.join(BASE_DIR, 'src', 'assets', 'codigos', 'codigos.JSON')
+YOUR_ACCESS_TOKEN= "APP_USR-1602288790288828-070514-a27c9302c7c6212c3463a976870217a5-278218017"

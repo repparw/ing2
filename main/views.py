@@ -720,31 +720,33 @@ class CommentViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(comments, many=True)
         return Response(serializer.data)
 
-
 class ProcessPaymentAPIView(APIView):
+    permission_classes = [AllowAny]
+
     def post(self, request):
         try:
             request_values = json.loads(request.body)
-            payment_data = {
-                "transaction_amount": float(request_values["transaction_amount"]),
-                "token": request_values["token"],
-                "installments": int(request_values["installments"]),
-                "payment_method_id": request_values["payment_method_id"],
-                "issuer_id": request_values["issuer_id"],
-                "payer": {
-                    "email": request_values["payer"]["email"],
-                    "identification": {
-                        "type": request_values["payer"]["identification"]["type"],
-                        "number": request_values["payer"]["identification"]["number"],
-                    },
-                },
+            
+            # Crea un ítem en la preferencia
+            preference_data = {
+                "items": [
+                    {
+                        "id" : "producto",
+                        "title": "Mi producto",
+                        "quantity": 1,
+                        "unit_price": 75.76,
+                    }
+                ]
             }
 
-            sdk = mercadopago.SDK(str(settings.YOUR_ACCESS_TOKEN))
+            sdk = mercadopago.SDK('APP_USR-1602288790288828-070514-a27c9302c7c6212c3463a976870217a5-278218017')
 
-            payment_response = sdk.payment().create(payment_data)
+            preference_response = sdk.preference().create(preference_data)
+            preference = preference_response["response"]
 
+            payment_response = sdk.payment().create(preference_data)
             payment = payment_response["response"]
+            
             status = {
                 "id": payment["id"],
                 "status": payment["status"],
@@ -753,4 +755,4 @@ class ProcessPaymentAPIView(APIView):
 
             return Response(data={"body": status, "statusCode": payment_response["status"]}, status=201)
         except Exception as e:
-            return Response(data={"body": payment_response}, status=400)
+            return Response(data={"body": str(e)}, status=400)
