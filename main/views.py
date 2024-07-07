@@ -763,4 +763,8 @@ class ProcessPaymentAPIView(APIView):
 class RatingViewSet(viewsets.ModelViewSet):
     queryset = Rating.objects.all()
     serializer_class = RatingSerializer
+        
+class RatingViewSet(viewsets.ModelViewSet):
+    queryset = Rating.objects.all()
+    serializer_class = RatingSerializer
 >>>>>>> f57fa45aa73ecb28caaeef8b92f270d6374a1c03

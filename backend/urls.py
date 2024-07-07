@@ -3,7 +3,7 @@ from django.urls import path, include
 from rest_framework import routers
 <<<<<<< HEAD
 from main.views import (
-    PubViewSet, SucursalViewSet, TradeProposalViewSet, UserViewSet, SalesViewSet, CommentViewSet, BannerViewSet,
+    PubViewSet, SucursalViewSet, TradeProposalViewSet, UserViewSet, SalesViewSet, CommentViewSet, BannerViewSet, RatingViewSet,
     CurrentUserView, CustomAuthToken, UpdatePasswordView, SendResetPasswordEmailView, PasswordResetConfirmView,
     StatisticsView, ProcessPaymentAPIView, return_pub_images_id, serve_publication_image, serve_branch_image,
     send_email, get_all_emails, save_discount_codes, verificar_codigo, borrar_codigo
