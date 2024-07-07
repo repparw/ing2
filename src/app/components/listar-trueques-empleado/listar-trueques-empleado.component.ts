@@ -34,6 +34,7 @@ export class ListarTruequesEmpleadoComponent implements OnInit{
         return this.tradeService.getTradeProposalsBySucursal(this.currentUserSucursal);
       }
       else{
+        this.mensajeFallido = 'trueques confirmados'
         return this.tradeService.getTradeProposals();
       }
     })

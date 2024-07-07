@@ -18,4 +18,8 @@ export interface TradeProposal {
   code?: string;
   created_at?: Date;
   date?: Date;
+  recipient_rated?: boolean;
+  proposer_rated?: boolean;
+  recipient_rated_sucursal?: boolean;
+  proposer_rated_sucursal?: boolean;
 }

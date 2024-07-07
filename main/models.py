@@ -9,6 +9,7 @@ class User(AbstractUser):
   rating = models.FloatField(default=0.00, blank=True)
   suc = models.ForeignKey('Sucursal', on_delete=models.SET_NULL, null=True)
   email = models.EmailField(unique=True)
+  total_ratings = models.IntegerField(default=0)
 
 class Pub(models.Model):
   title = models.CharField(max_length=100)
@@ -42,6 +43,10 @@ class TradeProposal(models.Model):
   code = models.CharField(max_length=100, blank=True, default='')
   created_at = models.DateTimeField(auto_now_add=True)
   date = models.DateField(null=True, blank=True)
+  recipient_rated = models.BooleanField(default=False)
+  proposer_rated = models.BooleanField(default=False)
+  recipient_rated_sucursal = models.BooleanField(default=False)
+  proposer_rated_sucursal = models.BooleanField(default=False)
 
 class Sucursal(models.Model):
   address = models.CharField(max_length=100)

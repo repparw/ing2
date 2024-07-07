@@ -11,18 +11,19 @@
         <li *ngFor="let trueque of data;  let i = index" class="fila justified-content-center">
           <div class="info">
             <h2>{{ titulo }}</h2>
+            <h4>Estado del trueque: {{ tradeStatus(trueque.status) }}</h4>
             <h6>Publicacion: {{ trueque.publication.title }}</h6>
             <img [src]="getPhotos(trueque.publication.id)" class="image-thumbnail" width="100" height="100" alt="{{ trueque.publication.title }}" (click)="navigatePubli(trueque.publication.id)">
             <a class="proposer" (click)="navigate(trueque.proposer.username)">Oferta hecha por: {{ trueque.proposer.name }}</a>
             <span class="rating">Valoración del usuario: {{ trueque.proposer.rating }}</span>
 
-            <ng-container *ngIf="trueque.status == 'accepted' || trueque.status == 'confirmed'">
+            <ng-container *ngIf="trueque.status == 'accepted' || trueque.status == 'confirmed' || trueque.status == 'concreted'">
               <div>
                 <a class="recipient" (click)="navigate(trueque.recipient.username)">Recibida por: {{ trueque.recipient.name }}</a>
                 <span class="rating">Valoración del usuario: {{ trueque.recipient.rating }}</span>
                 <p>Codigo: {{ trueque.code }} </p>
 
-                <span *ngIf="trueque.status == 'confirmed'">
+                <span *ngIf="trueque.status == 'confirmed' || trueque.status == 'concreted'">
                   <p>Sucursal: {{ trueque.suc?.address }}<br>
                   Fecha del trueque: {{ trueque.date | date:'dd/MM/yyyy' }}</p>
                 </span>
@@ -48,6 +49,13 @@
             <div *ngIf="empleado == true && trueque.status == 'confirmed'">
               <button type="button" class="btn btn-outline-primary" (click)="navigateConcretar(trueque.id)">Concretar Trueque</button>
               <button type="button" class="btn btn-outline-primary" (click)="navigateVentas(trueque.id)">Cargar Ventas Asociadas</button>              
+            </div>
+            <div *ngIf="trueque.status == 'concreted' && tradeParticipant(trueque)" >
+              <button *ngIf="!valoro(trueque)" type="button" class="btn btn-secondary"  (click)="popupValorar(trueque, trueque.id)">Valorar usuario</button>
+              <span *ngIf="valoro(trueque)">¡Ya valoraste al usuario!</span>
+              <br>
+              <button *ngIf="!valoroSucursal(trueque)"type="button" class="btn btn-secondary"  (click)="popupValorarSucursal(trueque, trueque.id)">Valorar sucursal</button>
+              <span *ngIf="valoroSucursal(trueque)">¡Ya valoraste a la sucursal!</span>
             </div>
           </div>
         </li>

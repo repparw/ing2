@@ -2,9 +2,13 @@ import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/cor
 import { TradeService } from 'src/app/services/trade.service';
 import { Router } from '@angular/router';
 import { PublicationService } from 'src/app/services/publication.service';
+import { UserService } from 'src/app/services/user.service';
 import Swal from 'sweetalert2';
 import { EmailService } from 'src/app/services/email.service';
 import { TradeProposal } from 'src/app/models/tradeProposal';
+import { RatingService } from 'src/app/services/rating.service';
+import { Rating } from 'src/app/models/rating';
+import { User } from 'src/app/models/user';
 
 @Component({
   selector: 'app-listar-trueques',
@@ -20,11 +24,14 @@ export class ListarTruequesComponent implements OnInit, OnChanges {
     show: boolean[] = [];
     fecha2?: Date;
     limitDate?: Date;
+    usuarioActual?: number;
 
     constructor (private tradeService: TradeService,
                  private publicationService: PublicationService,
                  private router:Router,
                  private emailService: EmailService,
+                 private userService: UserService,
+                 private ratingService: RatingService,
                 ){}
 
     ngOnInit(): void {
@@ -127,6 +134,171 @@ export class ListarTruequesComponent implements OnInit, OnChanges {
       console.error('Error sending email', error);
       }
       );
+    }
+
+    tradeParticipant(trueque: TradeProposal): boolean{
+      if (this.userID == trueque.proposer.id || this.userID == trueque.recipient.id){
+        return true;
+      }
+      else{
+        return false;
+      }
+    }
+
+    tradeStatus(status: string){
+      switch (status){
+        case 'concreted':
+        case 'Concreted':
+          return "Concretado";
+        case 'pending':
+        case 'Pending':
+          return "Pendiente de aceptación"
+        case 'accepted':
+        case 'Accepted':
+          return "Aceptado"
+        case 'rejected':
+        case 'Rejected':
+          return 'Oferta rechazada'
+        case 'cancelled':
+        case 'Cancelled':
+          return 'Cancelado'
+        case 'confirmed':
+        case 'Confirmed':
+          return 'Confirmado'
+        case 'not_finished':
+        case 'Not Finished':
+          return 'No Finalizado'
+      }
+      return '';
+    }
+
+    valoro(trueque: TradeProposal): boolean{
+      if (this.userID == trueque.proposer.id && trueque.proposer_rated){
+        return true;
+      }
+      else{
+        if (this.userID == trueque.recipient.id && trueque.recipient_rated){
+          return true;
+        }
+        else{
+          return false;
+        }
+      }
+    }    
+
+    valoroSucursal(trueque: TradeProposal): boolean{
+      if (this.userID == trueque.proposer.id && trueque.proposer_rated_sucursal){
+        return true;
+      }
+      else{
+        if (this.userID == trueque.recipient.id && trueque.recipient_rated_sucursal){
+          return true;
+        }
+        else{
+          return false;
+        }
+      }
+    }    
+
+    popupValorar(trueque: TradeProposal, id: number){
+      //Popup
+      Swal.fire({
+        title: "Califica a este usuario",
+        icon: "info",
+        input: "range",
+        inputLabel: "Valoración",
+        inputAttributes: {
+          min: "1",
+          max: "10",
+          step: "1"
+        },
+        inputValue: 1
+      })
+      .then((result) => {
+        if (result.isConfirmed) {
+          //Crear valoración
+          let recipiente: number;
+          if (this.userID == trueque.proposer.id){
+            recipiente = trueque.recipient.id;
+          }
+          else{
+            recipiente = trueque.proposer.id;
+          }
+
+          let valoracion: Rating = {
+            rating_score: result.value,
+            recipient: recipiente,
+          };
+          
+          this.ratingService.createRating(valoracion).subscribe(
+            (response) => {
+              console.log('valoración creada correctamente', response);
+          },
+            (error) => {
+              console.log('error');
+            }
+          )
+  
+          //Actualizar promedio y total de calificaciones del usuario
+          this.userService.getUser(recipiente).subscribe({
+            next: (user: User) => {
+              this.ratingService.getRatingsForUser(user.id).subscribe({
+                next: (ratings: Rating[]) => {
+                  // Calculate the average rating
+                  const totalRatings = ratings.length;
+                  const sumRatings = ratings.reduce((sum, rating) => sum + rating.rating_score, 0);
+                  const averageRating = totalRatings > 0 ? sumRatings / totalRatings : 0;
+          
+                // Update the user's rating and total ratings fields
+                  user.rating = averageRating;
+                  user.total_ratings = totalRatings;
+          
+                  // Update the user
+                  this.userService.updateUser(user).subscribe({
+                    next: (updatedUser: User) => {
+                      console.log('Usuario modificado:', updatedUser);
+                    },
+                    error: (error: any) => {
+                      console.error('Error updating user:', error);
+                    }
+                  });
+                },
+                error: (error: any) => {
+                  console.error('Error fetching ratings for user:', error);
+                }
+              });
+            },
+            error: (error: any) => {
+              console.error('Error fetching current user:', error);
+            }
+          });
+
+
+          //Actualizar tradeproposal
+          this.tradeService.getTradeProposal(id).subscribe(
+            trade => {
+              if(this.userID == trade.recipient.id){
+                trade.recipient_rated = true;
+              }
+              else{
+                trade.proposer_rated = true;
+              }
+              this.tradeService.updateTrade(id, trade).subscribe();
+            }
+          )
+
+          //Popup de exito
+          Swal.fire({
+            title: "¡Calificado!",
+            text: "Has calificado a este usuario correctamente.",
+            icon: "success"
+          });
+        }
+      });
+    }    
+
+    popupValorarSucursal(trueque: TradeProposal, id: number){
+
     }
 
   }

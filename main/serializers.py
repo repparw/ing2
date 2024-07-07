@@ -46,6 +46,8 @@ class UserSerializer(serializers.ModelSerializer):
       instance.name = validated_data.get('name', instance.name)
       instance.suc = validated_data.get('suc', instance.suc)
       instance.mailing = validated_data.get('mailing', instance.mailing)
+      instance.rating = validated_data.get('rating', instance.rating)
+      instance.total_ratings = validated_data.get('total_ratings', instance.total_ratings)
       instance.save()
       return instance
 
@@ -72,7 +74,8 @@ class TradeProposalSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'proposer_id', 'proposer', 'recipient_id', 'recipient',
             'publication_id', 'publication', 'proposed_items_id', 'proposed_items',
-            'suc_id', 'suc', 'status', 'code', 'created_at', 'date'
+            'suc_id', 'suc', 'status', 'code', 'created_at', 'date', 'recipient_rated',
+            'proposer_rated', 'recipient_rated_sucursal', 'proposer_rated_sucursal',
         ]
 
     def create(self, validated_data):
@@ -89,7 +92,11 @@ class TradeProposalSerializer(serializers.ModelSerializer):
             suc=suc,
             status=validated_data.get('status', 'pending'),
             code=validated_data.get('code', ''),
-            date=validated_data.get('date')
+            date=validated_data.get('date'),
+            recipient_rated=validated_data.get('recipient_rated', False),
+            proposer_rated=validated_data.get('proposer_rated', False),
+            recipient_rated_sucursal=validated_data.get('recipient_rated_sucursal', False),
+            proposer_rated_sucursal=validated_data.get('proposer_rated_sucursal', False),
         )
 
         trade_proposal.proposed_items.set(proposed_items)
@@ -103,6 +110,11 @@ class TradeProposalSerializer(serializers.ModelSerializer):
         instance.status = validated_data.get('status', instance.status)
         instance.code = validated_data.get('code', instance.code)
         instance.date = validated_data.get('date', instance.date)
+        instance.recipient_rated = validated_data.get('recipient_rated', instance.recipient_rated)
+        instance.proposer_rated = validated_data.get('proposer_rated', instance.proposer_rated)
+        instance.recipient_rated_sucursal = validated_data.get('recipient_rated_sucursal', instance.recipient_rated_sucursal)
+        instance.proposer_rated_sucursal = validated_data.get('proposer_rated_sucursal', instance.proposer_rated_sucursal)
+
 
         proposed_items = validated_data.get('proposed_items_id')
         if proposed_items is not None:
