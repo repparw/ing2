@@ -61,7 +61,9 @@
               <li><a class="dropdown-item" routerLink="ad-email">Ad-email</a></li>
               <li><a class="dropdown-item" routerLink="enviar-descuento">Enviar descuento</a></li>
               <li><a class="dropdown-item" routerLink="verificar-codigo">Verificar código</a></li>
+              <ng-container *ngIf="(isAdmin$ | async)">
               <li><a class="dropdown-item" routerLink="modificar-banners">Modificar banners</a></li>
+            </ng-container>
             </ul>
           </li>
         </ng-container>

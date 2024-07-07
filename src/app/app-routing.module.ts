@@ -71,7 +71,7 @@ const routes: Routes = [
   { path: 'concretar-trueque/:id', component: ConcretarTruequeComponent },
   { path: 'checkout/:id', component: CheckoutComponent },
   { path: 'estadisticas', component: EstadisticasGlobalesComponent, canActivate: [AdminGuard] },
-  { path: 'modificar-banners', component: ModificarBannersComponent, canActivate:[EmployeeGuard] },
+  { path: 'modificar-banners', component: ModificarBannersComponent, canActivate:[AdminGuard] },
   { path: '**', redirectTo: '/home', pathMatch: 'full' }
 ];
 

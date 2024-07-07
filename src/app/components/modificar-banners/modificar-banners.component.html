@@ -1,6 +1,6 @@
 <div>
   <input type="file" (change)="onFilesSelected($event)" multiple>
-  <button (click)="onUpload()">Upload</button>
+  <button (click)="onUpload()" [disabled]="!isValidFiles">Upload</button>
 </div>
 
 <div *ngIf="images.length > 0">
