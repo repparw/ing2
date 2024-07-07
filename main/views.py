@@ -755,10 +755,7 @@ class ProcessPaymentAPIView(APIView):
 
             return Response(data={"body": status, "statusCode": payment_response["status"]}, status=201)
         except Exception as e:
-<<<<<<< HEAD
             return Response(data={"body": str(e)}, status=400)
-=======
-            return Response(data={"body": payment_response}, status=400)
         
 class RatingViewSet(viewsets.ModelViewSet):
     queryset = Rating.objects.all()
@@ -767,4 +764,3 @@ class RatingViewSet(viewsets.ModelViewSet):
 class RatingViewSet(viewsets.ModelViewSet):
     queryset = Rating.objects.all()
     serializer_class = RatingSerializer
->>>>>>> f57fa45aa73ecb28caaeef8b92f270d6374a1c03
