@@ -224,6 +224,8 @@ export class ListarTruequesComponent implements OnInit, OnChanges {
           else{
             recipiente = trueque.proposer.id;
           }
+          console.log('Recibipiente:', recipiente);
+
 
           let valoracion: Rating = {
             rating_score: result.value,
@@ -257,7 +259,7 @@ export class ListarTruequesComponent implements OnInit, OnChanges {
                 console.log('Updating user with data:', user);
           
                   // Update the user
-                  this.userService.updateUser(user).subscribe({
+                  this.userService.updateUserById(user.id, user).subscribe({
                     next: (updatedUser: User) => {
                       console.log('Usuario modificado:', updatedUser);
                     },

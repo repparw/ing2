@@ -4,7 +4,7 @@ from rest_framework import routers
 from main.views import (
     PubViewSet, SucursalViewSet, TradeProposalViewSet, UserViewSet, SalesViewSet, CommentViewSet, BannerViewSet, RatingViewSet,
     CurrentUserView, CustomAuthToken, UpdatePasswordView, SendResetPasswordEmailView, PasswordResetConfirmView,
-    StatisticsView, ProcessPaymentAPIView, return_pub_images_id, serve_publication_image, serve_branch_image,
+    StatisticsView, ProcessPaymentAPIView, UserDetailView, return_pub_images_id, serve_publication_image, serve_branch_image,
     send_email, get_all_emails, save_discount_codes, verificar_codigo, borrar_codigo
 )
 
@@ -28,6 +28,7 @@ urlpatterns = [
     path('statistics/sucursal/<int:sucursal_id>/', StatisticsView.as_view(), name='sucursal_statistics'),
     path('api-token-auth/', CustomAuthToken.as_view(), name='api_token_auth'),
     path('users/current/', CurrentUserView.as_view(), name='current_user'),
+    path('users/<int:pk>/', UserViewSet.as_view({'get': 'retrieve', 'put': 'update', 'patch': 'partial_update', 'delete': 'destroy'}), name='user-detail'),
     path('profiles/<str:username>/', UserViewSet.as_view({'get': 'profile_by_username'}), name='profile-by-username'),
     path('publications-by/<int:user>/', PubViewSet.as_view({'get': 'get_user_publications'}), name='publications-by-user'),
     path('users/change-password/', UpdatePasswordView.as_view(), name='change_password'),
