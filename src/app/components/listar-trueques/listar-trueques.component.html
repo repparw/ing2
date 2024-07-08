@@ -16,11 +16,11 @@
             <img [src]="getPhotos(trueque.publication.id)" class="image-thumbnail" width="100" height="100" alt="{{ trueque.publication.title }}" (click)="navigatePubli(trueque.publication.id)">
             <a class="proposer" (click)="navigate(trueque.proposer.username)">Oferta hecha por: {{ trueque.proposer.name }}</a>
             <span class="rating">Valoración del usuario: {{ trueque.proposer.rating }}</span>
+            <a class="recipient" (click)="navigate(trueque.recipient.username)">Recibida por: {{ trueque.recipient.name }}</a>
+            <span class="rating">Valoración del usuario: {{ trueque.recipient.rating }}</span>
 
             <ng-container *ngIf="trueque.status == 'accepted' || trueque.status == 'confirmed' || trueque.status == 'concreted'">
               <div>
-                <a class="recipient" (click)="navigate(trueque.recipient.username)">Recibida por: {{ trueque.recipient.name }}</a>
-                <span class="rating">Valoración del usuario: {{ trueque.recipient.rating }}</span>
                 <p>Codigo: {{ trueque.code }} </p>
 
                 <span *ngIf="trueque.status == 'confirmed' || trueque.status == 'concreted'">
@@ -39,7 +39,7 @@
               <button *ngIf="show[i]" type="button" class="btn btn-danger" (click)="toggleShow(i)">Ocultar Objetos ofrecidos</button>
               <app-listar-publicaciones *ngIf="show[i]" [data]="trueque.proposed_items"></app-listar-publicaciones>
             </div>
-            <button *ngIf="trueque.status == 'pending'"   type="button" class="btn btn-outline-primary" (click)="navigateTrade(trueque.id)">Responder Trueque</button>
+            <button *ngIf="trueque.status == 'pending' && userID != this.trueque.proposer.id"  type="button" class="btn btn-outline-primary" (click)="navigateTrade(trueque.id)">Responder Trueque</button>
             <button *ngIf="trueque.status == 'accepted' && userID != this.trueque.proposer.id"    type="button" class="btn btn-outline-primary" (click)="navigateFecha(trueque.id)">Proponer fecha</button>
             <!-- Hacer lógica del cancelar -->
             <div *ngIf="trueque.status == 'confirmed' && empleado == false && validateDate(trueque.date)" >

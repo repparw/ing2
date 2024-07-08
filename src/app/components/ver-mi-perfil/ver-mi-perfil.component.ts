@@ -17,6 +17,7 @@ export class VerMiPerfilComponent implements OnInit {
   fotoDePerfil: string = './assets/logos/Principal.png';  //Poner foto de perfil por defecto en algún lado
   nombre: string = '';
   valoracion: number = 0;
+  cantidadValoraciones: number = 0;
   publicaciones: any[]=[];
   dni: string = '';
   fechaDeNacimiento: Date = new Date(0, 0, 0);
@@ -40,6 +41,7 @@ export class VerMiPerfilComponent implements OnInit {
         this.sucursal = sucursal;
               });
       this.valoracion = user.rating!;
+      this.cantidadValoraciones = user.total_ratings!;
       this.publicationService.getPublicationsById(user.id).subscribe(
           (publications: Pub[]) => {
             this.publicaciones = publications;
