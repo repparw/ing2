@@ -376,7 +376,7 @@ export class ListarTruequesComponent implements OnInit, OnChanges {
                 //Popup de exito
                 Swal.fire({
                   title: "¡Calificado!",
-                  text: "Has calificado a este usuario correctamente.",
+                  text: "Has calificado a esta sucursal correctamente.",
                   icon: "success"
                 }).then((result) => {
                   window.location.reload()
