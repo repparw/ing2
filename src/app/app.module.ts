@@ -43,8 +43,6 @@ import { VerSucursalComponent } from './components/ver-sucursal/ver-sucursal.com
 import { ModificarBannersComponent } from './components/modificar-banners/modificar-banners.component';
 import { CrearComentarioComponent } from './components/crear-comentario/CrearComentarioComponent';
 import { ListarOfertasEnviadasComponent } from './components/listar-ofertas-enviadas/listar-ofertas-enviadas.component';
-import { CheckoutComponent } from './components/checkout/checkout.component';
-
 
 @NgModule({
   declarations: [
@@ -83,7 +81,6 @@ import { CheckoutComponent } from './components/checkout/checkout.component';
     ModificarBannersComponent,
     CrearComentarioComponent,
     ListarOfertasEnviadasComponent,
-    CheckoutComponent
   ],
   imports: [
     BrowserModule,

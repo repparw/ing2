@@ -300,7 +300,7 @@ class SucursalViewSet(viewsets.ModelViewSet):
     sucursales = Sucursal.objects.all()
     serializer = SucursalSerializer(sucursales, many=True)
     return Response(serializer.data)
-  
+
 class SucursalRatingViewSet(viewsets.ModelViewSet):
     queryset = SucursalRating.objects.all()
     serializer_class = SucursalRatingSerializer
@@ -352,14 +352,14 @@ class UserViewSet(viewsets.ModelViewSet):
       "user": serializer.data,
       "message": "Usuario creado exitosamente",
           }, status=status.HTTP_201_CREATED)
-  
+
 class UserDetailView(APIView):
     def put(self, request, pk):
         try:
             user = User.objects.get(pk=pk)
         except User.DoesNotExist:
             return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
-        
+
         serializer = UserSerializer(user, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
@@ -690,7 +690,7 @@ class SalesViewSet(viewsets.ModelViewSet):
             serializer = self.get_serializer(ventas, many=True)
             return Response(serializer.data)
         return Response({"error": "Trade ID not provided"}, status=400)
-    
+
 
 
 class BannerViewSet(viewsets.ModelViewSet):
@@ -746,48 +746,11 @@ class CommentViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(comments, many=True)
         return Response(serializer.data)
 
-class ProcessPaymentAPIView(APIView):
-    permission_classes = [AllowAny]
-
-    def post(self, request):
-        try:
-            request_values = json.loads(request.body)
-            
-            # Crea un ítem en la preferencia
-            preference_data = {
-                "items": [
-                    {
-                        "id" : "producto",
-                        "title": "Mi producto",
-                        "quantity": 1,
-                        "unit_price": 75.76,
-                    }
-                ]
-            }
-
-            sdk = mercadopago.SDK('APP_USR-1602288790288828-070514-a27c9302c7c6212c3463a976870217a5-278218017')
-
-            preference_response = sdk.preference().create(preference_data)
-            preference = preference_response["response"]
-
-            payment_response = sdk.payment().create(preference_data)
-            payment = payment_response["response"]
-            
-            status = {
-                "id": payment["id"],
-                "status": payment["status"],
-                "status_detail": payment["status_detail"],
-            }
-
-            return Response(data={"body": status, "statusCode": payment_response["status"]}, status=201)
-        except Exception as e:
-            return Response(data={"body": str(e)}, status=400)
-        
 class RatingViewSet(viewsets.ModelViewSet):
     queryset = Rating.objects.all()
     serializer_class = RatingSerializer
 
-    
+
     @action(detail=False, methods=['get'], url_path='by-user')
     def get_by_sucursal(self, request):
         user_id = request.query_params.get('recipient')
@@ -796,4 +759,4 @@ class RatingViewSet(viewsets.ModelViewSet):
             serializer = self.get_serializer(ratings, many=True)
             return Response(serializer.data)
         return Response({"error": "User not provided"}, status=status.HTTP_400_BAD_REQUEST)
-        
+

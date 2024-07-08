@@ -37,7 +37,6 @@ import { ConcretarTruequeComponent } from './components/concretar-trueque/concre
 import { VerSucursalComponent } from './components/ver-sucursal/ver-sucursal.component';
 import { ModificarBannersComponent } from './components/modificar-banners/modificar-banners.component';
 import { ListarOfertasEnviadasComponent } from './components/listar-ofertas-enviadas/listar-ofertas-enviadas.component';
-import { CheckoutComponent } from './components/checkout/checkout.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -69,7 +68,6 @@ const routes: Routes = [
   { path: 'trueque/:id/cargar-venta', component: CargarVentaComponent },
   { path: 'trueques-empleado', component: ListarTruequesEmpleadoComponent },
   { path: 'concretar-trueque/:id', component: ConcretarTruequeComponent },
-  { path: 'checkout/:id', component: CheckoutComponent },
   { path: 'estadisticas', component: EstadisticasGlobalesComponent, canActivate: [AdminGuard] },
   { path: 'modificar-banners', component: ModificarBannersComponent, canActivate:[AdminGuard] },
   { path: '**', redirectTo: '/home', pathMatch: 'full' }
