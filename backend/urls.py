@@ -3,7 +3,7 @@ from django.urls import path, include
 from rest_framework import routers
 from main.views import (
     PubViewSet, SucursalViewSet, TradeProposalViewSet, UserViewSet, SalesViewSet, CommentViewSet, BannerViewSet, RatingViewSet,
-    CurrentUserView, CustomAuthToken, UpdatePasswordView, SendResetPasswordEmailView, PasswordResetConfirmView,
+    CurrentUserView, CustomAuthToken, UpdatePasswordView, SendResetPasswordEmailView, PasswordResetConfirmView, SucursalRatingViewSet,
     StatisticsView, ProcessPaymentAPIView, UserDetailView, return_pub_images_id, serve_publication_image, serve_branch_image,
     send_email, get_all_emails, save_discount_codes, verificar_codigo, borrar_codigo
 )
@@ -17,6 +17,8 @@ router.register('ventas', SalesViewSet, basename='ventas')
 router.register('ads', BannerViewSet, basename='ads')
 router.register('comments', CommentViewSet, basename='comments')
 router.register('ratings', RatingViewSet)
+router.register('sucursal-ratings', SucursalRatingViewSet, basename='sucursal-ratings')
+
 
 
 urlpatterns = [

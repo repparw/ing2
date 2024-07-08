@@ -1,0 +1,22 @@
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { SucursalRating } from '../models/sucursalRating'; 
+
+@Injectable({
+  providedIn: 'root'
+})
+export class SucursalRatingService {
+  private apiUrl = 'http://localhost:8000/sucursal-ratings/';  // Adjust URL as per your Django API endpoint
+
+  constructor(private http: HttpClient) { }
+
+  getRatingsBySucursalId(sucursalId: number): Observable<SucursalRating[]> {
+    const url = `${this.apiUrl}?sucursal=${sucursalId}`;
+    return this.http.get<SucursalRating[]>(url);
+  }
+
+  addRating(rating: SucursalRating): Observable<SucursalRating> {
+    return this.http.post<SucursalRating>(this.apiUrl, rating);
+  }
+}

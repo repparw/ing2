@@ -1,6 +1,6 @@
 from django.contrib.auth import authenticate
 from rest_framework import serializers
-from .models import Pub, User, Sucursal, TradeProposal, Sales, Comment, Banner, Rating
+from .models import Pub, User, Sucursal, TradeProposal, Sales, Comment, Banner, Rating, SucursalRating
 
 class PubSerializer(serializers.ModelSerializer):
     class Meta:
@@ -21,6 +21,11 @@ class CurrentUserSerializer(serializers.ModelSerializer):
 class RatingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rating
+        fields = '__all__'
+
+class SucursalRatingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SucursalRating
         fields = '__all__'
         
 class UserSerializer(serializers.ModelSerializer):
@@ -53,6 +58,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class SucursalSerializer(serializers.ModelSerializer):
+    ratings = SucursalRatingSerializer(many=True, read_only=True)
     class Meta:
         model = Sucursal
         fields = '__all__'

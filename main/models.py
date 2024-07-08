@@ -90,3 +90,8 @@ class Rating(models.Model):
 
     def __str__(self):
         return f'Rating: {self.rating_score} for {self.recipient.username}'
+    
+class SucursalRating(models.Model):
+    sucursal = models.ForeignKey(Sucursal, on_delete=models.SET_NULL, null=True, related_name='ratings')
+    rating_score = models.IntegerField()
+    comment = models.CharField(max_length=1000)

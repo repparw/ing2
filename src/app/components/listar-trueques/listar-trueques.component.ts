@@ -9,6 +9,8 @@ import { TradeProposal } from 'src/app/models/tradeProposal';
 import { RatingService } from 'src/app/services/rating.service';
 import { Rating } from 'src/app/models/rating';
 import { User } from 'src/app/models/user';
+import { SucursalRating } from 'src/app/models/sucursalRating';
+import { SucursalRatingService } from 'src/app/services/sucursalRating.service';
 
 @Component({
   selector: 'app-listar-trueques',
@@ -32,6 +34,7 @@ export class ListarTruequesComponent implements OnInit, OnChanges {
                  private emailService: EmailService,
                  private userService: UserService,
                  private ratingService: RatingService,
+                 private sucursalRatingService: SucursalRatingService,
                 ){}
 
     ngOnInit(): void {
@@ -303,7 +306,79 @@ export class ListarTruequesComponent implements OnInit, OnChanges {
     }    
 
     popupValorarSucursal(trueque: TradeProposal, id: number){
+      //Popup
+      Swal.fire({
+        title: "Califica a este sucursal",
+        icon: "info",
+        input: "range",
+        inputLabel: "Valoración",
+        inputAttributes: {
+          min: "1",
+          max: "10",
+          step: "1"
+        },
+        inputValue: 1
+      })
+      .then((result) => {
+        if (result.isConfirmed) {
+          //Crear valoración sucursal
+          let sucId: number;
+          let comentario: string = '';
+          if(trueque.suc_id){
+            sucId = trueque.suc_id;
+            console.log('Sucursal:', sucId);
 
-    }
+            
+            let valoracion: SucursalRating = {
+              rating_score: result.value,
+              sucursal: sucId,
+              comment: comentario,
+            };
 
-  }
+            //Agrega el comentario
+            Swal.fire({
+              input: "textarea",
+              inputLabel: "Comentario sobre el empleado",
+              inputPlaceholder: "Escriba el comentario aquí...",
+              inputAttributes: {
+                "aria-label": "Escriba el comentario aquí"
+              },
+              showCancelButton: true
+            }).then((result) => {
+              valoracion.comment = result.value;
+              //Crea valoración de la sucursal
+              this.sucursalRatingService.addRating(valoracion).subscribe(
+                (response) => {
+                  console.log('valoración creada correctamente', response);
+              },
+                (error) => {
+                  console.log('error');
+                }
+              )
+
+              //Actualizar tradeproposal
+              this.tradeService.getTradeProposal(id).subscribe(
+              trade => {
+                if(this.userID == trade.recipient.id){
+                  trade.recipient_rated_sucursal = true;
+                }
+                else{
+                  trade.proposer_rated_sucursal = true;
+                }
+                this.tradeService.updateTrade(id, trade).subscribe();
+              })
+
+              //Popup de exito
+              Swal.fire({
+                title: "¡Calificado!",
+                text: "Has calificado a este usuario correctamente.",
+                icon: "success"
+              });
+            })
+          }
+        }
+      });
+    }    
+}
+
+

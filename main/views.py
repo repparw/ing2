@@ -14,8 +14,8 @@ from django.urls import reverse
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.views import APIView
 from rest_framework.generics import UpdateAPIView
-from .models import  Banner, Pub, User, Sucursal, TradeProposal, Photo, Sales, Comment, Rating
-from .serializers import CommentSerializer, PubSerializer, UserSerializer, SucursalSerializer, TradeProposalSerializer, SalesSerializer, BannerSerializer, RatingSerializer
+from .models import  Banner, Pub, User, Sucursal, TradeProposal, Photo, Sales, Comment, Rating, SucursalRating
+from .serializers import CommentSerializer, PubSerializer, UserSerializer, SucursalSerializer, TradeProposalSerializer, SalesSerializer, BannerSerializer, RatingSerializer, SucursalRatingSerializer
 from .serializers import CurrentUserSerializer, CustomAuthTokenSerializer, UpdatePasswordSerializer
 from django.core.mail import send_mail
 from django.http import JsonResponse
@@ -300,6 +300,10 @@ class SucursalViewSet(viewsets.ModelViewSet):
     sucursales = Sucursal.objects.all()
     serializer = SucursalSerializer(sucursales, many=True)
     return Response(serializer.data)
+  
+class SucursalRatingViewSet(viewsets.ModelViewSet):
+    queryset = SucursalRating.objects.all()
+    serializer_class = SucursalRatingSerializer
 
 class CurrentUserView(APIView):
   permission_classes = [IsAuthenticatedOrReadOnly]
