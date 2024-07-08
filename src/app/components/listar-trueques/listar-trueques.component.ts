@@ -300,6 +300,8 @@ export class ListarTruequesComponent implements OnInit, OnChanges {
             title: "¡Calificado!",
             text: "Has calificado a este usuario correctamente.",
             icon: "success"
+          }).then((result) => {
+            window.location.reload()
           });
         }
       });
@@ -324,10 +326,9 @@ export class ListarTruequesComponent implements OnInit, OnChanges {
           //Crear valoración sucursal
           let sucId: number;
           let comentario: string = '';
-          if(trueque.suc_id){
-            sucId = trueque.suc_id;
+          if(trueque.suc?.id != undefined){
+            sucId = parseInt(trueque.suc.id);
             console.log('Sucursal:', sucId);
-
             
             let valoracion: SucursalRating = {
               rating_score: result.value,
@@ -343,37 +344,48 @@ export class ListarTruequesComponent implements OnInit, OnChanges {
               inputAttributes: {
                 "aria-label": "Escriba el comentario aquí"
               },
-              showCancelButton: true
+              showCancelButton: true,
             }).then((result) => {
-              valoracion.comment = result.value;
-              //Crea valoración de la sucursal
-              this.sucursalRatingService.addRating(valoracion).subscribe(
-                (response) => {
-                  console.log('valoración creada correctamente', response);
-              },
-                (error) => {
-                  console.log('error');
-                }
-              )
+              if(!result.value){
+                Swal.fire({
+                  title: "Advertencia",
+                  text: "Debes escribir un comentario para por valorar la sucursal.",
+                  icon: "warning"
+                });
+              }
+              else{
+                valoracion.comment = result.value;
+                //Crea valoración de la sucursal
+                this.sucursalRatingService.addRating(valoracion).subscribe(
+                  (response) => {
+                    console.log('valoración creada correctamente', response);
+                },
+                  (error) => {
+                    console.log('error');
+                  }
+                )
 
-              //Actualizar tradeproposal
-              this.tradeService.getTradeProposal(id).subscribe(
-              trade => {
-                if(this.userID == trade.recipient.id){
-                  trade.recipient_rated_sucursal = true;
-                }
-                else{
-                  trade.proposer_rated_sucursal = true;
-                }
-                this.tradeService.updateTrade(id, trade).subscribe();
-              })
+                //Actualizar tradeproposal
+                this.tradeService.getTradeProposal(id).subscribe(
+                trade => {
+                  if(this.userID == trade.recipient.id){
+                    trade.recipient_rated_sucursal = true;
+                  }
+                  else{
+                    trade.proposer_rated_sucursal = true;
+                  }
+                  this.tradeService.updateTrade(id, trade).subscribe();
+                })
 
-              //Popup de exito
-              Swal.fire({
-                title: "¡Calificado!",
-                text: "Has calificado a este usuario correctamente.",
-                icon: "success"
-              });
+                //Popup de exito
+                Swal.fire({
+                  title: "¡Calificado!",
+                  text: "Has calificado a este usuario correctamente.",
+                  icon: "success"
+                }).then((result) => {
+                  window.location.reload()
+                });
+              }
             })
           }
         }

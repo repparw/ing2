@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { SucursalRating } from '../models/sucursalRating'; 
 
@@ -11,12 +11,19 @@ export class SucursalRatingService {
 
   constructor(private http: HttpClient) { }
 
+  private getHeaders(): HttpHeaders {
+    return new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': 'Token ' + localStorage.getItem('token'),
+    });
+  }
+
   getRatingsBySucursalId(sucursalId: number): Observable<SucursalRating[]> {
     const url = `${this.apiUrl}?sucursal=${sucursalId}`;
     return this.http.get<SucursalRating[]>(url);
   }
 
   addRating(rating: SucursalRating): Observable<SucursalRating> {
-    return this.http.post<SucursalRating>(this.apiUrl, rating);
+    return this.http.post<SucursalRating>(this.apiUrl, rating, { headers: this.getHeaders() });
   }
-}
+}  
