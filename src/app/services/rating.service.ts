@@ -19,7 +19,7 @@ export class RatingService {
   constructor(private http: HttpClient) { }
 
   getRatingsForUser(userId: number): Observable<Rating[]> {
-    return this.http.get<Rating[]>(`${this.apiUrl}?recipient=${userId}`, { headers: this.getHeaders() });
+    return this.http.get<Rating[]>(`${this.apiUrl}by-user?recipient=${userId}`, { headers: this.getHeaders() });
   }
 
   createRating(rating: Rating): Observable<Rating> {

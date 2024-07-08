@@ -786,7 +786,14 @@ class ProcessPaymentAPIView(APIView):
 class RatingViewSet(viewsets.ModelViewSet):
     queryset = Rating.objects.all()
     serializer_class = RatingSerializer
+
+    
+    @action(detail=False, methods=['get'], url_path='by-user')
+    def get_by_sucursal(self, request):
+        user_id = request.query_params.get('recipient')
+        if user_id:
+            ratings = self.queryset.filter(recipient=user_id)
+            serializer = self.get_serializer(ratings, many=True)
+            return Response(serializer.data)
+        return Response({"error": "User not provided"}, status=status.HTTP_400_BAD_REQUEST)
         
-class RatingViewSet(viewsets.ModelViewSet):
-    queryset = Rating.objects.all()
-    serializer_class = RatingSerializer

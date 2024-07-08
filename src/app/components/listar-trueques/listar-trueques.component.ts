@@ -238,71 +238,67 @@ export class ListarTruequesComponent implements OnInit, OnChanges {
           this.ratingService.createRating(valoracion).subscribe(
             (response) => {
               console.log('valoración creada correctamente', response);
+              //Actualizar promedio y total de calificaciones del usuario
+              this.userService.getUser(recipiente).subscribe({
+                next: (user: User) => {
+                  this.ratingService.getRatingsForUser(user.id).subscribe({
+                    next: (ratings: Rating[]) => {
+                      // Calculate the average rating
+                      const totalRatings = ratings.length;
+                      const sumRatings = ratings.reduce((sum, rating) => sum + rating.rating_score, 0);
+                      const averageRating = totalRatings > 0 ? sumRatings / totalRatings : 0;
+              
+                    // Update the user's rating and total ratings fields
+                      user.rating = averageRating;
+                      user.total_ratings = totalRatings;
+
+                    // Log the user object before sending the request
+                    console.log('Updating user with data:', user);
+              
+                      // Update the user
+                      this.userService.updateUserById(user.id, user).subscribe({
+                        next: (updatedUser: User) => {
+                          console.log('Usuario modificado:', updatedUser);
+                        },
+                        error: (error: any) => {
+                          console.error('Error updating user:', error);
+                        }
+                      });
+                    },
+                    error: (error: any) => {
+                      console.error('Error fetching ratings for user:', error);
+                    }
+                  });
+                },
+                error: (error: any) => {
+                  console.error('Error fetching current user:', error);
+                }
+              });
+              //Actualizar tradeproposal
+              this.tradeService.getTradeProposal(id).subscribe(
+                trade => {
+                  if(this.userID == trade.recipient.id){
+                    trade.recipient_rated = true;
+                  }
+                  else{
+                    trade.proposer_rated = true;
+                  }
+                  this.tradeService.updateTrade(id, trade).subscribe();
+                }
+              )
+              //Popup de exito
+              Swal.fire({
+                title: "¡Calificado!",
+                text: "Has calificado a este usuario correctamente.",
+                icon: "success"
+              }).then((result) => {
+                window.location.reload()
+              });
           },
             (error) => {
               console.log('error');
             }
           )
-  
-          //Actualizar promedio y total de calificaciones del usuario
-          this.userService.getUser(recipiente).subscribe({
-            next: (user: User) => {
-              this.ratingService.getRatingsForUser(user.id).subscribe({
-                next: (ratings: Rating[]) => {
-                  // Calculate the average rating
-                  const totalRatings = ratings.length;
-                  const sumRatings = ratings.reduce((sum, rating) => sum + rating.rating_score, 0);
-                  const averageRating = totalRatings > 0 ? sumRatings / totalRatings : 0;
-          
-                // Update the user's rating and total ratings fields
-                  user.rating = averageRating;
-                  user.total_ratings = totalRatings;
-
-                 // Log the user object before sending the request
-                console.log('Updating user with data:', user);
-          
-                  // Update the user
-                  this.userService.updateUserById(user.id, user).subscribe({
-                    next: (updatedUser: User) => {
-                      console.log('Usuario modificado:', updatedUser);
-                    },
-                    error: (error: any) => {
-                      console.error('Error updating user:', error);
-                    }
-                  });
-                },
-                error: (error: any) => {
-                  console.error('Error fetching ratings for user:', error);
-                }
-              });
-            },
-            error: (error: any) => {
-              console.error('Error fetching current user:', error);
-            }
-          });
-
-
-          //Actualizar tradeproposal
-          this.tradeService.getTradeProposal(id).subscribe(
-            trade => {
-              if(this.userID == trade.recipient.id){
-                trade.recipient_rated = true;
-              }
-              else{
-                trade.proposer_rated = true;
-              }
-              this.tradeService.updateTrade(id, trade).subscribe();
-            }
-          )
-
-          //Popup de exito
-          Swal.fire({
-            title: "¡Calificado!",
-            text: "Has calificado a este usuario correctamente.",
-            icon: "success"
-          }).then((result) => {
-            window.location.reload()
-          });
         }
       });
     }    
