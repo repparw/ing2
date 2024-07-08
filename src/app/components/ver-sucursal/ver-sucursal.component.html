@@ -8,8 +8,23 @@
 
   <ng-container *ngIf="(isAdmin$ | async)">
     <div>
-      <p>Acá van las valoraciones de la sucursal</p>
-      <!--- TODO --->
+      <h2>Valoración de la sucursal: {{sucursal_rating}}</h2>
+      <button *ngIf="oculto == true" type="button" class="btn btn-primary" (click)="mostrar()">Ver todas las valoraciones</button>
+      <button *ngIf="oculto == false" type="button" class="btn btn-dark" (click)="ocultar()">Ocultar todas las valoraciones</button>
+      <div *ngIf="oculto == false && ratings?.length != 0" class="card">
+        <h2 class="card-title">Valoraciones</h2>
+        <div class="card-body">
+          <ul>
+            <li *ngFor="let valoracion of ratings" class="fila justified-content-center">
+              <div class="info">
+                <h5>Valoración: {{valoracion.rating_score}}</h5>
+                <h5>Comentario: {{valoracion.comment}}</h5>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <p *ngIf="oculto == false && ratings?.length == 0" class="text-center text-danger">No hay valoraciones para mostrar</p>
     </div>
   </ng-container>
 

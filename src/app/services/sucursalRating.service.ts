@@ -19,10 +19,9 @@ export class SucursalRatingService {
   }
 
   getRatingsBySucursalId(sucursalId: number): Observable<SucursalRating[]> {
-    const url = `${this.apiUrl}?sucursal=${sucursalId}`;
-    return this.http.get<SucursalRating[]>(url);
+    const url = `${this.apiUrl}by-sucursal?sucursal=${sucursalId}`;
+    return this.http.get<SucursalRating[]>(url, { headers: this.getHeaders() });
   }
-
   addRating(rating: SucursalRating): Observable<SucursalRating> {
     return this.http.post<SucursalRating>(this.apiUrl, rating, { headers: this.getHeaders() });
   }

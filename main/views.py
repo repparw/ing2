@@ -305,6 +305,15 @@ class SucursalRatingViewSet(viewsets.ModelViewSet):
     queryset = SucursalRating.objects.all()
     serializer_class = SucursalRatingSerializer
 
+    @action(detail=False, methods=['get'], url_path='by-sucursal')
+    def get_by_sucursal(self, request):
+        sucursal_id = request.query_params.get('sucursal')
+        if sucursal_id:
+            sucursal_ratings = self.queryset.filter(sucursal=sucursal_id)
+            serializer = self.get_serializer(sucursal_ratings, many=True)
+            return Response(serializer.data)
+        return Response({"error": "Sucursal not provided"}, status=status.HTTP_400_BAD_REQUEST)
+
 class CurrentUserView(APIView):
   permission_classes = [IsAuthenticatedOrReadOnly]
 
